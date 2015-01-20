@@ -1,0 +1,5 @@
+Update base.mako
+Update common.js
+Convert files into scaffold
+Write script to convert markdown to html with mako template
+Compare with CC 0.7.7
