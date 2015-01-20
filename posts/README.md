@@ -24,3 +24,11 @@ Launch server.
     
     cd ~/Projects/our-home
     pserve development.ini
+
+
+Recreate package
+----------------
+- [Pyramid](http://docs.pylonsproject.org/en/latest/docs/pyramid.html) 1.6dev
+- [Bootstrap](http://getbootstrap.com) 3.3.2
+- [JQuery](http://jquery.com) 1.11.2
+- [RequireJS](http://requirejs.org) 2.1.15
