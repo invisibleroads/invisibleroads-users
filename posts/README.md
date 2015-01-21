@@ -146,6 +146,7 @@ Prepare templates.
     rm $TARGET_FOLDER/invisibleroads_posts/templates/*
     mkdir $TEMPLATES_FOLDER
     cp $SOURCE_FOLDER/invisibleroads_posts/templates/* $TEMPLATES_FOLDER
+    vim $TEMPLATES_FOLDER/base.mako
 
 Clean files.
 

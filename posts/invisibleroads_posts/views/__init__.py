@@ -10,12 +10,14 @@ def includeme(config):
     config.add_route('post', '/%s/{name}' % settings['posts.url'])
 
 
-@view_config(route_name='index', http_cache=3600)
+@view_config(
+    renderer='invisibleroads_posts:templates/index.mako',
+    route_name='index', http_cache=3600)
 def index(request):
     settings = request.registry.settings
     path = join(settings['data.folder'], 'index.html')
     if not exists(path):
-        raise HTTPNotFound
+        return dict()
     return FileResponse(path, request)
 
 

@@ -1,4 +1,4 @@
-Update base.mako
+Hide login if desired
 Update common.js
 Convert files into scaffold
 Write script to convert markdown to html with mako template
