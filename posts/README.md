@@ -88,11 +88,28 @@ Add __init__.py.
 
     vimdiff $TARGET_FOLDER/invisibleroads_posts/setup.py $SOURCE_FOLDER/invisibleroads_posts/setup.py
 
+Prepare views.
+
+    VIEWS_FOLDER=$TARGET_FOLDER/invisibleroads_posts/views
+    rm $TARGET_FOLDER/invisibleroads_posts/views.py
+    mkdir $VIEWS_FOLDER
+    cp $SOURCE_FOLDER/invisibleroads_posts/views/__init__.py $VIEWS_FOLDER
+    vim $VIEWS_FOLDER/__init__.py
+
+Prepare templates.
+
+    TEMPLATES_FOLDER=$TARGET_FOLDER/invisibleroads_posts/templates
+    rm $TARGET_FOLDER/invisibleroads_posts/templates/*
+    mkdir $TEMPLATES_FOLDER
+    cp $SOURCE_FOLDER/invisibleroads_posts/templates/* $TEMPLATES_FOLDER
+    vim $TEMPLATES_FOLDER/base.mako
+
 Prepare assets.
 
     ASSETS_FOLDER=$TARGET_FOLDER/invisibleroads_posts/assets
     rm $TARGET_FOLDER/invisibleroads_posts/static/*
     mv $TARGET_FOLDER/invisibleroads_posts/static $ASSETS_FOLDER
+    vim $ASSETS_FOLDER/common.js
 
 Add favicon.ico.
 
@@ -131,22 +148,6 @@ Add whoops.html.
 
     cp $SOURCE_FOLDER/invisibleroads_posts/assets/whoops.html $ASSETS_FOLDER
     vim $ASSETS_FOLDER/whoops.html
-
-Prepare views.
-
-    VIEWS_FOLDER=$TARGET_FOLDER/invisibleroads_posts/views
-    rm $TARGET_FOLDER/invisibleroads_posts/views.py
-    mkdir $VIEWS_FOLDER
-    cp $SOURCE_FOLDER/invisibleroads_posts/views/__init__.py $VIEWS_FOLDER
-    vim $VIEWS_FOLDER/__init__.py
-
-Prepare templates.
-
-    TEMPLATES_FOLDER=$TARGET_FOLDER/invisibleroads_posts/templates
-    rm $TARGET_FOLDER/invisibleroads_posts/templates/*
-    mkdir $TEMPLATES_FOLDER
-    cp $SOURCE_FOLDER/invisibleroads_posts/templates/* $TEMPLATES_FOLDER
-    vim $TEMPLATES_FOLDER/base.mako
 
 Clean files.
 

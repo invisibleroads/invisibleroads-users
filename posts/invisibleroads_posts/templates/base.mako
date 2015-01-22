@@ -5,6 +5,7 @@ from titlecase import titlecase
 <%
 settings = request.registry.settings
 site_name = settings['site.name']
+local.attr.script_url = request.static_path('invisibleroads_posts:assets/common')
 %>
 <!doctype html>
 <html lang="en">
@@ -45,7 +46,8 @@ ${site_name}
 <div class="container">
 ${next.body()}
 </div>
-<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script>var static_url = '${request.static_path("invisibleroads_posts:assets/")}';</script>
+<script data-main="${local.attr.script_url}" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
+<script>window.requirejs || document.write('<script data-main="${local.attr.script_url}" src="' + '${request.static_path("invisibleroads_posts:assets/require.min.js")}' + '">\x3C/script>');</script>
 </body>
 </html>
