@@ -1,3 +1,4 @@
-Compare with CC 0.7.7
-Convert files into scaffold
++ Let user specify files available from root url in configuration file
+= Convert files into scaffold
+Add build.js for r.js optimizer
 Write script to convert markdown to html with mako template
