@@ -37,11 +37,11 @@ def configure_views(config):
 
 def add_root_asset(config, asset_path):
     settings = config.registry.settings
-    absolute_path = resolve_asset_path(asset_path, settings['here'])
+    absolute_path = resolve_asset_path(asset_path, settings['site.folder'])
     asset_name = basename(absolute_path)
-    config.add_route(asset_name, '/' + asset_name)
     config.add_view(
-        lambda request: FileResponse(absolute_path, request), asset_name)
+        lambda request: FileResponse(absolute_path, request),
+        asset_name, http_cache=3600)
 
 
 def resolve_asset_path(asset_path, base_folder):
@@ -53,5 +53,5 @@ def resolve_asset_path(asset_path, base_folder):
     else:
         package_module = import_module(package_name)
         package_folder = package_module.__path__[0]
-        absolute_path = join(package_folder, asset_path)
+        absolute_path = join(package_folder, relative_path)
     return absolute_path
