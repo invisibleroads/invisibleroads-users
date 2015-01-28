@@ -16,24 +16,39 @@ Prepare environment.
     virtualenv $VIRTUAL_ENV
     source $VIRTUAL_ENV/bin/activate
 
+    NODE_PATH=$VIRTUAL_ENV/lib/node_modules
+    npm install -g requirejs
+
 Install package.
 
     cd ~/Documents
     git clone git@github.com:invisibleroads/invisibleroads-posts.git
+
     cd ~/Documents/invisibleroads-posts
+    r.js -o build.js
+
+    cd ~/Experiments/invisibleroads-posts
     python setup.py develop
 
 Create project.
 
     cd ~/Projects
     pcreate -s invisibleroads our-home
-    cd ~/Projects/our-home
-    python setup.py develop
 
-Launch server.
+Launch development server.
     
     cd ~/Projects/our-home
+    python setup.py develop
     pserve development.ini
+
+Launch production server.
+
+    cd ~/Projects/our-home
+    r.js -o build.js
+
+    cd ~/Experiments/invisibleroads-posts
+    python setup.py develop
+    pserve production.ini
 
 
 Recreate
