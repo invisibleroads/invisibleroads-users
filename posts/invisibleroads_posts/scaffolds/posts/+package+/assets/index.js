@@ -4,5 +4,7 @@ require.config({
   }
 });
 require(['common'], function() {
-  console.log('whee');
+  window.setInterval(function() {
+    $('#clock').text((new Date()).getTime());
+  }, 1000);
 });

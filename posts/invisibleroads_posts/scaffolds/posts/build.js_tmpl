@@ -1,6 +1,9 @@
 ({
   appDir: '.',
   baseUrl: '{{package}}/assets',
+  paths: {
+    common: 'empty:'
+  },
   dir: '../../Experiments/{{project}}',
   optimize: 'uglify2',
   optimizeCss: 'standard.keepLines',

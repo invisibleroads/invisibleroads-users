@@ -1,6 +1,3 @@
-<%!
-script_url = '/_/{{project}}/index'
-%>
+<%! script_url = '/_/{{project}}/index' %>
 <%inherit file='invisibleroads_posts:templates/base.mako'/>
-
-Hmm
+<div id=clock></div>
