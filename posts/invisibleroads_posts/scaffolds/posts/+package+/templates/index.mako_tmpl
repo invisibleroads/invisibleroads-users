@@ -1,0 +1,6 @@
+<%!
+script_url = '/_/{{project}}/index'
+%>
+<%inherit file='invisibleroads_posts:templates/base.mako'/>
+
+Hmm

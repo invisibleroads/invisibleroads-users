@@ -4,18 +4,10 @@ from setuptools import setup, find_packages
 
 ENTRY_POINTS = """
 [paste.app_factory]
-main = invisibleroads_posts:main
-[pyramid.scaffold]
-posts=invisibleroads_posts.scaffolds:PostsTemplate
+main = {{package}}:main
 """
 REQUIREMENTS = [
-    'pyramid',
-    'pyramid_debugtoolbar',
-    'waitress',
-] + [
-    'mistune',
-    'pyramid_mako',
-    'titlecase',
+    'invisibleroads_posts',
 ]
 
 
@@ -25,9 +17,9 @@ DESCRIPTION = '\n\n'.join(open(join(HERE, _)).read() for _ in [
     'CHANGES.md',
 ])
 setup(
-    name='invisibleroads-posts',
-    version='0.1',
-    description='invisibleroads-posts',
+    name='{{project}}',
+    version='0.0.0',
+    description='{{project}}',
     long_description=DESCRIPTION,
     classifiers=[
         'Programming Language :: Python',
@@ -38,13 +30,13 @@ setup(
     ],
     author='',
     author_email='',
-    url='http://invisibleroads.com',
+    url='',
     keywords='web pyramid pylons invisibleroads',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
     install_requires=REQUIREMENTS,
     tests_require=REQUIREMENTS,
-    test_suite='invisibleroads_posts',
+    test_suite='{{package}}',
     entry_points=ENTRY_POINTS,
 )

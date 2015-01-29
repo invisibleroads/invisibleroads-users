@@ -4,6 +4,8 @@ from pyramid.config import Configurator
 from pyramid.response import FileResponse
 from pyramid.settings import asbool, aslist
 
+from . import views
+
 
 def main(global_config, **settings):
     config = Configurator(settings=settings)
@@ -22,17 +24,16 @@ def includeme(config):
 def configure_assets(config):
     settings = config.registry.settings
     config.add_directive('add_root_asset', add_root_asset)
-    config.add_static_view(
-        '_', 'invisibleroads_posts:assets', cache_max_age=3600)
-    root_asset_paths = aslist(settings.get('posts.root_asset_paths', []))
-    for root_asset_path in root_asset_paths:
+    for root_asset_path in aslist(settings.get('posts.root_asset_paths', [])):
         config.add_root_asset(root_asset_path)
+    config.add_static_view(
+        '_/invisibleroads-posts', 'invisibleroads_posts:assets',
+        cache_max_age=3600)
 
 
 def configure_views(config):
     config.include('pyramid_mako')
-    config.include('invisibleroads_posts.views')
-    config.scan()
+    views.add_routes(config)
 
 
 def add_root_asset(config, asset_path):

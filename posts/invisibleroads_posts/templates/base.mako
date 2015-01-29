@@ -1,11 +1,11 @@
 <%!
 from os.path import basename
 from titlecase import titlecase
+script_url = '/_/invisibleroads-posts/common'
 %>
 <%
 settings = request.registry.settings
 site_name = settings['site.name']
-local.attr.script_url = request.static_path('invisibleroads_posts:assets/common')
 %>
 <!doctype html>
 <html lang="en">
@@ -14,7 +14,7 @@ local.attr.script_url = request.static_path('invisibleroads_posts:assets/common'
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>
-% if request.path:
+% if request.path[1:]:
 <%block name="page_title">
 ${titlecase(basename(request.path).replace('-', ' '))}
 </%block> &middot;
@@ -47,7 +47,7 @@ ${site_name}
 ${next.body()}
 </div>
 <script>var static_url = '${request.static_path("invisibleroads_posts:assets/")}';</script>
-<script data-main="${local.attr.script_url}" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
-<script>window.requirejs || document.write('<script data-main="${local.attr.script_url}" src="' + '${request.static_path("invisibleroads_posts:assets/require.min.js")}' + '">\x3C/script>');</script>
+<script data-main="${self.attr.script_url}" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
+<script>window.requirejs || document.write('<script data-main="${self.attr.script_url}" src="' + '${request.static_path("invisibleroads_posts:assets/require.min.js")}' + '">\x3C/script>');</script>
 </body>
 </html>

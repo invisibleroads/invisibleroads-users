@@ -1,43 +1,45 @@
 [app:main]
-use = egg:invisibleroads-posts
-site.name = invisibleroads-posts
+use = egg:{{project}}
+site.name = {{project}}
 site.folder = %(here)s
-data.folder = %(here)s/data_production
+data.folder = %(here)s/data_development
 posts.folder = %(data.folder)s/posts
 posts.url = posts
 posts.root_asset_paths =
     invisibleroads_posts:assets/favicon.ico
     invisibleroads_posts:assets/robots.txt
 mako.directories =
+    {{package}}:templates
     invisibleroads_posts:templates
 
-pyramid.reload_templates = false
-pyramid.prevent_http_cache = false
+pyramid.reload_templates = true
+pyramid.prevent_http_cache = true
 pyramid.debug_authorization = false
 pyramid.debug_notfound = false
 pyramid.debug_routematch = false
 pyramid.default_locale_name = en
 pyramid.includes =
+    pyramid_debugtoolbar
 
 [server:main]
 use = egg:waitress#main
 host = 0.0.0.0
-port = 8000
-url_scheme = https
+port = 6543
+url_scheme = http
 
 [loggers]
-keys = root, invisibleroads_posts
+keys = root, {{package}}
 [handlers]
 keys = console
 [formatters]
 keys = generic
 [logger_root]
-level = WARN
+level = INFO
 handlers = console
-[logger_invisibleroads_posts]
-level = WARN
+[logger_{{package}}]
+level = DEBUG
 handlers =
-qualname = invisibleroads_posts
+qualname = {{package}}
 [handler_console]
 class = StreamHandler
 args = (sys.stderr,)

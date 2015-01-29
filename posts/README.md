@@ -33,7 +33,7 @@ Install package.
 Create project.
 
     cd ~/Projects
-    pcreate -s invisibleroads our-home
+    pcreate -s posts our-home
 
 Launch development server.
     

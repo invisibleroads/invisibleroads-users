@@ -1,0 +1,17 @@
+from os.path import exists, join
+from pyramid.response import FileResponse
+
+
+def add_routes(config):
+    config.add_view(
+        '{{package}}.views.index',
+        renderer='{{package}}:templates/index.mako',
+        route_name='index', http_cache=3600)
+
+
+def index(request):
+    settings = request.registry.settings
+    path = join(settings['data.folder'], 'index.html')
+    if not exists(path):
+        return dict()
+    return FileResponse(path, request)
