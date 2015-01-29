@@ -1,5 +1,6 @@
 <%!
 from os.path import basename
+from pyramid.settings import aslist
 from titlecase import titlecase
 script_url = '/_/invisibleroads-posts/common'
 %>
@@ -15,7 +16,7 @@ site_name = settings['site.name']
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>
 % if request.path[1:]:
-<%block name="page_title">
+<%block name="title">
 ${titlecase(basename(request.path).replace('-', ' '))}
 </%block> &middot;
 % endif
@@ -40,6 +41,18 @@ ${site_name}
       <a class="navbar-brand" href="${request.route_path('index')}#">${site_name}</a>
     </div>
     <div class="navbar-collapse collapse" id="main-navbar-collapse">
+      <ul class="navbar-nav nav">
+      % for site_section in aslist(settings.get('site.sections', [])):
+        <% site_url = request.route_path(site_section.lower()) %>
+        % if request.path.split('/')[1] == site_url[1:]:
+        <li class="active">
+        % else:
+        <li>
+        % endif
+          <a href="${site_url}#">${site_section}</a>
+        </li>
+      % endfor
+      </ul>
     </div>
   </div>
 </nav>
