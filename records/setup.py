@@ -3,19 +3,14 @@ from setuptools import setup, find_packages
 
 
 ENTRY_POINTS = """
-[paste.app_factory]
-main = invisibleroads_posts:main
-[pyramid.scaffold]
-posts=invisibleroads_posts.scaffolds:PostsTemplate
+[console_scripts]
+initialize_database = invisibleroads_records.scripts.initialize:main
 """
 REQUIREMENTS = [
-    'pyramid',
-    'pyramid_debugtoolbar',
-    'waitress',
-] + [
-    'mistune',
-    'pyramid_mako',
-    'titlecase',
+    'pyramid_tm',
+    'SQLAlchemy',
+    'transaction',
+    'zope.sqlalchemy',
 ]
 
 
@@ -25,9 +20,9 @@ DESCRIPTION = '\n\n'.join(open(join(HERE, _)).read() for _ in [
     'CHANGES.md',
 ])
 setup(
-    name='invisibleroads-posts',
+    name='invisibleroads-records',
     version='0.1',
-    description='Web application defaults',
+    description='Database functionality',
     long_description=DESCRIPTION,
     classifiers=[
         'Programming Language :: Python',
@@ -45,6 +40,6 @@ setup(
     zip_safe=False,
     install_requires=REQUIREMENTS,
     tests_require=REQUIREMENTS,
-    test_suite='invisibleroads_posts',
+    test_suite='invisibleroads_records',
     entry_points=ENTRY_POINTS,
 )
