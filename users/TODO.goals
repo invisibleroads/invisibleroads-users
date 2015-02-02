@@ -1,0 +1,17 @@
+Update view with login
+Update view with logout
+Add login and logout to base.mako
+Update configuration with authtkt options
+Update configuration with session options
+Update configuration with velruse options
+
+Add User class
+Add RootFactory
+Set security policy
+Define get_groups
+Set session factory
+Define renderer global user
+Include velruse
+
+Update crosscompute with new base.mako
+Include invisibleroads_users in crosscompute

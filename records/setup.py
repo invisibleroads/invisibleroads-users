@@ -7,6 +7,7 @@ ENTRY_POINTS = """
 initialize_database = invisibleroads_records.scripts.initialize:main
 """
 REQUIREMENTS = [
+    'pyramid',
     'pyramid_tm',
     'SQLAlchemy',
     'transaction',
