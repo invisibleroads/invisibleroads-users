@@ -30,7 +30,7 @@ ${site_name}
 </head>
 <body>
 <nav class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
-  <div class="container-fluid">
+  <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
@@ -56,9 +56,9 @@ ${site_name}
     </div>
   </div>
 </nav>
-<div class="container">
-${next.body()}
-</div>
+<%block name="header"></%block>
+<div class="container">${next.body()}</div>
+<%block name="footer"></%block>
 <script>var static_url = '${request.static_path("invisibleroads_posts:assets/")}';</script>
 <script data-main="${self.attr.script_url}" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
 <script>window.requirejs || document.write('<script data-main="${self.attr.script_url}" src="' + '${request.static_path("invisibleroads_posts:assets/require.min.js")}' + '">\x3C/script>');</script>
