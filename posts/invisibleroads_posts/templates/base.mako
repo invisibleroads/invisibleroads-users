@@ -38,7 +38,7 @@ ${site_name}
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="${request.route_path('index')}#">${site_name}</a>
+      <a class="navbar-brand" href="/#">${site_name}</a>
     </div>
     <div class="navbar-collapse collapse" id="main-navbar-collapse">
       <ul class="navbar-nav nav">
