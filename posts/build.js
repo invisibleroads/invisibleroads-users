@@ -11,7 +11,7 @@
   removeCombined: true,
   modules: [
     {
-      name: 'common'
+      name: 'posts'
     }
   ]
 })

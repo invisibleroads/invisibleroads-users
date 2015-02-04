@@ -1,9 +1,9 @@
 require.config({
   paths: {
-    common: static_url + 'common'
+    posts: d.posts.assets_url + 'base'
   }
 });
-require(['common'], function() {
+require(['posts'], function() {
   window.setInterval(function() {
     $('#clock').text((new Date()).getTime());
   }, 1000);

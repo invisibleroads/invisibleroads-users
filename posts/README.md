@@ -124,7 +124,7 @@ Prepare assets.
     ASSETS_FOLDER=$TARGET_FOLDER/invisibleroads_posts/assets
     rm $TARGET_FOLDER/invisibleroads_posts/static/*
     mv $TARGET_FOLDER/invisibleroads_posts/static $ASSETS_FOLDER
-    vim $ASSETS_FOLDER/common.js
+    vim $ASSETS_FOLDER/base.js
 
 Add favicon.ico.
 

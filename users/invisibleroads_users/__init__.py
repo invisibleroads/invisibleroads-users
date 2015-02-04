@@ -36,6 +36,9 @@ def includeme(config):
     configure_third_party_authentication(config)
     add_routes(config)
     config.add_subscriber(add_renderer_globals, BeforeRender)
+    config.add_static_view(
+        '_/invisibleroads-users', 'invisibleroads_users:assets',
+        cache_max_age=3600)
 
 
 def configure_security_policy(config, prefix='authtkt.'):

@@ -2,7 +2,7 @@
 from os.path import basename
 from pyramid.settings import aslist
 from titlecase import titlecase
-script_url = '/_/invisibleroads-posts/common'
+script_url = '/_/invisibleroads-posts/base'
 %>
 <%
 settings = request.registry.settings
@@ -29,12 +29,6 @@ ${site_name}
 <![endif]-->
 <script>
 var d = {};
-% if user:
-d.csrf_token = '${request.session.get_csrf_token()}';
-d.user_id = ${user.id};
-% endif
-d.posts = {};
-d.posts.assets_url = '${request.static_path("invisibleroads_posts:assets/")}';
 </script>
 </head>
 <body>
@@ -69,6 +63,10 @@ d.posts.assets_url = '${request.static_path("invisibleroads_posts:assets/")}';
 <%block name="header"></%block>
 <div class="container">${next.body()}</div>
 <%block name="footer"></%block>
+<script>
+var v = d.posts = {};
+v.assets_url = '${request.static_path("invisibleroads_posts:assets/")}';
+</script>
 <script data-main="${self.attr.script_url}" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
 <script>window.requirejs || document.write('<script data-main="${self.attr.script_url}" src="' + '${request.static_path("invisibleroads_posts:assets/require.min.js")}' + '">\x3C/script>');</script>
 </body>
