@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 ENTRY_POINTS = """
 [console_scripts]
-initialize_database = invisibleroads_records.scripts.initialize:main
+ir-initialize = invisibleroads_records.scripts.initialize:main
 """
 REQUIREMENTS = [
     'pyramid',

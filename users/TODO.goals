@@ -1,17 +1,3 @@
-Add RootFactory
-Set security policy
-Define get_groups
-Set session factory
-Define renderer global user
-Include velruse
-
-Add User class
-Add login and logout to base.mako
-Update configuration with authtkt options
-Update configuration with session options
-Update configuration with velruse options
-
-Update crosscompute with new base.mako
-Include invisibleroads_users in crosscompute
-Check that target_url redirection works
-Add dependency on invisibleroads-posts
+Restore caching of User.get or get_user
+Add CSRF to AJAX POST requests
+Add user profile page

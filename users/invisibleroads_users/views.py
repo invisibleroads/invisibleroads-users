@@ -25,7 +25,7 @@ def add_routes(config):
 
 
 def login_user(request):
-    request.session['target_url'] = request.params.get('target_url', '')
+    request.session['target_url'] = request.params.get('target_url', '/')
     try:
         return HTTPFound(location=velruse.login_url(request, 'google'))
     except AttributeError:
@@ -34,15 +34,12 @@ def login_user(request):
 
 def logout_user(request):
     user_id = request.authenticated_userid
-    try:
-        user = User.get(user_id)
-    except TypeError:
-        pass
-    else:
+    user = User.get(user_id)
+    if user:
         user.ticket = make_ticket()
     request.session.new_csrf_token()
     return HTTPFound(
-        location=request.params.get('target_url', ''),
+        location=request.params.get('target_url', '/'),
         headers=forget(request))
 
 
@@ -51,7 +48,7 @@ def finish_login(request):
 
 
 def cancel_login(request):
-    return HTTPFound(location=request.session.pop('target_url', ''))
+    return HTTPFound(location=request.session.pop('target_url', '/'))
 
 
 def set_headers(request, email):
@@ -61,7 +58,7 @@ def set_headers(request, email):
         db.add(user)
         db.flush()
     return HTTPFound(
-        location=request.session.pop('target_url', ''),
+        location=request.session.pop('target_url', '/'),
         headers=remember(request, user.id, tokens=[user.ticket]))
 
 

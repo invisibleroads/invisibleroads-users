@@ -27,6 +27,15 @@ ${site_name}
 <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+<script>
+var d = {};
+% if user:
+d.csrf_token = '${request.session.get_csrf_token()}';
+d.user_id = ${user.id};
+% endif
+d.posts = {};
+d.posts.assets_url = '${request.static_path("invisibleroads_posts:assets/")}';
+</script>
 </head>
 <body>
 <nav class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
@@ -53,13 +62,13 @@ ${site_name}
         </li>
       % endfor
       </ul>
+      <%block name="toolbar"></%block>
     </div>
   </div>
 </nav>
 <%block name="header"></%block>
 <div class="container">${next.body()}</div>
 <%block name="footer"></%block>
-<script>var static_url = '${request.static_path("invisibleroads_posts:assets/")}';</script>
 <script data-main="${self.attr.script_url}" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
 <script>window.requirejs || document.write('<script data-main="${self.attr.script_url}" src="' + '${request.static_path("invisibleroads_posts:assets/require.min.js")}' + '">\x3C/script>');</script>
 </body>

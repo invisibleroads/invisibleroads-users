@@ -5,6 +5,9 @@ from setuptools import setup, find_packages
 ENTRY_POINTS = """
 """
 REQUIREMENTS = [
+    'invisibleroads_posts',
+    'invisibleroads_records',
+    'pyramid_redis_sessions',
 ]
 
 
