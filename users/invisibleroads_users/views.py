@@ -1,7 +1,7 @@
 import velruse
-from pyramid.security import remember, forget
 from pyramid.httpexceptions import HTTPFound
 from pyramid.interfaces import IAuthenticationPolicy
+from pyramid.security import remember, forget
 
 from .models import User, make_ticket, db
 
@@ -34,9 +34,11 @@ def login_user(request):
 
 def logout_user(request):
     user_id = request.authenticated_userid
-    user = User.get(user_id)
-    if user:
-        user.ticket = make_ticket()
+    cached_user = User.get_from_cache(user_id)
+    if cached_user:
+        cached_user.ticket = make_ticket()
+        db.add(cached_user)  # Reattach cached_user to session to save changes
+        User.clear_from_cache(user_id)
     request.session.new_csrf_token()
     return HTTPFound(
         location=request.params.get('target_url', '/'),

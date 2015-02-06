@@ -1,9 +1,10 @@
 import random
-from string import letters
 from invisibleroads_macros.security import make_random_string
+from invisibleroads_records.libraries.cache import FromCache
 from invisibleroads_records.models import Base, db
-from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy import Column, Integer, String, Unicode
+from sqlalchemy.ext.hybrid import hybrid_property
+from string import letters
 
 
 ROLE_GUEST, ROLE_MEMBER, ROLE_LEADER = xrange(3)
@@ -34,7 +35,16 @@ class User(Base):
         return self.role >= ROLE_LEADER
 
     @classmethod
-    def get(Class, id):
+    def get_from_cache(Class, id):
         if id is None:
             return
-        return db.query(Class).get(id)
+        return Class._make_query(id).get(id)
+
+    @classmethod
+    def clear_from_cache(Class, id):
+        Class._make_query(id).invalidate()
+
+    @classmethod
+    def _make_query(Class, id):
+        return db.query(Class).options(FromCache(
+            cache_key='%s.id=%s' % (Class.__name__, id)))

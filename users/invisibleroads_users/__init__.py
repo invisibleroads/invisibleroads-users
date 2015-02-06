@@ -85,13 +85,13 @@ def get_groups(user_id, request):
     if 'POST' == request.method and not check_csrf_token(
             request, raises=False):
         return  # CSRF token does not match
-    user = User.get(user_id)
-    if not user or user.ticket != ticket:
+    cached_user = User.get_from_cache(user_id)
+    if not cached_user or cached_user.ticket != ticket:
         return  # User does not exist or ticket changed
     groups = []
-    if user.is_member:
+    if cached_user.is_member:
         groups.append('member')
-    if user.is_leader:
+    if cached_user.is_leader:
         groups.append('leader')
     return groups
 
@@ -99,5 +99,6 @@ def get_groups(user_id, request):
 def add_renderer_globals(event):
     'Define client-side permissions for user'
     user_id = event['request'].authenticated_userid
+    cached_user = User.get_from_cache(user_id)
     event.update(dict(
-        user=User.get(user_id)))
+        user=cached_user))

@@ -1,4 +1,3 @@
-Restore caching of User.get or get_user
 Add user profile page
 Add build.js to users
 Add setup instructions to users
