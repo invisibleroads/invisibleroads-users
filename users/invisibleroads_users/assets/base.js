@@ -7,15 +7,18 @@ require.config({
   } 
 });
 require(['jquery', 'posts'], function($) {
-  // Send csrf_token automatically for POST requests
+  // Send CSRF token automatically
   $.ajaxSetup({
     beforeSend: function(xhr, settings) {
-      if ('POST' != settings.type) return;
-      xhr.setRequestHeader('X-CSRF-Token', d.users.csrf_token);
+      if (/^(POST|PUT|DELETE)$/.test(settings.type) && !this.crossDomain) {
+        xhr.setRequestHeader('X-CSRF-Token', d.users.csrf_token);
+      }
     }
   });
   // Redirect to login if the page is forbidden
   $(document).ajaxError(function(event, request, settings) {
-    if (request.status == 403) window.location = d.users.login_url;
+    if (request.status == 403) {
+      window.location = d.users.login_url;
+    }
   });
 });

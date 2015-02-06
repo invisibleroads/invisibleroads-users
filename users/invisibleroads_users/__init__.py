@@ -82,7 +82,7 @@ def get_groups(user_id, request):
     ticket = get_ticket(request)
     if not ticket:
         return  # Cookie is bad
-    if 'POST' == request.method and not check_csrf_token(
+    if request.method in ('POST', 'PUT', 'DELETE') and not check_csrf_token(
             request, raises=False):
         return  # CSRF token does not match
     cached_user = User.get_from_cache(user_id)
