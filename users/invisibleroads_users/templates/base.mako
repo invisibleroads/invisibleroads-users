@@ -8,15 +8,14 @@
   <input name="target_url" value="${request.path}" type="hidden">
   <input name="csrf_token" value="${request.session.get_csrf_token()}" type="hidden">
 % if user:
-  ## <a href=${request.route_path('user')} class=navbar-link>${user.name}</a>
-  <a class=navbar-link>${user.name}</a>
+  <a href=${request.route_path('user', name=user.name)} class=navbar-link>${user.name}</a>
 % endif
   <button type="submit" class="btn btn-default">${'Logout' if user else 'Login'}</button>
 </form>
 </%block>
 ${next.body()}
 <script>
-var v = d.users = {}
+var v = d.users = {};
 v.assets_url = '${request.static_path("invisibleroads_users:assets/")}';
 v.login_url = '${request.route_path("user_login") + "?target_url=" + request.path}';
 % if user:

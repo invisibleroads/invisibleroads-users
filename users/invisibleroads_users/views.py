@@ -11,9 +11,11 @@ def add_routes(config):
     config.add_view(
         'invisibleroads_users.views.login_user',
         route_name='user_login')
+
     config.add_view(
         'invisibleroads_users.views.finish_login',
         context='velruse.AuthenticationComplete')
+
     config.add_view(
         'invisibleroads_users.views.cancel_login',
         context='velruse.AuthenticationDenied')
@@ -23,6 +25,12 @@ def add_routes(config):
         'invisibleroads_users.views.logout_user',
         route_name='user_logout')
 
+    config.add_route('user', 'users/{name}')
+    config.add_view(
+        'invisibleroads_users.views.show_post',
+        renderer='invisibleroads_users:templates/user.mako',
+        route_name='user')
+
 
 def login_user(request):
     request.session['target_url'] = request.params.get('target_url', '/')
@@ -30,6 +38,14 @@ def login_user(request):
         return HTTPFound(location=velruse.login_url(request, 'google'))
     except AttributeError:
         return set_headers(request, u'user@example.com')
+
+
+def finish_login(request):
+    return set_headers(request, request.context.profile['verifiedEmail'])
+
+
+def cancel_login(request):
+    return HTTPFound(location=request.session.pop('target_url', '/'))
 
 
 def logout_user(request):
@@ -45,12 +61,8 @@ def logout_user(request):
         headers=forget(request))
 
 
-def finish_login(request):
-    return set_headers(request, request.context.profile['verifiedEmail'])
-
-
-def cancel_login(request):
-    return HTTPFound(location=request.session.pop('target_url', '/'))
+def show_post(request):
+    return {}
 
 
 def set_headers(request, email):

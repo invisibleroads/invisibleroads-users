@@ -4,7 +4,6 @@ site.name = {{project}}
 site.folder = %(here)s
 data.folder = %(here)s/data_production
 posts.folder = %(data.folder)s/posts
-posts.url = posts
 posts.root_asset_paths =
     invisibleroads_posts:assets/favicon.ico
     invisibleroads_posts:assets/robots.txt

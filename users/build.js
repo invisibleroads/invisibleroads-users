@@ -1,11 +1,11 @@
 ({
   appDir: '.',
-  baseUrl: 'invisibleroads_posts/assets',
+  baseUrl: 'invisibleroads_users/assets',
   paths: {
     jquery: 'empty:',
-    bootstrap: 'empty:'
+    posts: 'empty:'
   },
-  dir: '../../../Experiments/invisibleroads-posts',
+  dir: '../../../Experiments/invisibleroads-users',
   optimize: 'uglify2',
   optimizeCss: 'standard.keepLines',
   removeCombined: true,
