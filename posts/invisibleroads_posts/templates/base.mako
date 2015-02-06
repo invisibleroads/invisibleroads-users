@@ -32,7 +32,7 @@ var d = {};
 </script>
 </head>
 <body>
-<nav class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
+<nav id="main-navbar" class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar-collapse">
