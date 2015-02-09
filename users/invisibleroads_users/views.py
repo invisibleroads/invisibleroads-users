@@ -9,7 +9,7 @@ from .models import User, make_ticket, db
 def add_routes(config):
     config.add_route('user_login', 'users/login')
     config.add_view(
-        'invisibleroads_users.views.login_user',
+        'invisibleroads_users.views.login',
         route_name='user_login')
 
     config.add_view(
@@ -22,17 +22,17 @@ def add_routes(config):
 
     config.add_route('user_logout', 'users/logout')
     config.add_view(
-        'invisibleroads_users.views.logout_user',
+        'invisibleroads_users.views.logout',
         route_name='user_logout')
 
     config.add_route('user', 'users/{name}')
     config.add_view(
-        'invisibleroads_users.views.show_post',
+        'invisibleroads_users.views.show',
         renderer='invisibleroads_users:templates/user.mako',
         route_name='user')
 
 
-def login_user(request):
+def login(request):
     request.session['target_url'] = request.params.get('target_url', '/')
     try:
         return HTTPFound(location=velruse.login_url(request, 'google'))
@@ -48,7 +48,7 @@ def cancel_login(request):
     return HTTPFound(location=request.session.pop('target_url', '/'))
 
 
-def logout_user(request):
+def logout(request):
     user_id = request.authenticated_userid
     cached_user = User.get_from_cache(user_id)
     if cached_user:
@@ -61,7 +61,7 @@ def logout_user(request):
         headers=forget(request))
 
 
-def show_post(request):
+def show(request):
     return {}
 
 
