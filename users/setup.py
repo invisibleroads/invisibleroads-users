@@ -1,5 +1,5 @@
 from os.path import abspath, dirname, join
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 
 ENTRY_POINTS = """
@@ -38,5 +38,4 @@ setup(
     install_requires=REQUIREMENTS,
     tests_require=REQUIREMENTS,
     test_suite='invisibleroads_users',
-    entry_points=ENTRY_POINTS,
-)
+    entry_points=ENTRY_POINTS)

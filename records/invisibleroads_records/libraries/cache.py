@@ -84,9 +84,9 @@ class FromCache(MapperOption):
 
 def configure_cache(config, prefix='cache.'):
     settings = config.registry.settings
-    interpretation = get_interpretation_by_name(
+    region_settings_by_name = get_interpretation_by_name(
         settings, prefix, interpret_cache_setting)
-    for region_name, region_settings in interpretation.iteritems():
+    for region_name, region_settings in region_settings_by_name.iteritems():
         key_mangler = region_settings.pop(
             'key_mangler', None)
         backend = 'dogpile.cache.' + region_settings.pop(
