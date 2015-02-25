@@ -5,8 +5,8 @@ from .models import Base, db
 
 
 def includeme(config):
-    configure_database(config)
     configure_cache(config)
+    configure_database(config)
 
 
 def configure_database(config):

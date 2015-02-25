@@ -1,1 +1,1 @@
-Write script to convert markdown to html with mako template
+Configure mako cache with dogpile cache

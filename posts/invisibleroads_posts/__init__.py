@@ -4,6 +4,7 @@ from pyramid.config import Configurator
 from pyramid.response import FileResponse
 from pyramid.settings import aslist
 
+from .libraries.cache import configure_cache
 from .views import add_routes
 
 
@@ -15,6 +16,7 @@ def main(global_config, **settings):
 
 def includeme(config):
     configure_assets(config)
+    configure_cache(config)
     configure_views(config)
 
 

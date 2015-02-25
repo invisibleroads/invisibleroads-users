@@ -13,7 +13,7 @@ REQUIREMENTS = [
     'pyramid_debugtoolbar',
     'waitress',
 ] + [
-    'mistune',
+    'dogpile.cache',
     'pyramid_mako',
     'titlecase',
 ]

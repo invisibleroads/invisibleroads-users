@@ -1,12 +1,16 @@
 [app:main]
 use = egg:{{project}}
 site.name = {{project}}
+site.sections =
 site.folder = %(here)s
 data.folder = %(here)s/data_production
 posts.folder = %(data.folder)s/posts
 posts.root_asset_paths =
     invisibleroads_posts:assets/favicon.ico
     invisibleroads_posts:assets/robots.txt
+
+cache.function.backend = dogpile.cache.memory
+cache.function.expiration_time = 3600
 
 pyramid.reload_templates = false
 pyramid.prevent_http_cache = false

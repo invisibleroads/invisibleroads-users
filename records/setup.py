@@ -7,6 +7,7 @@ ENTRY_POINTS = """
 ir-initialize = invisibleroads_records.scripts.initialize:main
 """
 REQUIREMENTS = [
+    'dogpile.cache',
     'pyramid',
     'pyramid_tm',
     'SQLAlchemy',
