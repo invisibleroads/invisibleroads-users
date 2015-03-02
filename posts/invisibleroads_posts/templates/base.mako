@@ -2,7 +2,6 @@
 from os.path import basename
 from pyramid.settings import aslist
 from titlecase import titlecase
-script_url = '/_/invisibleroads-posts/base'
 %>
 <%
 settings = request.registry.settings
@@ -29,6 +28,8 @@ ${site_name}
 <![endif]-->
 <script>
 var d = {};
+var v = d.posts = {};
+v.assets_url = '${request.static_path("invisibleroads_posts:assets/")}';
 </script>
 </head>
 <body>
@@ -63,11 +64,12 @@ var d = {};
 <%block name="header"></%block>
 <div class="container">${next.body()}</div>
 <%block name="footer"></%block>
-<script>
-var v = d.posts = {};
-v.assets_url = '${request.static_path("invisibleroads_posts:assets/")}';
-</script>
-<script data-main="${self.attr.script_url}" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
-<script>window.requirejs || document.write('<script data-main="${self.attr.script_url}" src="' + '${request.static_path("invisibleroads_posts:assets/require.min.js")}' + '">\x3C/script>');</script>
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script>window.jQuery || document.write('<script src="${request.static_path("invisibleroads_posts:assets/jquery.min.js")}">\x3C/script>')</script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script>$.fn.modal || document.write('<script src="${request.static_path("invisibleroads_posts:assets/bootstrap.min.js")}">\x3C/script>')</script>
+<%block name="script">
+<script src="${request.static_path('invisibleroads_posts:assets/base.js')}"></script>
+</%block>
 </body>
 </html>
