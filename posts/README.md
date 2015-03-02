@@ -5,7 +5,6 @@ Posts form the foundation for most of our web applications.
 - [Pyramid](http://docs.pylonsproject.org/en/latest/docs/pyramid.html) 1.6.dev0
 - [Bootstrap](http://getbootstrap.com) 3.3.2
 - [JQuery](http://jquery.com) 1.11.2
-- [RequireJS](http://requirejs.org) 2.1.15
 
 
 Use
@@ -17,7 +16,7 @@ Prepare environment.
     source $VIRTUAL_ENV/bin/activate
 
     NODE_PATH=$VIRTUAL_ENV/lib/node_modules
-    npm install -g requirejs
+    npm install -g browserify gulp gulp-sourcemaps gulp-uglify vinyl-transform
 
 Install package.
 
@@ -25,29 +24,31 @@ Install package.
     git clone git@github.com:invisibleroads/invisibleroads-posts.git
 
     cd ~/Documents/invisibleroads-posts
-    r.js -o build.js
-
-    cd ~/Experiments/invisibleroads-posts
     python setup.py develop
+    gulp
+
+    cd ~/Documents/invisibleroads-posts/node_modules/invisibleroads-posts
+    npm install -g
 
 Create project.
 
     cd ~/Projects
     pcreate -s posts our-home
 
+Install project.
+
+    cd ~/Projects/our-home
+    python setup.py develop
+    gulp
+
 Launch development server.
     
     cd ~/Projects/our-home
-    python setup.py develop
     pserve development.ini
 
 Launch production server.
 
     cd ~/Projects/our-home
-    r.js -o build.js
-
-    cd ~/Experiments/invisibleroads-posts
-    python setup.py develop
     pserve production.ini
 
 
@@ -124,7 +125,9 @@ Prepare assets.
     ASSETS_FOLDER=$TARGET_FOLDER/invisibleroads_posts/assets
     rm $TARGET_FOLDER/invisibleroads_posts/static/*
     mv $TARGET_FOLDER/invisibleroads_posts/static $ASSETS_FOLDER
-    vim $ASSETS_FOLDER/base.js
+    MODULES_FOLDER = $TARGET_FOLDER/invisibleroads_posts/modules
+    mkdir $MODULES_FOLDER
+    vim $MODULES_FOLDER/base.js
 
 Add favicon.ico.
 
@@ -148,12 +151,10 @@ Add [JQuery](http://jquery.com).
     wget http://code.jquery.com/jquery-1.11.2.min.js -O jquery.min.js
     wget http://code.jquery.com/jquery-1.11.2.min.map -O jquery.min.map
     
-Add [RequireJS](http://requirejs.org).
+Add [Gulp](http://gulpjs.com).
 
-    REQUIREJS_VERSION=2.1.15
-    cd $ASSETS_FOLDER
-    wget http://requirejs.org/docs/release/2.1.15/minified/require.js -O require.min.js
-    v; npm install -g requirejs
+    cd $SOURCE_FOLDER
+    vim gulpfile.js
 
 Add robots.txt.
 

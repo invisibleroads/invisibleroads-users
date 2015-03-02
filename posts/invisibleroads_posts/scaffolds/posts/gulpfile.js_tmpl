@@ -12,12 +12,12 @@ gulp.task('javascript', function () {
     return b.bundle();
   });
 
-  return gulp.src('./node_modules/invisibleroads-posts/base.js')
+  return gulp.src('./node_modules/{{project}}/base.js')
     .pipe(browserified)
     .pipe(sourcemaps.init({loadMaps: true}))
       .pipe(uglify())
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('./invisibleroads_posts/assets/'));
+    .pipe(gulp.dest('./{{package}}/assets/'));
 });
 
 gulp.task('default', ['javascript']);
