@@ -36,7 +36,5 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=REQUIREMENTS,
-    tests_require=REQUIREMENTS,
-    test_suite='{{package}}',
     entry_points=ENTRY_POINTS,
 )

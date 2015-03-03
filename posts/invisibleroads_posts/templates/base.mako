@@ -21,7 +21,7 @@ ${titlecase(basename(request.path).replace('-', ' '))}
 % endif
 ${site_name}
 </title>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
 <style>
 <%block name="head_style_inline"></%block>
 </style>

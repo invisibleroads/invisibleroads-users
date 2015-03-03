@@ -33,6 +33,4 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=REQUIREMENTS,
-    tests_require=REQUIREMENTS,
-    test_suite='invisibleroads_macros',
     entry_points=ENTRY_POINTS)
