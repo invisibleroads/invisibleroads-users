@@ -30,6 +30,7 @@ ${site_name}
 var d = {};
 var v = d.posts = {};
 v.assets_url = '${request.static_path("invisibleroads_posts:assets/")}';
+<%block name="head-script-inline"></%block>
 </script>
 </head>
 <body>
@@ -68,8 +69,11 @@ v.assets_url = '${request.static_path("invisibleroads_posts:assets/")}';
 <script>window.jQuery || document.write('<script src="${request.static_path("invisibleroads_posts:assets/jquery.min.js")}">\x3C/script>')</script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <script>$.fn.modal || document.write('<script src="${request.static_path("invisibleroads_posts:assets/bootstrap.min.js")}">\x3C/script>')</script>
-<%block name="end">
+<%block name="body-script-loaded">
 <script src="${request.static_path('invisibleroads_posts:assets/base.js')}"></script>
 </%block>
+<script>
+<%block name="body-script-inline"></%block>
+</script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <%inherit file='invisibleroads_posts:templates/base.mako'/>
 <div id=clock></div>
-<%block name="end">
+<%block name="body-script-loaded">
 <script src="${request.static_path('{{package}}:assets/base.js')}"></script>
 </%block>

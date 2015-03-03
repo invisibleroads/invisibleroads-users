@@ -13,12 +13,13 @@ Prepare environment.
     source $VIRTUAL_ENV/bin/activate
 
     NODE_PATH=$VIRTUAL_ENV/lib/node_modules
-    npm install -g requirejs
+    npm install -g browserify gulp gulp-sourcemaps gulp-uglify vinyl-transform
 
 Install package.
 
     cd ~/Documents/invisibleroads-users
-    r.js -o build.js
-
-    cd ~/Experiments/invisibleroads-users
     python setup.py develop
+    gulp
+
+    cd ~/Documents/invisibleroads-users/node_modules/invisibleroads-users
+    npm install -g

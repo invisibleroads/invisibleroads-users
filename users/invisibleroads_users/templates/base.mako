@@ -1,4 +1,3 @@
-<%! script_url = '/_/invisibleroads-users/base' %>
 <%inherit file='invisibleroads_posts:templates/base.mako'/>
 <style>
 #user-link {margin-right: 1em}
@@ -14,7 +13,7 @@
 </form>
 </%block>
 ${next.body()}
-<script>
+<%block name="head-script-inline">
 var v = d.users = {};
 v.assets_url = '${request.static_path("invisibleroads_users:assets/")}';
 v.login_url = '${request.route_path("user_login") + "?target_url=" + request.path}';
@@ -22,4 +21,7 @@ v.login_url = '${request.route_path("user_login") + "?target_url=" + request.pat
 v.csrf_token = '${request.session.get_csrf_token()}';
 v.user_id = ${user.id};
 % endif
-</script>
+</%block>
+<%block name="body-script-loaded">
+<script src="${request.static_path('invisibleroads_users:assets/base.js')}"></script>
+</%block>

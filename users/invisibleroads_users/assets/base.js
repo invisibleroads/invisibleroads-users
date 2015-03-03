@@ -1,24 +1,2 @@
-require.config({
-  paths: {
-    jquery: [
-      '//code.jquery.com/jquery-1.11.2.min',
-      d.posts.assets_url + 'jquery.min'],
-    posts: d.posts.assets_url + 'base'
-  } 
-});
-require(['jquery', 'posts'], function($) {
-  // Send CSRF token automatically
-  $.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-      if (/^(POST|PUT|DELETE)$/.test(settings.type) && !this.crossDomain) {
-        xhr.setRequestHeader('X-CSRF-Token', d.users.csrf_token);
-      }
-    }
-  });
-  // Redirect to login if the page is forbidden
-  $(document).ajaxError(function(event, request, settings) {
-    if (request.status == 403) {
-      window.location = d.users.login_url;
-    }
-  });
-});
+!function r(e,t,o){function n(i,u){if(!t[i]){if(!e[i]){var a="function"==typeof require&&require;if(!u&&a)return a(i,!0);if(s)return s(i,!0);var f=new Error("Cannot find module '"+i+"'");throw f.code="MODULE_NOT_FOUND",f}var c=t[i]={exports:{}};e[i][0].call(c.exports,function(r){var t=e[i][1][r];return n(t?t:r)},c,c.exports,r,e,t,o)}return t[i].exports}for(var s="function"==typeof require&&require,i=0;i<o.length;i++)n(o[i]);return n}({1:[function(r,e){"rgb(51, 51, 51)"!=$("body").css("color")&&$("head").append('<link rel="stylesheet" href="'+d.posts.assets_url+'bootstrap.min.css">'),e.exports={}},{}],2:[function(r){r("invisibleroads-posts"),$.ajaxSetup({beforeSend:function(r,e){/^(POST|PUT|DELETE)$/.test(e.type)&&!this.crossDomain&&r.setRequestHeader("X-CSRF-Token",d.users.csrf_token)}}),$(document).ajaxError(function(r,e){403==e.status&&(window.location=d.users.login_url)})},{"invisibleroads-posts":1}]},{},[2]);
+//# sourceMappingURL=base.js.map
