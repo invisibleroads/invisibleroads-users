@@ -22,6 +22,9 @@ ${titlecase(basename(request.path).replace('-', ' '))}
 ${site_name}
 </title>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+<%block name="head_style_inline"></%block>
+</style>
 <!--[if lt IE 9]>
 <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -30,7 +33,7 @@ ${site_name}
 var d = {};
 var v = d.posts = {};
 v.assets_url = '${request.static_path("invisibleroads_posts:assets/")}';
-<%block name="head-script-inline"></%block>
+<%block name="head_script_inline"></%block>
 </script>
 </head>
 <body>
@@ -69,11 +72,11 @@ v.assets_url = '${request.static_path("invisibleroads_posts:assets/")}';
 <script>window.jQuery || document.write('<script src="${request.static_path("invisibleroads_posts:assets/jquery.min.js")}">\x3C/script>')</script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <script>$.fn.modal || document.write('<script src="${request.static_path("invisibleroads_posts:assets/bootstrap.min.js")}">\x3C/script>')</script>
-<%block name="body-script-loaded">
+<%block name="body_script_loaded">
 <script src="${request.static_path('invisibleroads_posts:assets/base.js')}"></script>
 </%block>
 <script>
-<%block name="body-script-inline"></%block>
+<%block name="body_script_inline"></%block>
 </script>
 </body>
 </html>
