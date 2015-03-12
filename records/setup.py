@@ -1,12 +1,13 @@
 from os.path import abspath, dirname, join
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 
 ENTRY_POINTS = """
 [console_scripts]
-initialize_database = invisibleroads_records.scripts.initialize:main
+ir-initialize = invisibleroads_records.scripts.initialize:main
 """
 REQUIREMENTS = [
+    'dogpile.cache',
     'pyramid',
     'pyramid_tm',
     'SQLAlchemy',
@@ -40,7 +41,4 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=REQUIREMENTS,
-    tests_require=REQUIREMENTS,
-    test_suite='invisibleroads_records',
-    entry_points=ENTRY_POINTS,
-)
+    entry_points=ENTRY_POINTS)

@@ -1,10 +1,13 @@
 from os.path import abspath, dirname, join
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 
 ENTRY_POINTS = """
 """
 REQUIREMENTS = [
+    'invisibleroads_posts',
+    'invisibleroads_records',
+    'pyramid_redis_sessions',
 ]
 
 
@@ -33,7 +36,4 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=REQUIREMENTS,
-    tests_require=REQUIREMENTS,
-    test_suite='invisibleroads_users',
-    entry_points=ENTRY_POINTS,
-)
+    entry_points=ENTRY_POINTS)

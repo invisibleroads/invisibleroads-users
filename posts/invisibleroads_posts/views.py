@@ -4,15 +4,13 @@ from pyramid.response import FileResponse
 
 
 def add_routes(config):
-    settings = config.registry.settings
-
     config.add_route('index', '')
     config.add_view(
         'invisibleroads_posts.views.list_posts',
         renderer='invisibleroads_posts:templates/posts.mako',
         route_name='index', http_cache=3600)
 
-    config.add_route('post', '%s/{name}' % settings['posts.url'])
+    config.add_route('post', 'posts/{name}')
     config.add_view(
         'invisibleroads_posts.views.show_post',
         route_name='post', http_cache=3600)
@@ -20,7 +18,7 @@ def add_routes(config):
 
 def list_posts(request):
     settings = request.registry.settings
-    path = join(settings['data.folder'], 'list_posts.html')
+    path = join(settings['data.folder'], 'index.html')
     if not exists(path):
         return dict()
     return FileResponse(path, request)

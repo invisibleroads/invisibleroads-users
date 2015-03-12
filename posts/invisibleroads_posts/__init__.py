@@ -2,9 +2,10 @@ from importlib import import_module
 from os.path import basename, isabs, join
 from pyramid.config import Configurator
 from pyramid.response import FileResponse
-from pyramid.settings import asbool, aslist
+from pyramid.settings import aslist
 
-from . import views
+from .libraries.cache import configure_cache
+from .views import add_routes
 
 
 def main(global_config, **settings):
@@ -14,10 +15,8 @@ def main(global_config, **settings):
 
 
 def includeme(config):
-    settings = config.registry.settings
-    config.in_development = asbool(settings.get(
-        'pyramid.reload_templates', False))
     configure_assets(config)
+    configure_cache(config)
     configure_views(config)
 
 
@@ -33,7 +32,7 @@ def configure_assets(config):
 
 def configure_views(config):
     config.include('pyramid_mako')
-    views.add_routes(config)
+    add_routes(config)
 
 
 def add_root_asset(config, asset_path):

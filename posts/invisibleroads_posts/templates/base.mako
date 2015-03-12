@@ -2,7 +2,6 @@
 from os.path import basename
 from pyramid.settings import aslist
 from titlecase import titlecase
-script_url = '/_/invisibleroads-posts/common'
 %>
 <%
 settings = request.registry.settings
@@ -22,14 +21,23 @@ ${titlecase(basename(request.path).replace('-', ' '))}
 % endif
 ${site_name}
 </title>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+<style>
+<%block name="head_style_inline"></%block>
+</style>
 <!--[if lt IE 9]>
 <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+<script>
+var d = {};
+var v = d.posts = {};
+v.assets_url = '${request.static_path("invisibleroads_posts:assets/")}';
+<%block name="head_script_inline"></%block>
+</script>
 </head>
 <body>
-<nav class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
+<nav id="main-navbar" class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar-collapse">
@@ -53,14 +61,22 @@ ${site_name}
         </li>
       % endfor
       </ul>
+      <%block name="toolbar"></%block>
     </div>
   </div>
 </nav>
 <%block name="header"></%block>
 <div class="container">${next.body()}</div>
 <%block name="footer"></%block>
-<script>var static_url = '${request.static_path("invisibleroads_posts:assets/")}';</script>
-<script data-main="${self.attr.script_url}" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
-<script>window.requirejs || document.write('<script data-main="${self.attr.script_url}" src="' + '${request.static_path("invisibleroads_posts:assets/require.min.js")}' + '">\x3C/script>');</script>
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script>window.jQuery || document.write('<script src="${request.static_path("invisibleroads_posts:assets/jquery.min.js")}">\x3C/script>')</script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script>$.fn.modal || document.write('<script src="${request.static_path("invisibleroads_posts:assets/bootstrap.min.js")}">\x3C/script>')</script>
+<%block name="body_script_loaded">
+<script src="${request.static_path('invisibleroads_posts:assets/base.js')}"></script>
+</%block>
+<script>
+<%block name="body_script_inline"></%block>
+</script>
 </body>
 </html>
