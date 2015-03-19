@@ -14,5 +14,7 @@ def main(argv=sys.argv):
     setup_logging(configuration_path)
     app = get_app(configuration_path)
     settings = app.registry.settings
-    disk.make_folder(settings['data.folder'])
+    for key, value in settings.iteritems():
+        if key.endswith('.folder'):
+            disk.make_folder(value)
     Base.metadata.create_all()

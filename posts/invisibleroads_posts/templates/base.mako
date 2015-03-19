@@ -16,7 +16,7 @@ site_name = settings['site.name']
 <title>
 % if request.path[1:]:
 <%block name="title">
-${titlecase(basename(request.path).replace('-', ' '))}
+${titlecase(basename(request.path.rstrip('/')).replace('-', ' '))}
 </%block> &middot;
 % endif
 ${site_name}
