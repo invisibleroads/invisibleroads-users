@@ -1,4 +1,3 @@
-import shutil
 import sys
 from argparse import ArgumentParser
 from invisibleroads_macros import disk
@@ -19,7 +18,7 @@ def main(argv=sys.argv):
     settings = app.registry.settings
 
     if args.restart:
-        shutil.rmtree(settings['data.folder'])
+        disk.remove_folder(settings['data.folder'])
     for key, value in settings.iteritems():
         if key.endswith('.folder'):
             disk.make_folder(value)
