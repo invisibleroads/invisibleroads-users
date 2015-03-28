@@ -16,7 +16,7 @@ Prepare environment.
     source $VIRTUAL_ENV/bin/activate
 
     NODE_PATH=$VIRTUAL_ENV/lib/node_modules
-    npm install -g browserify gulp gulp-sourcemaps gulp-uglify vinyl-transform
+    npm install -g browserify gulp gulp-if gulp-uglify vinyl-transform yargs
 
 Install package.
 
@@ -25,7 +25,6 @@ Install package.
 
     cd ~/Documents/invisibleroads-posts
     python setup.py develop
-    gulp
 
     cd ~/Documents/invisibleroads-posts/node_modules/invisibleroads-posts
     npm install -g
@@ -39,16 +38,17 @@ Install project.
 
     cd ~/Projects/our-home
     python setup.py develop
-    gulp
 
 Launch development server.
     
     cd ~/Projects/our-home
+    gulp
     pserve development.ini
 
 Launch production server.
 
     cd ~/Projects/our-home
+    gulp --production
     pserve production.ini
 
 

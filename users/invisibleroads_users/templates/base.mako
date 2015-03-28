@@ -2,16 +2,16 @@
 
 <%block name="head_style_inline">
 ${parent.head_style_inline()}
-#user-link {margin-right: 1em}
+.user-link {margin-right: 1em}
 </%block>
 
 <%block name="toolbar">
-<form id="login-form" class="navbar-form navbar-right" role="toolbar" method="post" action="${request.route_path('user_logout' if user else 'user_login')}">
-  <input name="target_url" value="${request.path}" type="hidden">
+<form action="${request.route_path('user_logout' if user else 'user_login')}" class="navbar-form navbar-right" id="login-form" method="post" role="toolbar">
+  <input name="target_url" type="hidden" value="${request.path}">
 % if user:
-  <a id="user-link" class="navbar-link" href="${request.route_path('user', name=user.name)}">${user.name}</a>
+  <a class="navbar-link user-link" href="${request.route_path('user', name=user.name)}">${user.name}</a>
 % endif
-  <button type="submit" class="btn btn-default">${'Logout' if user else 'Login'}</button>
+  <button class="btn btn-default" type="submit">${'Logout' if user else 'Login'}</button>
 </form>
 </%block>
 

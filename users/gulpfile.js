@@ -1,23 +1,16 @@
 'use strict';
-
+var argv = require('yargs').argv;
 var browserify = require('browserify');
 var gulp = require('gulp');
+var gulpif = require('gulp-if');
 var transform = require('vinyl-transform');
 var uglify = require('gulp-uglify');
-var sourcemaps = require('gulp-sourcemaps');
 
-gulp.task('javascript', function () {
-  var browserified = transform(function(filename) {
-    var b = browserify(filename);
-    return b.bundle();
-  });
-
+gulp.task('default', function() {
   return gulp.src('./node_modules/invisibleroads-users/base.js')
-    .pipe(browserified)
-    .pipe(sourcemaps.init({loadMaps: true}))
-      .pipe(uglify())
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('./invisibleroads_users/assets/'));
+    .pipe(transform(function(path) {
+      return browserify(path).bundle();
+    }))
+    .pipe(gulpif(argv.production, uglify()))
+    .pipe(gulp.dest('./invisibleroads_users/assets'))
 });
-
-gulp.task('default', ['javascript']);

@@ -12,20 +12,21 @@ Prepare environment.
     source $VIRTUAL_ENV/bin/activate
 
     NODE_PATH=$VIRTUAL_ENV/lib/node_modules
-    npm install -g browserify gulp gulp-sourcemaps gulp-uglify vinyl-transform
+    npm install -g browserify gulp gulp-if gulp-uglify vinyl-transform yargs
 
 Install project.
 
     cd ~/Projects/{{project}}
     python setup.py develop
-    gulp
 
 Launch development server.
     
     cd ~/Projects/{{project}}
+    gulp
     pserve development.ini
 
 Launch production server.
 
     cd ~/Projects/{{project}}
+    gulp --production
     pserve production.ini
