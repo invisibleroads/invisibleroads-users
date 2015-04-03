@@ -6,9 +6,13 @@ from zipfile import ZipFile, ZIP_DEFLATED
 
 
 def replace_folder(target_folder, source_folder):
-    remove_folder(target_folder)
-    make_folder(dirname(target_folder))
+    clean_folder(target_folder)
     shutil.copytree(source_folder, target_folder)
+
+
+def clean_folder(folder):
+    remove_folder(folder)
+    make_folder(dirname(folder))
 
 
 def remove_folder(folder):
