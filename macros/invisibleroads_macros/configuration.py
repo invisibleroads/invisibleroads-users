@@ -13,7 +13,3 @@ def get_interpretation_by_name(settings, prefix, interpret_setting):
         interpretation = interpretation_by_name[name]
         interpretation.update(interpret_setting(attribute, value))
     return interpretation_by_name
-
-
-def parse_words(x):
-    return x.replace(',', ' ').split()

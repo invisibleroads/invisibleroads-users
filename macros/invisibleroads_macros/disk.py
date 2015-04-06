@@ -1,18 +1,19 @@
-import os
 import re
 import shutil
+from os import makedirs, walk
 from os.path import dirname, join, normpath, relpath
 from zipfile import ZipFile, ZIP_DEFLATED
 
 
 def replace_folder(target_folder, source_folder):
-    clean_folder(target_folder)
+    remove_folder(target_folder)
+    make_folder(dirname(target_folder))
     shutil.copytree(source_folder, target_folder)
 
 
 def clean_folder(folder):
     remove_folder(folder)
-    make_folder(dirname(folder))
+    make_folder(folder)
 
 
 def remove_folder(folder):
@@ -24,17 +25,23 @@ def remove_folder(folder):
 
 def make_folder(folder):
     try:
-        os.makedirs(folder)
+        makedirs(folder)
     except OSError:
         pass
     return folder
+
+
+def find_path(name, folder):
+    for root_folder, folder_names, file_names in walk(folder):
+        if name in file_names:
+            return join(root_folder, name)
 
 
 def compress(source_folder, target_path=None):
     if not target_path:
         target_path = normpath(source_folder) + '.zip'
     with ZipFile(target_path, 'w', ZIP_DEFLATED) as target_file:
-        for root, folders, paths in os.walk(source_folder):
+        for root, folders, paths in walk(source_folder):
             for path in paths:
                 source_path = join(root, path)
                 relative_path = relpath(source_path, source_folder)
