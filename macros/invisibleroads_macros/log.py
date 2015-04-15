@@ -10,3 +10,4 @@ def print_nested_dictionary(d, prefix=''):
                 print '  ' + line
         else:
             print(left_hand_side + ' = ' + str(value))
+    return d
