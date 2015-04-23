@@ -9,11 +9,12 @@ def replace_folder(target_folder, source_folder):
     remove_folder(target_folder)
     make_folder(dirname(target_folder))
     shutil.copytree(source_folder, target_folder)
+    return target_folder
 
 
 def clean_folder(folder):
     remove_folder(folder)
-    make_folder(folder)
+    return make_folder(folder)
 
 
 def remove_folder(folder):
@@ -21,6 +22,7 @@ def remove_folder(folder):
         shutil.rmtree(folder)
     except OSError:
         pass
+    return folder
 
 
 def make_folder(folder):
