@@ -1,7 +1,8 @@
 import re
 import shutil
-from os import makedirs, walk
-from os.path import dirname, join, normpath, relpath
+from contextlib import contextmanager
+from os import chdir, getcwd, makedirs, walk
+from os.path import dirname, islink, join, normpath, realpath, relpath
 from zipfile import ZipFile, ZIP_DEFLATED
 
 
@@ -40,14 +41,22 @@ def find_path(name, folder):
 
 
 def compress(source_folder, target_path=None):
+    source_folder = realpath(source_folder)
     if not target_path:
         target_path = normpath(source_folder) + '.zip'
-    with ZipFile(target_path, 'w', ZIP_DEFLATED) as target_file:
-        for root, folders, paths in walk(source_folder):
-            for path in paths:
-                source_path = join(root, path)
+    with ZipFile(target_path, 'w', ZIP_DEFLATED) as target_zip:
+        for root_folder, folder_names, file_names in walk(source_folder):
+            for file_name in file_names:
+                source_path = join(root_folder, file_name)
                 relative_path = relpath(source_path, source_folder)
-                target_file.write(source_path, relative_path)
+                resolved_path = realpath(source_path)
+                if not resolved_path.startswith(source_folder):
+                    # Resolve links whose target is outside source_folder
+                    source_path = resolved_path
+                elif islink(source_path):
+                    # Ignore links whose target is inside source_folder
+                    continue
+                target_zip.write(source_path, relative_path)
     return target_path
 
 
@@ -57,3 +66,13 @@ def uncompress(source_path, target_folder=None):
     with ZipFile(source_path, 'r') as source_file:
         source_file.extractall(target_folder)
     return target_folder
+
+
+@contextmanager
+def cd(target_folder):
+    source_folder = getcwd()
+    try:
+        chdir(target_folder)
+        yield
+    finally:
+        chdir(source_folder)
