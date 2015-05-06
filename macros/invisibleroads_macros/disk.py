@@ -1,9 +1,10 @@
 import re
 import shutil
+import subprocess
 from contextlib import contextmanager
+from glob import glob
 from os import chdir, getcwd, makedirs, walk
-from os.path import dirname, islink, join, normpath, realpath, relpath
-from zipfile import ZipFile, ZIP_DEFLATED
+from os.path import abspath, dirname, join, normpath
 
 
 def replace_folder(target_folder, source_folder):
@@ -41,30 +42,30 @@ def find_path(name, folder):
 
 
 def compress(source_folder, target_path=None):
-    source_folder = realpath(source_folder)
     if not target_path:
-        target_path = normpath(source_folder) + '.zip'
-    with ZipFile(target_path, 'w', ZIP_DEFLATED) as target_zip:
-        for root_folder, folder_names, file_names in walk(source_folder):
-            for file_name in file_names:
-                source_path = join(root_folder, file_name)
-                relative_path = relpath(source_path, source_folder)
-                resolved_path = realpath(source_path)
-                if not resolved_path.startswith(source_folder):
-                    # Resolve links whose target is outside source_folder
-                    source_path = resolved_path
-                elif islink(source_path):
-                    # Ignore links whose target is inside source_folder
-                    continue
-                target_zip.write(source_path, relative_path)
+        target_path = normpath(source_folder) + '.tar.gz'
+    target_path = abspath(target_path)
+    if target_path.endswith('.tar.gz'):
+        command_terms = ['tar', 'czhf']
+    else:
+        command_terms = ['zip', '-r', '-9']
+    with cd(source_folder):
+        subprocess.check_output(command_terms + [target_path] + glob('*'))
     return target_path
 
 
 def uncompress(source_path, target_folder=None):
+    if source_path.endswith('.tar.gz'):
+        command_terms = ['tar', 'xf', source_path, '-C']
+        target_extension = '.tar.gz'
+    else:
+        command_terms = ['unzip', source_path, '-d']
+        target_extension = '.zip'
     if not target_folder:
-        target_folder = re.sub(r'\.zip$', '', source_path)
-    with ZipFile(source_path, 'r') as source_file:
-        source_file.extractall(target_folder)
+        target_folder = re.sub(
+            target_extension.replace('.', '\.') + '$', '', source_path)
+    make_folder(target_folder)
+    subprocess.check_output(command_terms + [target_folder])
     return target_folder
 
 
