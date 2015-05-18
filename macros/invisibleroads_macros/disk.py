@@ -1,10 +1,11 @@
+import fnmatch
 import re
 import shutil
 import subprocess
 from contextlib import contextmanager
 from glob import glob
 from os import chdir, getcwd, makedirs, walk
-from os.path import abspath, dirname, join, normpath
+from os.path import abspath, dirname, join, normpath, relpath
 
 
 def replace_folder(target_folder, source_folder):
@@ -39,6 +40,21 @@ def find_path(name, folder):
     for root_folder, folder_names, file_names in walk(folder):
         if name in file_names:
             return join(root_folder, name)
+    raise IOError('cannot find "%s" in "%s"' % (name, folder))
+
+
+def find_paths(name_expression, folder):
+    return [
+        join(root_folder, file_name)
+        for root_folder, folder_names, file_names in walk(folder)
+        for file_name in fnmatch.filter(file_names, name_expression)]
+
+
+def resolve_relative_path(relative_path, folder):
+    relative_path = relpath(join(folder, relative_path), folder)
+    if relative_path.startswith('..'):
+        raise IOError('relative_path must refer to a file inside folder')
+    return join(folder, relative_path)
 
 
 def compress(source_folder, target_path=None):
