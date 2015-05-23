@@ -66,7 +66,10 @@ def compress(source_folder, target_path=None):
     else:
         command_terms = ['zip', '-r', '-9']
     with cd(source_folder):
-        subprocess.check_output(command_terms + [target_path] + glob('*'))
+        source_paths = glob('*')
+        if not source_paths:
+            raise IOError('cannot compress empty folder "%s"' % source_folder)
+        subprocess.check_output(command_terms + [target_path] + source_paths)
     return target_path
 
 
