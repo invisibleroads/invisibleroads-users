@@ -59,16 +59,13 @@ def resolve_relative_path(relative_path, folder):
 
 
 def compress(source_folder, target_path=None):
-    if not target_path or target_path.endswith('.tar.gz'):
-        return compress_tar(source_folder, target_path)
-    return compress_zip(source_folder, target_path)
-
-
-def compress_tar(source_folder, target_path=None):
     if not target_path:
         target_path = normpath(source_folder) + '.tar.gz'
     target_path = abspath(target_path)
-    command_terms = ['tar', 'czhf']
+    if target_path.endswith('.tar.gz'):
+        command_terms = ['tar', 'czhf']
+    else:
+        command_terms = ['zip', '-r', '-9']
     with cd(source_folder):
         source_paths = glob('*')
         if not source_paths:
@@ -77,48 +74,18 @@ def compress_tar(source_folder, target_path=None):
     return target_path
 
 
-def compress_zip(source_folder, target_path=None):
-    if not target_path:
-        target_path = normpath(source_folder) + '.zip'
-    source_folder = realpath(source_folder)
-    with ZipFile(
-        target_path, 'w', ZIP_DEFLATED, allowZip64=True,
-    ) as target_zip:
-        for root_folder, folder_names, file_names in walk(source_folder):
-            for file_name in file_names:
-                source_path = join(root_folder, file_name)
-                relative_path = relpath(source_path, source_folder)
-                resolved_path = realpath(source_path)
-                if not resolved_path.startswith(source_folder):
-                    # Resolve links whose target is outside source_folder
-                    source_path = resolved_path
-                elif islink(source_path):
-                    # Ignore links whose target is inside source_folder
-                    continue
-                target_zip.write(source_path, relative_path)
-    return target_path
-
-
 def uncompress(source_path, target_folder=None):
     if source_path.endswith('.tar.gz'):
-        return _uncompress_tar(source_path, target_folder)
-    if source_path.endswith('.zip'):
-        return _uncompress_zip(source_path, target_folder)
-
-
-def _uncompress_tar(source_path, target_folder=None):
+        command_terms = ['tar', 'xf', source_path, '-C']
+        target_extension = '.tar.gz'
+    else:
+        command_terms = ['unzip', source_path, '-d']
+        target_extension = '.zip'
     if not target_folder:
-        target_folder = re.sub(r'\.tar.gz$', '', source_path)
-    command_terms = ['tar', 'xf', source_path, '-C']
-    subprocess.check_output(command_terms + [make_folder(target_folder)])
-    return target_folder
-
-
-def _uncompress_zip(source_path, target_folder=None):
-    if not target_folder:
-        target_folder = re.sub(r'\.zip$', '', source_path)
-    with ZipFile(source_path, 'r') as source_file:
-        source_file.extractall(target_folder)
+        target_folder = re.sub(
+            target_extension.replace('.', '\.') + '$', '', source_path)
+    make_folder(target_folder)
+    subprocess.check_output(command_terms + [target_folder])
     return target_folder
 
 
