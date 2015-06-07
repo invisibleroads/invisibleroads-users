@@ -1,2 +1,0 @@
-include *.cfg *.ini *.md
-recursive-include invisibleroads_macros *.css *.html *.ico *.jpg *.js *.mako *.png
