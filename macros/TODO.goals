@@ -1,2 +1,0 @@
-Prevent uncompressing outside target_folder
-Consider compress_zip or compress(target_extension)
