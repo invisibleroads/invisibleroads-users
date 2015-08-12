@@ -14,26 +14,20 @@ REQUIREMENTS = [
     'waitress',
 ] + [
     'dogpile.cache',
-    'pyramid_mako',
+    'pyramid_jinja2',
     'titlecase',
 ]
-
-
-HERE = dirname(abspath(__file__))
-DESCRIPTION = '\n\n'.join(open(join(HERE, _)).read() for _ in [
-    'README.md',
-    'CHANGES.md',
-])
+FOLDER = dirname(abspath(__file__))
+DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
+    'README.rst', 'CHANGES.rst'])
 setup(
     name='invisibleroads-posts',
-    version='0.1',
+    version='0.2',
     description='Web application defaults',
     long_description=DESCRIPTION,
     classifiers=[
         'Programming Language :: Python',
-        'Framework :: Pyramid',
         'Framework :: Pyramid :: InvisibleRoads',
-        'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
     ],
     author='Roy Hyunjin Han',

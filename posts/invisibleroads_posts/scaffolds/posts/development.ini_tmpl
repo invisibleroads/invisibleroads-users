@@ -1,17 +1,16 @@
 [app:main]
-use = egg:{{project}}
-site.name = {{project}}
+use = egg:{{ project }}
+data.folder = %(here)s/data_development
+site.name = {{ project }}
 site.sections =
 site.folder = %(here)s
-data.folder = %(here)s/data_development
-posts.folder = %(data.folder)s/posts
-posts.root_asset_paths =
+site.root_asset_paths =
     invisibleroads_posts:assets/favicon.ico
     invisibleroads_posts:assets/robots.txt
-
 cache.function.backend = dogpile.cache.memory
 cache.function.expiration_time = 3600
-
+jinja2.trim_blocks = true
+jinja2.lstrip_blocks = true
 pyramid.reload_templates = true
 pyramid.prevent_http_cache = true
 pyramid.debug_authorization = false
@@ -19,11 +18,11 @@ pyramid.debug_notfound = false
 pyramid.debug_routematch = false
 pyramid.default_locale_name = en
 pyramid.includes =
-    pyramid_debugtoolbar
+#   pyramid_debugtoolbar
 
 [server:main]
 use = egg:waitress#main
-host = 0.0.0.0
+host = 127.0.0.1
 port = 6543
 url_scheme = http
 

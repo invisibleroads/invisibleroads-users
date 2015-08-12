@@ -5,6 +5,7 @@ from pyramid.response import FileResponse
 from pyramid.settings import aslist
 
 from .libraries.cache import configure_cache
+from .libraries.text import render_title
 from .views import add_routes
 
 
@@ -31,7 +32,14 @@ def configure_assets(config):
 
 
 def configure_views(config):
-    config.include('pyramid_mako')
+    settings = config.registry.settings
+    config.include('pyramid_jinja2')
+    config.commit()
+    template_environment = config.get_jinja2_environment()
+    template_environment.globals['site_name'] = settings['site.name']
+    template_environment.globals['site_sections'] = aslist(
+        settings['site.sections'])
+    template_environment.globals['render_title'] = render_title
     add_routes(config)
 
 

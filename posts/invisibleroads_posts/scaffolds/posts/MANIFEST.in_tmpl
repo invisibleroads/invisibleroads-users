@@ -1,2 +1,2 @@
-include *.cfg *.ini *.md
-recursive-include {{package}} *.css *.html *.ico *.jpg *.js *.mako *.png
+include *.cfg *.ini *.rst
+recursive-include {{ package }} *.html *.css *.js *.jpg *.png *.gif *.ico *.jinja2

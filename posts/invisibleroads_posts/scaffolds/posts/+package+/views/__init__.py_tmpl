@@ -4,8 +4,8 @@ from pyramid.response import FileResponse
 
 def add_routes(config):
     config.add_view(
-        '{{package}}.views.index',
-        renderer='{{package}}:templates/index.mako',
+        '{{ package }}.views.index',
+        renderer='{{ package }}:templates/index.jinja2',
         route_name='index', http_cache=3600)
 
 
