@@ -11,24 +11,25 @@ Use
 ---
 Prepare environment.
 
-    VIRTUAL_ENV=~/.virtualenvs/crosscompute
+    export VIRTUAL_ENV=~/.virtualenvs/crosscompute
     virtualenv ${VIRTUAL_ENV}
     source ${VIRTUAL_ENV}/bin/activate
 
-    NODE_PATH=${VIRTUAL_ENV}/lib/node_modules
+    export NODE_PATH=${VIRTUAL_ENV}/lib/node_modules
     npm install -g browserify uglify-js
 
 Install package.
 
-    PACKAGE_FOLDER=~/Projects/invisibleroads-packages/posts
+    PYTHON_PACKAGE_FOLDER=~/Projects/invisibleroads-packages/posts
+    NODE_PACKAGE_FOLDER=${PYTHON_PACKAGE_FOLDER}/node_modules/invisibleroads-posts
 
     cd ~/Projects
     git clone git@github.com:invisibleroads/invisibleroads-posts.git
 
-    cd ${PACKAGE_FOLDER}
+    cd ${PYTHON_PACKAGE_FOLDER}
     python setup.py develop
 
-    cd ${PACKAGE_FOLDER}/node_modules/invisibleroads-posts
+    cd ${NODE_PACKAGE_FOLDER}
     npm install -g
 
 Create project.

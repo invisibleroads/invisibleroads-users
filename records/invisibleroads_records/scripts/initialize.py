@@ -7,7 +7,7 @@ from pyramid.paster import get_app, setup_logging
 from ..models import Base
 
 
-def main(argv=sys.argv):
+def run(argv=sys.argv):
     argument_parser = ArgumentParser()
     argument_parser.add_argument('configuration_path')
     argument_parser.add_argument('--restart', action='store_true')

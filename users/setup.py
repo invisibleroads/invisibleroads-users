@@ -5,17 +5,14 @@ from setuptools import find_packages, setup
 ENTRY_POINTS = """
 """
 REQUIREMENTS = [
-    'invisibleroads_posts',
-    'invisibleroads_records',
+    'invisibleroads-posts',
+    'invisibleroads-records',
     'pyramid_redis_sessions',
+    'velruse',
 ]
-
-
-HERE = dirname(abspath(__file__))
-DESCRIPTION = '\n\n'.join(open(join(HERE, _)).read() for _ in [
-    'README.md',
-    'CHANGES.md',
-])
+FOLDER = dirname(abspath(__file__))
+DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
+    'README.rst', 'CHANGES.rst'])
 setup(
     name='invisibleroads-users',
     version='0.1',
@@ -23,9 +20,7 @@ setup(
     long_description=DESCRIPTION,
     classifiers=[
         'Programming Language :: Python',
-        'Framework :: Pyramid',
         'Framework :: Pyramid :: InvisibleRoads',
-        'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
     ],
     author='Roy Hyunjin Han',

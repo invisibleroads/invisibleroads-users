@@ -1,0 +1,33 @@
+{% extends "invisibleroads_posts:templates/base.jinja2" %}
+
+{% block head_style_inline %}
+{{ super() }}
+.user-link {margin-right: 1em}
+{% endblock %}
+
+{% block navigation %}
+<form id="login-form" action="{{ request.route_path('user_logout' if user else 'user_login') }}" method="post" class="navbar-form navbar-right" role="navigation">
+  <input name="target_url" type="hidden" value="{{ request.path }}">
+  <div class="form-group">
+  {% if user %}
+    <a class="navbar-link user-link" href="{{ request.route_path('user', id=user.id, name=user.name) }}">{{ user.name }}</a>
+  {% endif %}
+  </div>
+  <button class="btn btn-default" type="submit">{{ 'Logout' if user else 'Login' }}</button>
+</form>
+{% endblock %}
+
+{% block head_script_inline %}
+{{ super() }}
+var v = d.users = {};
+v.assets_url = "{{ request.static_path('invisibleroads_users:assets/') }}";
+v.login_url = "{{ request.route_path('user_login') + '?target_url=' + request.path }}";
+v.user_id = {{ user.id if user else 0 }};
+{% if user %}
+v.csrf_token = "{{ request.session.get_csrf_token() }}";
+{% endif %}
+{% endblock %}
+
+{% block body_script_loaded %}
+<script src="{{ request.static_path('invisibleroads_users:assets/base.js') }}"></script>
+{% endblock %}

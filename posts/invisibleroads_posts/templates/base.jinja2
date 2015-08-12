@@ -43,6 +43,7 @@ v.assets_url = "{{ request.static_path('invisibleroads_posts:assets/') }}";
         <li><a href="/#{{ site_section.lower() }}">{{ site_section }}</a></li>
       {% endfor %}
       </ul>
+      {% block navigation %}{% endblock %}
     </div>
   </div>
 </nav>

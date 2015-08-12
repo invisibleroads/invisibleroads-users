@@ -25,10 +25,10 @@ def add_routes(config):
         'invisibleroads_users.views.logout',
         route_name='user_logout')
 
-    config.add_route('user', 'users/{name}')
+    config.add_route('user', 'users/{id}/{name}')
     config.add_view(
         'invisibleroads_users.views.show',
-        renderer='invisibleroads_users:templates/user.mako',
+        renderer='invisibleroads_users:templates/user.jinja2',
         route_name='user')
 
 

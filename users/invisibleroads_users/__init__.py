@@ -14,7 +14,7 @@ from .views import add_routes, get_ticket
 
 AUTHTKT_KEY = 'a'
 SESSION_KEY = 's'
-RANDOM_LEN = 128
+SECRET_LENGTH = 128
 LOG = logging.getLogger(__name__)
 
 
@@ -44,7 +44,8 @@ def includeme(config):
 def configure_security_policy(config, prefix='authtkt.'):
     settings = config.registry.settings
     authentication_policy = AuthTktAuthenticationPolicy(
-        secret=settings.get(prefix + 'secret', make_random_string(RANDOM_LEN)),
+        secret=settings.get(
+            prefix + 'secret', make_random_string(SECRET_LENGTH)),
         callback=get_groups,
         cookie_name=settings.get(prefix + 'key', AUTHTKT_KEY),
         secure=asbool(settings.get(prefix + 'secure', False)),
@@ -59,7 +60,8 @@ def configure_security_policy(config, prefix='authtkt.'):
 def configure_session_factory(config, prefix='session.'):
     settings = config.registry.settings
     session_factory = RedisSessionFactory(
-        secret=settings.get(prefix + 'secret', make_random_string(RANDOM_LEN)),
+        secret=settings.get(
+            prefix + 'secret', make_random_string(SECRET_LENGTH)),
         timeout=int(settings.get(prefix + 'timeout', 1800)),
         cookie_name=settings.get(prefix + 'key', SESSION_KEY),
         cookie_secure=asbool(settings.get(prefix + 'secure', False)),
