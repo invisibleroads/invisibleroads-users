@@ -1,2 +1,2 @@
-include *.cfg *.ini *.md
-recursive-include invisibleroads_records *.css *.html *.ico *.jpg *.js *.mako *.png
+include *.cfg *.ini *.rst
+recursive-include invisibleroads_records *.html *.css *.js *.jpg *.png *.gif *.ico *.jinja2
