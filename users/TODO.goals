@@ -1,9 +1,0 @@
-Update invisibleroads-users
-Update node-modules
-See if we should upgrade validation mechanism
-    Use https://github.com/keleshev/schema
-    Use voluptuous
-See if we should upgrade authentication mechanism
-    Experiment with https://github.com/omab/python-social-auth
-    Experiment with https://github.com/peterhudec/authomatic
-    Experiment with velruse

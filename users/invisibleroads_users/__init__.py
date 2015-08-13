@@ -3,7 +3,6 @@ from invisibleroads_macros.security import make_random_string
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.events import BeforeRender
-from pyramid.security import Allow, Authenticated
 from pyramid.session import check_csrf_token
 from pyramid.settings import asbool
 from pyramid_redis_sessions import RedisSessionFactory
@@ -18,24 +17,12 @@ SECRET_LENGTH = 128
 LOG = logging.getLogger(__name__)
 
 
-class RootFactory(object):
-    'Permission definitions'
-    __acl__ = [
-        (Allow, Authenticated, 'guest'),
-        (Allow, 'member', 'member'),
-        (Allow, 'leader', 'leader'),
-    ]
-
-    def __init__(self, request):
-        pass
-
-
 def includeme(config):
     configure_security_policy(config)
     configure_session_factory(config)
     configure_third_party_authentication(config)
     add_routes(config)
-    config.add_subscriber(add_renderer_globals, BeforeRender)
+    config.add_subscriber(define_add_renderer_globals(config), BeforeRender)
     config.add_static_view(
         '_/invisibleroads-users', 'invisibleroads_users:assets',
         cache_max_age=3600)
@@ -46,7 +33,7 @@ def configure_security_policy(config, prefix='authtkt.'):
     authentication_policy = AuthTktAuthenticationPolicy(
         secret=settings.get(
             prefix + 'secret', make_random_string(SECRET_LENGTH)),
-        callback=get_groups,
+        callback=define_get_groups(config),
         cookie_name=settings.get(prefix + 'key', AUTHTKT_KEY),
         secure=asbool(settings.get(prefix + 'secure', False)),
         http_only=True,
@@ -54,7 +41,7 @@ def configure_security_policy(config, prefix='authtkt.'):
     authorization_policy = ACLAuthorizationPolicy()
     config.set_authentication_policy(authentication_policy)
     config.set_authorization_policy(authorization_policy)
-    config.set_root_factory(RootFactory)
+    config.set_root_factory(settings.get('users.root_factory'))
 
 
 def configure_session_factory(config, prefix='session.'):
@@ -79,28 +66,35 @@ def configure_third_party_authentication(config):
         LOG.warn('Missing velruse.google.consumer_secret')
 
 
-def get_groups(user_id, request):
-    'Define server-side permissions for user'
-    ticket = get_ticket(request)
-    if not ticket:
-        return  # Cookie is bad
-    if request.method in ('POST', 'PUT', 'DELETE') and not check_csrf_token(
-            request, raises=False):
-        return  # CSRF token does not match
-    cached_user = User.get_from_cache(user_id)
-    if not cached_user or cached_user.ticket != ticket:
-        return  # User does not exist or ticket changed
-    groups = []
-    if cached_user.is_member:
-        groups.append('member')
-    if cached_user.is_leader:
-        groups.append('leader')
-    return groups
+def define_get_groups(config):
+    settings = config.registry.settings
+    user_class = config.maybe_dotted(settings.get('users.user', User))
+
+    def get_groups(user_id, request):
+        'Define server-side permissions for user'
+        ticket = get_ticket(request)
+        if not ticket:
+            return  # Cookie is bad
+        if request.method in (
+            'POST', 'PUT', 'DELETE',
+        ) and not check_csrf_token(request, raises=False):
+            return  # CSRF token does not match
+        cached_user = user_class.get_from_cache(user_id)
+        if not cached_user or cached_user.ticket != ticket:
+            return  # User does not exist or ticket changed
+        return cached_user.groups
+
+    return get_groups
 
 
-def add_renderer_globals(event):
-    'Define client-side permissions for user'
-    user_id = event['request'].authenticated_userid
-    cached_user = User.get_from_cache(user_id)
-    event.update(dict(
-        user=cached_user))
+def define_add_renderer_globals(config):
+    settings = config.registry.settings
+    user_class = config.maybe_dotted(settings.get('users.user', User))
+
+    def add_renderer_globals(event):
+        'Define client-side permissions for user'
+        user_id = event['request'].authenticated_userid
+        cached_user = user_class.get_from_cache(user_id)
+        event.update(dict(user=cached_user))
+
+    return add_renderer_globals
