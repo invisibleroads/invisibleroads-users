@@ -15,7 +15,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst', 'CHANGES.rst'])
 setup(
     name='invisibleroads-users',
-    version='0.1',
+    version='0.2',
     description='Authentication and authorization',
     long_description=DESCRIPTION,
     classifiers=[
