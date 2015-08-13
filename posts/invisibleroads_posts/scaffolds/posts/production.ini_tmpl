@@ -2,10 +2,10 @@
 use = egg:{{ project }}
 data.folder = %(here)s/data_production
 
-site.name = {{ project }}
-site.sections =
-site.folder = %(here)s
-site.root_asset_paths =
+website.name = {{ project }}
+website.sections =
+website.folder = %(here)s
+website.root_asset_paths =
     invisibleroads_posts:assets/favicon.ico
     invisibleroads_posts:assets/robots.txt
 

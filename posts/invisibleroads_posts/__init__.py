@@ -24,8 +24,8 @@ def includeme(config):
 def configure_assets(config):
     settings = config.registry.settings
     config.add_directive('add_root_asset', add_root_asset)
-    for root_asset_path in aslist(settings.get('posts.root_asset_paths', [])):
-        config.add_root_asset(root_asset_path)
+    for asset_path in aslist(settings.get('website.root_asset_paths', [])):
+        config.add_root_asset(asset_path)
     config.add_static_view(
         '_/invisibleroads-posts', 'invisibleroads_posts:assets',
         cache_max_age=3600)
@@ -36,16 +36,16 @@ def configure_views(config):
     config.include('pyramid_jinja2')
     config.commit()
     template_environment = config.get_jinja2_environment()
-    template_environment.globals['site_name'] = settings['site.name']
-    template_environment.globals['site_sections'] = aslist(
-        settings['site.sections'])
+    template_environment.globals['website_name'] = settings['website.name']
+    template_environment.globals['website_sections'] = aslist(
+        settings['website.sections'])
     template_environment.globals['render_title'] = render_title
     add_routes(config)
 
 
 def add_root_asset(config, asset_path):
     settings = config.registry.settings
-    absolute_path = resolve_asset_path(asset_path, settings['site.folder'])
+    absolute_path = resolve_asset_path(asset_path, settings['website.folder'])
     asset_name = basename(absolute_path)
     config.add_view(
         lambda request: FileResponse(absolute_path, request),

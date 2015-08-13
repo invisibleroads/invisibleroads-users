@@ -8,7 +8,7 @@
 {% if request.path[1:] %}
 {{ render_title(request.path) }} &middot;
 {% endif %}
-{{ site_name }}
+{{ website_name }}
 </title>
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <!--[if lt IE 9]>
@@ -35,12 +35,12 @@ v.assets_url = "{{ request.static_path('invisibleroads_posts:assets/') }}";
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/#">{{ site_name }}</a>
+      <a class="navbar-brand" href="/#">{{ website_name }}</a>
     </div>
     <div class="navbar-collapse collapse" id="main-navbar-collapse">
       <ul class="navbar-nav nav">
-      {% for site_section in site_sections %}
-        <li><a href="/#{{ site_section.lower() }}">{{ site_section }}</a></li>
+      {% for section in website_sections %}
+        <li><a href="/#{{ section.lower() }}">{{ section }}</a></li>
       {% endfor %}
       </ul>
       {% block navigation %}{% endblock %}

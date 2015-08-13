@@ -1,8 +1,8 @@
 {% extends "invisibleroads_posts:templates/base.jinja2" %}
 {% block body_content %}
-{% for site_section in site_sections %}
-<div id="{{ site_section.lower() }}">
-  <h2>{{ site_section }}</h2>
+{% for section in website_sections %}
+<div id="{{ section.lower() }}">
+  <h2>{{ section }}</h2>
 </div>
 {% endfor %}
 {% endblock %}
