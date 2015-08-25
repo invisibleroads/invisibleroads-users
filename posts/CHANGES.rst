@@ -1,3 +1,7 @@
+0.3
+---
+- Add extensible command line script
+
 0.2
 ---
 - Replace mako with jinja2

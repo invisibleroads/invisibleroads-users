@@ -1,10 +1,18 @@
 import sys
 from argparse import ArgumentParser
 from invisibleroads_macros import disk
-from os.path import basename
 from pyramid.paster import get_app, setup_logging
 
 from ..models import Base
+
+
+class InvisibleRoads(object):
+
+    def configure(self, argument_parser):
+        print 'configure records'
+
+    def run(self, arguments):
+        print 'run records'
 
 
 def run(argv=sys.argv):

@@ -6,7 +6,7 @@ ENTRY_POINTS = """
 [paste.app_factory]
 main = invisibleroads_posts:main
 [pyramid.scaffold]
-posts=invisibleroads_posts.scaffolds:PostsTemplate
+posts = invisibleroads_posts.scaffolds:PostsTemplate
 """
 REQUIREMENTS = [
     'pyramid',
@@ -22,7 +22,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst', 'CHANGES.rst'])
 setup(
     name='invisibleroads-posts',
-    version='0.2',
+    version='0.3',
     description='Web application defaults',
     long_description=DESCRIPTION,
     classifiers=[
@@ -38,4 +38,5 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=REQUIREMENTS,
-    entry_points=ENTRY_POINTS)
+    entry_points=ENTRY_POINTS,
+    scripts=['scripts/invisibleroads'])
