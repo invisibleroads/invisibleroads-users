@@ -7,6 +7,8 @@ ENTRY_POINTS = """
 main = invisibleroads_posts:main
 [pyramid.scaffold]
 posts = invisibleroads_posts.scaffolds:PostsTemplate
+[invisibleroads]
+initialize = invisibleroads_posts.scripts:PostsInitializationScript
 """
 REQUIREMENTS = [
     'pyramid',
@@ -38,5 +40,4 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=REQUIREMENTS,
-    entry_points=ENTRY_POINTS,
-    scripts=['scripts/invisibleroads'])
+    entry_points=ENTRY_POINTS)
