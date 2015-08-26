@@ -11,7 +11,7 @@ make_ticket = lambda: choice(letters) + make_random_string(TICKET_LENGTH - 1)
 
 
 class User(Base):
-    __tablename__ = 'users'
+    __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
     email = Column(Unicode)
     ticket = Column(String, default=make_ticket)
