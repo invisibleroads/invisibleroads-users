@@ -25,6 +25,8 @@ def add_routes(config):
         'invisibleroads_users.views.logout',
         route_name='user_logout')
 
+    config.add_route('users', 'users')
+
     config.add_route('user', 'users/{id}/{name}')
     config.add_view(
         'invisibleroads_users.views.show',

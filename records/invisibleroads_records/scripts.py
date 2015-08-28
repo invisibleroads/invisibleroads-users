@@ -1,3 +1,4 @@
+import transaction
 from importlib import import_module
 from invisibleroads.scripts import InvisibleRoadsScript
 from pyramid.paster import get_app, setup_logging
@@ -28,3 +29,4 @@ class RecordsInitializationScript(InvisibleRoadsScript):
             module = import_module(module_name)
             function = getattr(module, function_name)
             function()
+        transaction.commit()
