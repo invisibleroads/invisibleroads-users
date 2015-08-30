@@ -1,7 +1,7 @@
 import transaction
 from importlib import import_module
 from invisibleroads.scripts import InvisibleRoadsScript
-from pyramid.paster import get_app, setup_logging
+from pyramid.paster import bootstrap, setup_logging
 
 from .models import Base
 
@@ -17,8 +17,8 @@ class RecordsScript(InvisibleRoadsScript):
 
     def run(self, args):
         setup_logging(args.configuration_path)
-        app = get_app(args.configuration_path)
-        settings = app.registry.settings
+        env = bootstrap(args.configuration_path)
+        settings = env['registry'].settings
         if 'sqlalchemy.url' not in settings:
             return
         Base.metadata.create_all()
@@ -28,7 +28,7 @@ class RecordsScript(InvisibleRoadsScript):
             return
         module = import_module(module_name)
         function = getattr(module, self.function_name)
-        function()
+        function(env['request'])
         transaction.commit()
 
 
