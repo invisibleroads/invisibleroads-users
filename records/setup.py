@@ -4,7 +4,8 @@ from setuptools import find_packages, setup
 
 ENTRY_POINTS = """
 [invisibleroads]
-initialize = invisibleroads_records.scripts:RecordsInitializationScript
+initialize = invisibleroads_records.scripts:InitializeRecordsScript
+update = invisibleroads_records.scripts:UpdateRecordsScript
 """
 REQUIREMENTS = [
     'dogpile.cache',

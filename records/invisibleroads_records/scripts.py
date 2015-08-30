@@ -6,9 +6,10 @@ from pyramid.paster import get_app, setup_logging
 from .models import Base
 
 
-class RecordsInitializationScript(InvisibleRoadsScript):
+class RecordsScript(InvisibleRoadsScript):
 
     priority = 20
+    function_name = 'run'
 
     def configure(self, argument_subparser):
         if not argument_subparser.has_argument('configuration_path'):
@@ -21,12 +22,21 @@ class RecordsInitializationScript(InvisibleRoadsScript):
         if 'sqlalchemy.url' not in settings:
             return
         Base.metadata.create_all()
-        for setting in ['invisibleroads.initialize_records']:
-            function_definition = settings.get(setting)
-            if not function_definition:
-                continue
-            module_name, function_name = function_definition.rsplit('.', 1)
-            module = import_module(module_name)
-            function = getattr(module, function_name)
-            function()
+        module_name = settings.get(
+            'invisibleroads.' + self.function_name).strip()
+        if not module_name:
+            return
+        module = import_module(module_name)
+        function = getattr(module, self.function_name)
+        function()
         transaction.commit()
+
+
+class InitializeRecordsScript(RecordsScript):
+
+    function_name = 'initialize_records'
+
+
+class UpdateRecordsScript(RecordsScript):
+
+    function_name = 'update_records'

@@ -3,7 +3,7 @@ from invisibleroads_macros.disk import make_folder, remove_folder
 from pyramid.paster import get_appsettings
 
 
-class PostsInitializationScript(InvisibleRoadsScript):
+class InitializePostsScript(InvisibleRoadsScript):
 
     priority = 10
 
