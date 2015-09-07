@@ -1,17 +1,17 @@
-from invisibleroads.scripts import InvisibleRoadsScript
+from invisibleroads.scripts import ConfigurableScript
 from invisibleroads_macros.disk import make_folder, remove_folder
 from pyramid.paster import get_appsettings
 
 
-class InitializePostsScript(InvisibleRoadsScript):
+class InitializePostsScript(ConfigurableScript):
 
     priority = 10
 
     def configure(self, argument_subparser):
-        argument_subparser.add_argument('configuration_path')
+        super(ConfigurableScript, self).configure(argument_subparser)
         argument_subparser.add_argument('--restart', action='store_true')
 
-    def run(self, args):
+    def run(self, args, terms):
         settings = get_appsettings(args.configuration_path)
         if args.restart and 'data.folder' in settings:
             remove_folder(settings['data.folder'])

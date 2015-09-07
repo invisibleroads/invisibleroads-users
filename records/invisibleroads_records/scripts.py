@@ -1,21 +1,17 @@
 import transaction
 from importlib import import_module
-from invisibleroads.scripts import InvisibleRoadsScript
+from invisibleroads.scripts import ConfigurableScript
 from pyramid.paster import bootstrap, setup_logging
 
 from .models import Base
 
 
-class RecordsScript(InvisibleRoadsScript):
+class RecordsScript(ConfigurableScript):
 
     priority = 20
     function_name = 'run'
 
-    def configure(self, argument_subparser):
-        if not argument_subparser.has_argument('configuration_path'):
-            argument_subparser.add_argument('configuration_path')
-
-    def run(self, args):
+    def run(self, args, terms):
         setup_logging(args.configuration_path)
         env = bootstrap(args.configuration_path)
         settings = env['registry'].settings
