@@ -4,7 +4,7 @@ from pyramid.config import Configurator
 from pyramid.response import FileResponse
 from pyramid.settings import aslist
 
-from .libraries.cache import configure_cache
+from .libraries.cache import configure_cache, FUNCTION_CACHE
 from .libraries.text import render_title
 from .views import add_routes
 
@@ -17,7 +17,7 @@ def main(global_config, **settings):
 
 def includeme(config):
     configure_assets(config)
-    configure_cache(config)
+    configure_cache(config, FUNCTION_CACHE, 'cache.function.')
     configure_views(config)
 
 
@@ -36,9 +36,10 @@ def configure_views(config):
     config.include('pyramid_jinja2')
     config.commit()
     template_environment = config.get_jinja2_environment()
-    template_environment.globals['website_name'] = settings['website.name']
+    template_environment.globals['website_name'] = settings.get(
+        'website.name', 'InvisibleRoads')
     template_environment.globals['website_sections'] = aslist(
-        settings['website.sections'])
+        settings.get('website.sections', ''))
     template_environment.globals['render_title'] = render_title
     add_routes(config)
 

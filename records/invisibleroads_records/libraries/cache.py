@@ -5,23 +5,23 @@ from sqlalchemy.orm.interfaces import MapperOption
 from sqlalchemy.orm.query import Query
 
 
-sqlalchemy_cache = make_region(key_mangler=sha1_mangle_key)
+SQLALCHEMY_CACHE = make_region(key_mangler=sha1_mangle_key)
 
 
 class CachingQuery(Query):
 
     def get_value(self, make_value):
-        value = sqlalchemy_cache.get_or_create(self._cache_key, make_value)
+        value = SQLALCHEMY_CACHE.get_or_create(self._cache_key, make_value)
         if value is NO_VALUE:
             raise KeyError(self._cache_key)
         value = self.merge_result(value, load=False)
         return self.expunge_result(value)
 
     def set_value(self, value):
-        sqlalchemy_cache.set(self._cache_key, value)
+        SQLALCHEMY_CACHE.set(self._cache_key, value)
 
     def invalidate(self):
-        sqlalchemy_cache.delete(self._cache_key)
+        SQLALCHEMY_CACHE.delete(self._cache_key)
 
     def expunge_result(self, value):
         vs = []
@@ -62,8 +62,3 @@ class FromCache(MapperOption):
 
     def process_query(self, query):
         query._from_cache = self
-
-
-def configure_cache(config, prefix='cache.'):
-    settings = config.registry.settings
-    sqlalchemy_cache.configure_from_config(settings, prefix + 'sqlalchemy.')
