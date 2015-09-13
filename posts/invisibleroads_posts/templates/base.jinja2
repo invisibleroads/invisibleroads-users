@@ -57,8 +57,6 @@ v.assets_url = "{{ request.static_path('invisibleroads_posts:assets/') }}";
 {% block body_script_loaded %}
 <script src="{{ request.static_path('invisibleroads_posts:assets/base.js') }}"></script>
 {% endblock %}
-<script>
-{% block body_script_inline %}{% endblock %}
-</script>
+<script>{% block body_script_inline %}{% endblock %}</script>
 </body>
 </html>
