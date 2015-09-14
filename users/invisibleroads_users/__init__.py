@@ -41,7 +41,6 @@ def configure_security_policy(config, prefix='authtkt.'):
     authorization_policy = ACLAuthorizationPolicy()
     config.set_authentication_policy(authentication_policy)
     config.set_authorization_policy(authorization_policy)
-    config.set_root_factory(settings.get('users.root_factory'))
 
 
 def configure_session_factory(config, prefix='session.'):
