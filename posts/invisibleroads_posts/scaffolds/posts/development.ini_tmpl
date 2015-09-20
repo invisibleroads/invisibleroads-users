@@ -31,7 +31,7 @@ port = 6543
 url_scheme = http
 
 [loggers]
-keys = root, {{package}}
+keys = root, {{ package }}
 [handlers]
 keys = console
 [formatters]
@@ -39,10 +39,10 @@ keys = generic
 [logger_root]
 level = INFO
 handlers = console
-[logger_{{package}}]
+[logger_{{ package }}]
 level = DEBUG
 handlers =
-qualname = {{package}}
+qualname = {{ package }}
 [handler_console]
 class = StreamHandler
 args = (sys.stderr,)

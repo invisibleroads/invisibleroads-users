@@ -30,7 +30,7 @@ port = 8000
 url_scheme = https
 
 [loggers]
-keys = root, {{package}}
+keys = root, {{ package }}
 [handlers]
 keys = console
 [formatters]
@@ -38,10 +38,10 @@ keys = generic
 [logger_root]
 level = WARN
 handlers = console
-[logger_{{package}}]
+[logger_{{ package }}]
 level = WARN
 handlers =
-qualname = {{package}}
+qualname = {{ package }}
 [handler_console]
 class = StreamHandler
 args = (sys.stderr,)
