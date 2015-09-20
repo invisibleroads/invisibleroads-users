@@ -29,6 +29,9 @@ def configure_assets(config):
     config.add_static_view(
         '_/invisibleroads-posts', 'invisibleroads_posts:assets',
         cache_max_age=3600)
+    config.add_static_view(
+        '_/fonts', 'invisibleroads_posts:assets/fonts',
+        cache_max_age=3600)
 
 
 def configure_views(config):
