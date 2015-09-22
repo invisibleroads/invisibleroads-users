@@ -1,6 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from argparse import ArgumentParser
 from collections import defaultdict
+from invisibleroads_macros.log import format_nested_dictionary
 from itertools import izip
 from six import add_metaclass
 from stevedore.extension import ExtensionManager
@@ -63,4 +64,7 @@ def run_scripts(scripts_by_name, args, terms, target_name=None):
     if not target_name:
         target_name = args.command
     for script in scripts_by_name[target_name]:
-        script.run(args, terms)
+        d = script.run(args, terms)
+        if not d:
+            continue
+        print(format_nested_dictionary(d))
