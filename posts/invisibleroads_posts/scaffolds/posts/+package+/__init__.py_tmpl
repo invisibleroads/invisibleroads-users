@@ -1,6 +1,6 @@
 from pyramid.config import Configurator
 
-from . import views
+from .views import add_routes
 
 
 def main(global_config, **settings):
@@ -14,4 +14,4 @@ def includeme(config):
     config.add_static_view(
         '_/{{ project }}', '{{ package }}:assets',
         cache_max_age=3600)
-    views.add_routes(config)
+    add_routes(config)
