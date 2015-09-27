@@ -17,7 +17,7 @@ class Script(object):
         pass
 
     @abstractmethod
-    def run(self, args, terms):
+    def run(self, args):
         pass
 
 
@@ -29,7 +29,7 @@ class ConfigurableScript(Script):
             argument_subparser.add_argument('configuration_path')
 
     @abstractmethod
-    def run(self, args, terms):
+    def run(self, args):
         pass
 
 
@@ -60,11 +60,11 @@ def configure_subparsers(argument_subparsers, scripts_by_name):
             script.configure(argument_subparser)
 
 
-def run_scripts(scripts_by_name, args, terms, target_name=None):
+def run_scripts(scripts_by_name, args, target_name=None):
     if not target_name:
         target_name = args.command
     for script in scripts_by_name[target_name]:
-        d = script.run(args, terms)
+        d = script.run(args)
         if not d:
             continue
         print(format_nested_dictionary(d))

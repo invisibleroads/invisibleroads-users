@@ -11,7 +11,7 @@ class RecordsScript(ConfigurableScript):
     priority = 20
     function_name = 'run'
 
-    def run(self, args, terms):
+    def run(self, args):
         setup_logging(args.configuration_path)
         env = bootstrap(args.configuration_path)
         settings = env['registry'].settings
