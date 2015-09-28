@@ -55,7 +55,8 @@ def get_scripts_by_name(namespace):
 
 def configure_subparsers(argument_subparsers, scripts_by_name):
     for name, scripts in scripts_by_name.iteritems():
-        argument_subparser = argument_subparsers.add_parser(name)
+        argument_subparser = argument_subparsers.add_parser(
+            name, add_help=False)
         for script in scripts:
             script.configure(argument_subparser)
 
