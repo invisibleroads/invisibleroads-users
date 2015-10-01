@@ -1,4 +1,5 @@
 from importlib import import_module
+from os import getcwd
 from os.path import basename, isabs, join
 from pyramid.config import Configurator
 from pyramid.response import FileResponse
@@ -38,22 +39,22 @@ def configure_views(config):
     settings = config.registry.settings
     config.include('pyramid_jinja2')
     config.commit()
-    template_environment = config.get_jinja2_environment()
-    template_environment.globals['website_name'] = settings.get(
-        'website.name', 'InvisibleRoads')
-    template_environment.globals['website_sections'] = aslist(
-        settings.get('website.sections', ''))
-    template_environment.globals['render_title'] = render_title
+    config.get_jinja2_environment().globals.update({
+        'website_name': settings.get('website.name', 'InvisibleRoads'),
+        'website_sections': aslist(settings.get('website.sections', '')),
+        'render_title': render_title,
+    })
     add_routes(config)
 
 
-def add_root_asset(config, asset_path):
+def add_root_asset(config, asset_path, http_cache=3600):
     settings = config.registry.settings
-    absolute_path = resolve_asset_path(asset_path, settings['website.folder'])
+    base_folder = settings.get('website.folder', getcwd())
+    absolute_path = resolve_asset_path(asset_path, base_folder)
     asset_name = basename(absolute_path)
     config.add_view(
         lambda request: FileResponse(absolute_path, request),
-        asset_name, http_cache=3600)
+        asset_name, http_cache=http_cache)
 
 
 def resolve_asset_path(asset_path, base_folder):

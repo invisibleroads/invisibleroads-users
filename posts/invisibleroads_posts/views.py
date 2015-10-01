@@ -5,8 +5,7 @@ from pyramid.response import FileResponse
 def add_routes(config):
     config.add_route('index', '')
     config.add_view(
-        'invisibleroads_posts.views.list_posts',
-        renderer='invisibleroads_posts:templates/posts.jinja2',
+        list_posts, renderer='invisibleroads_posts:templates/posts.jinja2',
         route_name='index', http_cache=3600)
 
 
