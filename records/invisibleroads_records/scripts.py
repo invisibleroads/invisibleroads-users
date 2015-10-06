@@ -19,7 +19,7 @@ class RecordsScript(ConfigurableScript):
             return
         Base.metadata.create_all()
         module_name = settings.get(
-            'invisibleroads.' + self.function_name).strip()
+            'invisibleroads.' + self.function_name, '').strip()
         if not module_name:
             return
         module = import_module(module_name)
