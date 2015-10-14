@@ -20,7 +20,7 @@ def add_routes(config):
     config.add_view(logout, route_name='user_logout')
     config.add_view(redirect_to_wee_user, route_name='user')
     config.add_view(
-        show,
+        show_user,
         renderer='invisibleroads_users:templates/user.jinja2',
         route_name='wee_user')
 
@@ -60,7 +60,7 @@ def redirect_to_wee_user(request):
         'wee_user', id=user.id))
 
 
-def show(request):
+def show_user(request):
     check_user(request.matchdict['id'])
     return {}
 
