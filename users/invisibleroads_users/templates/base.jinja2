@@ -10,7 +10,7 @@
   <input name="target_url" type="hidden" value="{{ request.path }}">
   <div class="form-group">
   {% if user %}
-    <a class="navbar-link user-link" href="{{ request.route_path('user', id=user.id, name=user.name) }}">{{ user.name }}</a>
+    <a class="navbar-link user-link" href="{{ request.route_path('wee_user', code=encode_number(user.id)) }}">{{ user.name }}</a>
   {% endif %}
   </div>
   <button class="btn btn-default" type="submit">{{ 'Logout' if user else 'Login' }}</button>

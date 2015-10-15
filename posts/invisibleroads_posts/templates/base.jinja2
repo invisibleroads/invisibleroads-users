@@ -4,12 +4,10 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>
-{% if request.path[1:] %}
-{{ render_title(request.path) }} &middot;
-{% endif %}
+<title>{% block title %}
+{% if request.path[1:] %} {{ render_title(request.path) }} &middot; {% endif %}
 {{ website_name }}
-</title>
+{% endblock %}</title>
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <!--[if lt IE 9]>
 <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>

@@ -1,4 +1,5 @@
 import velruse
+from invisibleroads_macros.url import decode_number
 from pyramid.httpexceptions import (
     HTTPFound, HTTPMovedPermanently, HTTPNotFound)
 from pyramid.interfaces import IAuthenticationPolicy
@@ -11,8 +12,8 @@ def add_routes(config):
     config.add_route('user_login', 'users/login')
     config.add_route('user_logout', 'users/logout')
     config.add_route('users', 'users')
-    config.add_route('user', 'users/{id}')
-    config.add_route('wee_user', 'u/{id}')
+    config.add_route('user', 'users/{code}')
+    config.add_route('wee_user', 'u/{code}')
 
     config.add_view(login, route_name='user_login')
     config.add_view(finish_login, context='velruse.AuthenticationComplete')
@@ -55,14 +56,17 @@ def logout(request):
 
 
 def redirect_to_wee_user(request):
-    user = check_user(request.matchdict['id'])
+    user_code = request.matchdict['code']
+    check_user(decode_number(user_code))
     return HTTPMovedPermanently(location=request.route_path(
-        'wee_user', id=user.id))
+        'wee_user', code=user_code))
 
 
 def show_user(request):
-    check_user(request.matchdict['id'])
-    return {}
+    user_code = request.matchdict['code']
+    check_user(decode_number(user_code))
+    return dict(
+        user_code=user_code)
 
 
 def set_headers(request, email):
@@ -88,5 +92,5 @@ def get_ticket(request):
 def check_user(user_id):
     cached_user = User.get_from_cache(user_id)
     if not cached_user:
-        raise HTTPNotFound({'id': 'bad_user_id'})
+        raise HTTPNotFound({'code': 'bad_user_code'})
     return cached_user

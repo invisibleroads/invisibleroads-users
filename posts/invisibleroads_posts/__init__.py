@@ -1,4 +1,5 @@
 from importlib import import_module
+from invisibleroads_macros.url import encode_number
 from os import getcwd
 from os.path import basename, isabs, join
 from pyramid.config import Configurator
@@ -43,6 +44,7 @@ def configure_views(config):
         'website_name': settings.get('website.name', 'InvisibleRoads'),
         'website_sections': aslist(settings.get('website.sections', '')),
         'render_title': render_title,
+        'encode_number': encode_number,
     })
     add_routes(config)
 
