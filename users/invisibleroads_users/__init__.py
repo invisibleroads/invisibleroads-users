@@ -52,8 +52,7 @@ def configure_session_factory(config, prefix='session.'):
         cookie_name=settings.get(prefix + 'key', SESSION_KEY),
         cookie_secure=asbool(settings.get(prefix + 'secure', False)),
         cookie_httponly=True,
-        url=settings.get(prefix + 'storage.url', 'redis://localhost:6379'),
-        password=settings.get(prefix + 'storage.password'))
+        url=settings.get(prefix + 'storage.url', 'redis://localhost:6379'))
     config.set_session_factory(session_factory)
 
 
