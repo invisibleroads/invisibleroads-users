@@ -23,7 +23,7 @@ Install package.
 
     cd ${PYTHON_PACKAGE_FOLDER}
     python setup.py develop
-    browserify node_modules/invisibleroads-users/base.js | uglifyjs -c > invisibleroads_users/assets/base.js
+    bash refresh.sh
 
     cd ${NODE_PACKAGE_FOLDER}
     npm install -g

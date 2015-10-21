@@ -6,7 +6,7 @@ def add_routes(config):
     config.add_route('index', '')
     config.add_view(
         list_posts, renderer='invisibleroads_posts:templates/posts.jinja2',
-        route_name='index', http_cache=3600)
+        route_name='index')
 
 
 def list_posts(request):

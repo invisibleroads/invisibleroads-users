@@ -10,7 +10,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
 setup(
     name='invisibleroads',
     version='0.1',
-    description='Manage your goals',
+    description='Simple framework for extensible command line scripts',
     long_description=DESCRIPTION,
     classifiers=[
         'Programming Language :: Python',
@@ -27,7 +27,11 @@ setup(
     packages=['invisibleroads'],
     include_package_data=True,
     zip_safe=False,
-    install_requires=['stevedore'],
+    install_requires=[
+        'invisibleroads-macros',
+        'six',
+        'stevedore'
+    ],
     tests_require=[],
     entry_points=ENTRY_POINTS,
     scripts=['bin/invisibleroads'])

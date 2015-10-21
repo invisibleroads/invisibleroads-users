@@ -5,5 +5,9 @@ for MODULE_NAME in ${MODULE_NAMES}; do
     NODE_FOLDER=${PARENT_FOLDER}/node_modules/${MODULE_NAME/_/-}
     PYTHON_FOLDER=${PARENT_FOLDER}/${MODULE_NAME}
     pushd ${NODE_FOLDER} > /dev/null; npm install -g; popd > /dev/null
-    browserify ${NODE_FOLDER}/base.js | uglifyjs -c > ${PYTHON_FOLDER}/assets/base.js
+    if [[ "$1" == "--debug" || "$1" == "-d" ]]; then
+        browserify ${NODE_FOLDER}/base.js
+    else
+        browserify ${NODE_FOLDER}/base.js | uglifyjs -c > ${PYTHON_FOLDER}/assets/base.js
+    fi
 done

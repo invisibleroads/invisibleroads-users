@@ -1,3 +1,7 @@
+0.4
+---
+- Use pronounceable alphabet for URL codes
+
 0.3
 ---
 - Add extensible command line script

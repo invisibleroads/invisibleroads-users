@@ -45,13 +45,13 @@ Install project.
 Launch development server.
 
     mkdir -p xyz/assets
-    browserify node_modules/xyz/base.js > xyz/assets/base.js
+    bash refresh.sh --debug  # bash refresh.sh -d
     pserve development.ini
 
 Launch production server.
 
     mkdir -p xyz/assets
-    browserify node_modules/xyz/base.js | uglifyjs -c > xyz/assets/base.js
+    bash refresh.sh
     pserve production.ini
 
 
@@ -108,8 +108,7 @@ Prepare assets.
     cp ${SOURCE_FOLDER}/invisibleroads_posts/assets/robots.txt ${ASSETS_FOLDER}
     cp ${SOURCE_FOLDER}/invisibleroads_posts/assets/whoops.html ${ASSETS_FOLDER}
     cd ${TARGET_FOLDER}
-    # browserify node_modules/invisibleroads-posts/base.js > invisibleroads_posts/assets/base.js
-    browserify node_modules/invisibleroads-posts/base.js | uglifyjs -c > invisibleroads_posts/assets/base.js
+    bash refresh.sh
 
 Add [Bootstrap](http://getbootstrap.com).
 
