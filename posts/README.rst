@@ -45,7 +45,7 @@ Install project.
 Launch development server.
 
     mkdir -p xyz/assets
-    bash refresh.sh --debug  # bash refresh.sh -d
+    bash refresh.sh -d
     pserve development.ini
 
 Launch production server.
