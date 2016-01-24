@@ -1,12 +1,12 @@
 {% extends "invisibleroads_posts:templates/base.jinja2" %}
 
 {% block head_style_inline %}
-{{ super() }}
+{{ super() -}}
 .user-link {margin-right: 1em}
 {% endblock %}
 
 {% block head_script_inline %}
-{{ super() }}
+{{ super() -}}
 var v = d.users = {};
 v.assets_url = "{{ request.static_path('invisibleroads_users:assets/') }}";
 v.login_url = "{{ request.route_path('user_login') + '?target_url=' + request.path }}";
