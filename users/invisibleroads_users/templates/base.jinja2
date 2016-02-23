@@ -29,5 +29,5 @@ v.csrf_token = "{{ request.session.get_csrf_token() }}";
 {% endblock %}
 
 {% block body_script_loaded %}
-<script src="{{ request.static_path('invisibleroads_users:assets/base.js') }}"></script>
+<script src="{{ request.static_path('invisibleroads_users:assets/library.js') }}"></script>
 {% endblock %}
