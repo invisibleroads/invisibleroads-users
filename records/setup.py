@@ -7,20 +7,12 @@ ENTRY_POINTS = """
 initialize = invisibleroads_records.scripts:InitializeRecordsScript
 update = invisibleroads_records.scripts:UpdateRecordsScript
 """
-REQUIREMENTS = [
-    'dogpile.cache',
-    'pyramid',
-    'pyramid_tm',
-    'SQLAlchemy',
-    'transaction',
-    'zope.sqlalchemy',
-]
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst', 'CHANGES.rst'])
 setup(
     name='invisibleroads-records',
-    version='0.2',
+    version='0.2.1',
     description='Database functionality',
     long_description=DESCRIPTION,
     classifiers=[
@@ -31,9 +23,23 @@ setup(
     author='Roy Hyunjin Han',
     author_email='rhh@crosscompute.com',
     url='http://invisibleroads.com',
-    keywords='web pyramid pylons invisibleroads',
+    keywords='web wsgi bfg pylons pyramid invisibleroads',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    install_requires=REQUIREMENTS,
+    setup_requires=[
+        'pytest-runner',
+    ],
+    install_requires=[
+        'pyramid_tm',
+        'SQLAlchemy',
+        'transaction',
+        'zope.sqlalchemy',
+    ] + [
+        'dogpile.cache',
+        'invisibleroads-posts>=0.4.8',
+    ],
+    tests_require=[
+        'pytest',
+    ],
     entry_points=ENTRY_POINTS)

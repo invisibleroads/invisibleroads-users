@@ -6,7 +6,7 @@ from .models import Base, db
 
 
 def includeme(config):
-    configure_cache(config, SQLALCHEMY_CACHE, 'cache.sqlalchemy.')
+    configure_cache(config, SQLALCHEMY_CACHE, 'server_cache.sqlalchemy.')
     configure_database(config)
 
 
