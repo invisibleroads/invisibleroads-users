@@ -1,3 +1,7 @@
+0.3
+---
+- 
+
 0.2
 ---
 - Let downstream packages override User, RootFactory
