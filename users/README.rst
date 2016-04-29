@@ -14,7 +14,7 @@ Prepare environment. ::
     source ${VIRTUAL_ENV}/bin/activate
 
     export NODE_PATH=${VIRTUAL_ENV}/lib/node_modules
-    npm install -g browserify uglify-js
+    npm install -g uglify-js
 
 Install package. ::
 
@@ -24,6 +24,3 @@ Install package. ::
     cd ${PYTHON_PACKAGE_FOLDER}
     python setup.py develop
     bash refresh.sh
-
-    cd ${NODE_PACKAGE_FOLDER}
-    npm install -g
