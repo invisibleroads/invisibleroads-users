@@ -9,7 +9,7 @@ from .models import Base
 class RecordsScript(ConfigurableScript):
 
     priority = 20
-    function_name = 'run'
+    setting_name = ''
 
     def run(self, args):
         setup_logging(args.configuration_path)
@@ -18,21 +18,22 @@ class RecordsScript(ConfigurableScript):
         if 'sqlalchemy.url' not in settings:
             return
         Base.metadata.create_all()
-        module_name = settings.get(
-            'invisibleroads.' + self.function_name, '').strip()
-        if not module_name:
+        setting_value = settings.get(
+            'records.' + self.setting_name, '').strip()
+        if not setting_value:
             return
-        module = import_module(module_name)
-        function = getattr(module, self.function_name)
+        module_url, function_name = setting_value.rsplit('.', 1)
+        module = import_module(module_url)
+        function = getattr(module, function_name)
         function(env['request'])
         transaction.commit()
 
 
 class InitializeRecordsScript(RecordsScript):
 
-    function_name = 'initialize_records'
+    setting_name = 'initialize'
 
 
 class UpdateRecordsScript(RecordsScript):
 
-    function_name = 'update_records'
+    setting_name = 'update'

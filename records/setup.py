@@ -12,7 +12,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst', 'CHANGES.rst'])
 setup(
     name='invisibleroads-records',
-    version='0.2.1',
+    version='0.2.2',
     description='Database functionality',
     long_description=DESCRIPTION,
     classifiers=[

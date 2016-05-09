@@ -27,7 +27,3 @@ v.csrf_token = "{{ request.session.get_csrf_token() }}";
   <button class="btn btn-default" type="submit">{{ 'Logout' if user else 'Login' }}</button>
 </form>
 {% endblock %}
-
-{% block body_script_loaded %}
-<script src="{{ request.static_path('invisibleroads_users:assets/library.js') }}"></script>
-{% endblock %}
