@@ -1,6 +1,5 @@
 import velruse
-from pyramid.httpexceptions import (
-    HTTPFound, HTTPMovedPermanently, HTTPNotFound)
+from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.security import remember, forget
 
@@ -8,21 +7,19 @@ from .models import User, make_ticket, db
 
 
 def add_routes(config):
-    config.add_route('user_login', 'users/login')
-    config.add_route('user_logout', 'users/logout')
-    config.add_route('users', 'users')
-    config.add_route('user', 'users/{id}')
-    config.add_route('wee_user', 'u/{id}')
+    config.add_route('user_login', 'u/login')
+    config.add_route('user_logout', 'u/logout')
+    config.add_route('users', 'u')
+    config.add_route('user', 'u/{id}')
 
     config.add_view(login, route_name='user_login')
     config.add_view(finish_login, context='velruse.AuthenticationComplete')
     config.add_view(cancel_login, context='velruse.AuthenticationDenied')
     config.add_view(logout, route_name='user_logout')
-    config.add_view(redirect_to_wee_user, route_name='user')
     config.add_view(
         show_user,
         renderer='invisibleroads_users:templates/user.jinja2',
-        route_name='wee_user')
+        route_name='user')
 
 
 def login(request):
@@ -52,13 +49,6 @@ def logout(request):
     return HTTPFound(
         location=request.params.get('target_url', '/'),
         headers=forget(request))
-
-
-def redirect_to_wee_user(request):
-    user_id = request.matchdict['id']
-    check_user(user_id)
-    return HTTPMovedPermanently(location=request.route_path(
-        'wee_user', id=user_id))
 
 
 def show_user(request):
