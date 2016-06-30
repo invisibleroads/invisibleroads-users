@@ -1,5 +1,6 @@
 import logging
 from invisibleroads_macros.security import make_random_string
+from invisibleroads_posts import get_http_expiration_time
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.events import BeforeRender
@@ -21,11 +22,18 @@ def includeme(config):
     configure_security_policy(config)
     configure_session_factory(config)
     configure_third_party_authentication(config)
-    add_routes(config)
+    configure_assets(config)
     config.add_subscriber(define_add_renderer_globals(config), BeforeRender)
+    add_routes(config)
+
+
+def configure_assets(config):
+    settings = config.registry.settings
+    settings['website.dependencies'].append(config.package_name)
+    http_expiration_time = get_http_expiration_time(settings)
     config.add_static_view(
         '_/invisibleroads-users', 'invisibleroads_users:assets',
-        cache_max_age=3600)
+        cache_max_age=http_expiration_time)
 
 
 def configure_security_policy(config, prefix='authtkt.'):
