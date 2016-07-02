@@ -16,14 +16,14 @@ v.csrf_token = "{{ request.session.get_csrf_token() }}";
 {% endif %}
 {% endblock %}
 
-{% block body_navigation %}
+{% block body_navigation_top %}
 <form id="login-form" action="{{ request.route_path('user_logout' if user else 'user_login') }}" method="post" class="navbar-form navbar-right" role="navigation">
-  <input name="target_url" type="hidden" value="{{ request.path }}">
-  <div class="form-group">
-  {% if user %}
-    <a class="navbar-link user-link" href="{{ request.route_path('user', id=user.id) }}">{{ user.name }}</a>
-  {% endif %}
-  </div>
-  <button class="btn btn-default" type="submit">{{ 'Logout' if user else 'Login' }}</button>
+<input name="target_url" type="hidden" value="{{ request.path }}">
+<div class="form-group">
+{% if user %}
+<a class="navbar-link user-link" href="{{ request.route_path('user', id=user.id) }}">{{ user.name }}</a>
+{% endif %}
+</div>
+<button class="btn btn-default" type="submit">{{ 'Exit' if user else 'Start' }}</button>
 </form>
 {% endblock %}
