@@ -7,10 +7,10 @@ from .models import User, make_ticket, db
 
 
 def add_routes(config):
-    config.add_route('user_login', 'u/login')
-    config.add_route('user_logout', 'u/logout')
-    config.add_route('users', 'u')
-    config.add_route('user', 'u/{id}')
+    config.add_route('user_login', '/u/login')
+    config.add_route('user_logout', '/u/logout')
+    config.add_route('users', '/u')
+    config.add_route('user', '/u/{user_id}')
 
     config.add_view(login, route_name='user_login')
     config.add_view(finish_login, context='velruse.AuthenticationComplete')
