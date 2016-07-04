@@ -7,12 +7,12 @@
 
 {% block head_script_inline %}
 {{ super() -}}
-var v = d.users = {};
-v.assets_url = "{{ request.static_path('invisibleroads_users:assets/') }}";
-v.login_url = "{{ request.route_path('user_login') + '?target_url=' + request.path }}";
-v.user_id = {{ user.id if user else 0 }};
+l = g.invisibleroads_users = {};
+l.assets_url = "{{ request.static_path('invisibleroads_users:assets/') }}";
+l.login_url = "{{ request.route_path('user_login') + '?target_url=' + request.path }}";
+l.user_id = {{ user.id if user else 0 }};
 {% if user %}
-v.csrf_token = "{{ request.session.get_csrf_token() }}";
+l.csrf_token = "{{ request.session.get_csrf_token() }}";
 {% endif %}
 {% endblock %}
 
@@ -21,7 +21,7 @@ v.csrf_token = "{{ request.session.get_csrf_token() }}";
 <input name="target_url" type="hidden" value="{{ request.path }}">
 <div class="form-group">
 {% if user %}
-<a class="navbar-link user-link" href="{{ request.route_path('user', id=user.id) }}">{{ user.name }}</a>
+<a class="navbar-link user-link" href="{{ request.route_path('user', user_id=user.id) }}">{{ user.name }}</a>
 {% endif %}
 </div>
 <button class="btn btn-default" type="submit">{{ 'Exit' if user else 'Start' }}</button>

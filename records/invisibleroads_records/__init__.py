@@ -13,7 +13,8 @@ def includeme(config):
 def configure_database(config):
     settings = config.registry.settings
     if 'sqlalchemy.url' not in settings:
-        settings['sqlalchemy.url'] = 'sqlite://'
+        data_folder = settings['data.folder']
+        settings['sqlalchemy.url'] = 'sqlite:///%s/db.sqlite' % data_folder
     engine = engine_from_config(settings, 'sqlalchemy.')
     db.configure(bind=engine)
     Base.metadata.bind = engine
