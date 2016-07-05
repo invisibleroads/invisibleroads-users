@@ -7,12 +7,12 @@
 
 {% block head_script_inline %}
 {{ super() -}}
-l = g.invisibleroads_users = {};
-l.assets_url = "{{ request.static_path('invisibleroads_users:assets/') }}";
-l.login_url = "{{ request.route_path('user_login') + '?target_url=' + request.path }}";
-l.user_id = {{ user.id if user else 0 }};
+x = IR.users = {}
+x.assets_url = '{{ request.static_path("invisibleroads_users:assets/") }}';
+x.login_url = '{{ request.route_path("user_login") + "?target_url=" + request.path }}';
+x.user_id = {{ user.id if user else 0 }};
 {% if user %}
-l.csrf_token = "{{ request.session.get_csrf_token() }}";
+x.csrf_token = '{{ request.session.get_csrf_token() }}';
 {% endif %}
 {% endblock %}
 

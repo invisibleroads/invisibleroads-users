@@ -19,6 +19,8 @@ LOG = logging.getLogger(__name__)
 
 
 def includeme(config):
+    config.include('invisibleroads_posts')
+    config.include('invisibleroads_records')
     configure_security_policy(config)
     configure_session_factory(config)
     configure_third_party_authentication(config)
