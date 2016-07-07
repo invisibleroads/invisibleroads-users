@@ -1,10 +1,5 @@
 {% extends "invisibleroads_posts:templates/base.jinja2" %}
 
-{% block head_style_inline %}
-{{ super() -}}
-.user-link {margin-right: 1em}
-{% endblock %}
-
 {% block head_script_inline %}
 {{ super() -}}
 x = IR.users = {}
@@ -17,13 +12,16 @@ x.csrf_token = '{{ request.session.get_csrf_token() }}';
 {% endblock %}
 
 {% block body_navigation_top %}
-<form id="login-form" action="{{ request.route_path('user_logout' if user else 'user_login') }}" method="post" class="navbar-form navbar-right" role="navigation">
-<input name="target_url" type="hidden" value="{{ request.path }}">
-<div class="form-group">
-{% if user %}
-<a class="navbar-link user-link" href="{{ request.route_path('user', user_id=user.id) }}">{{ user.name }}</a>
-{% endif %}
-</div>
-<button class="btn btn-default" type="submit">{{ 'Exit' if user else 'Start' }}</button>
+{% block body_navigation_top_div %}{% endblock %}
+<form class="navbar-form navbar-right" role="navigation">
+<a href="{{ request.route_path('user_logout' if user else 'user_login') }}?target_url={{ request.path }}" class="btn btn-default">{{ 'Exit' if user else 'Start' }}</a>
 </form>
+<ul class="nav navbar-nav navbar-right">
+{% if user %}
+{% set link_path = '{{ request.route_path("user", user_id=user.id) }}' %}
+<li{% if request_path == link_path %} class="active"{% endif %}><a href="{{ link_path }}"><b>{{ user.name }}</b></a></li>
+{% block body_navigation_top_list_user %}{% endblock %}
+{% endif %}
+{% block body_navigation_top_list %}{% endblock %}
+</ul>
 {% endblock %}
