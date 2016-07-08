@@ -1,6 +1,6 @@
 import logging
+from invisibleroads_macros.configuration import resolve_attribute
 from invisibleroads_macros.security import make_random_string
-from invisibleroads_posts import get_http_expiration_time
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.events import BeforeRender
@@ -21,6 +21,7 @@ LOG = logging.getLogger(__name__)
 def includeme(config):
     config.include('invisibleroads_posts')
     config.include('invisibleroads_records')
+    configure_settings(config)
     configure_security_policy(config)
     configure_session_factory(config)
     configure_third_party_authentication(config)
@@ -29,13 +30,18 @@ def includeme(config):
     add_routes(config)
 
 
-def configure_assets(config):
+def configure_settings(config):
     settings = config.registry.settings
+
+    settings['users.user'] = resolve_attribute(settings.get(
+        'users.user')) or User
+
     settings['website.dependencies'].append(config.package_name)
-    http_expiration_time = get_http_expiration_time(settings)
-    config.add_static_view(
-        '_/invisibleroads-users', 'invisibleroads_users:assets',
-        cache_max_age=http_expiration_time)
+
+
+def configure_assets(config):
+    config.add_cached_static_view(
+        '_/invisibleroads-users', 'invisibleroads_users:assets')
 
 
 def configure_security_policy(config, prefix='authtkt.'):
@@ -77,7 +83,7 @@ def configure_third_party_authentication(config):
 
 def define_get_groups(config):
     settings = config.registry.settings
-    user_class = config.maybe_dotted(settings.get('users.user', User))
+    user_class = settings['users.user']
 
     def get_groups(user_id, request):
         'Define server-side permissions for user'
@@ -98,7 +104,7 @@ def define_get_groups(config):
 
 def define_add_renderer_globals(config):
     settings = config.registry.settings
-    user_class = config.maybe_dotted(settings.get('users.user', User))
+    user_class = settings['users.user']
 
     def add_renderer_globals(event):
         'Define client-side permissions for user'
