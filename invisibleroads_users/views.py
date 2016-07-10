@@ -25,7 +25,8 @@ def add_routes(config):
 
 
 def show_entrance(request):
-    request.session['target_url'] = request.params.get('target_url', '/')
+    request.session['target_url'] = request.params.get(
+        'target_url', '/').strip()
     try:
         return HTTPFound(location=velruse.login_url(request, 'google'))
     except AttributeError:
@@ -43,7 +44,7 @@ def show_exit(request):
         user_class.clear_from_cache(user_id)
     request.session.new_csrf_token()
     return HTTPFound(
-        location=request.params.get('target_url', '/'),
+        location=request.params.get('target_url', '/').strip(),
         headers=forget(request))
 
 
