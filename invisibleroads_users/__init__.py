@@ -32,10 +32,8 @@ def includeme(config):
 
 def configure_settings(config):
     settings = config.registry.settings
-
     settings['users.user'] = resolve_attribute(settings.get(
         'users.user')) or User
-
     settings['website.dependencies'].append(config.package_name)
 
 
