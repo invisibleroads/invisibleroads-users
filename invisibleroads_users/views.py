@@ -12,10 +12,10 @@ def add_routes(config):
     config.add_route('user_exit', '/users/exit')
     config.add_route('user', '/u/{user_id}')
 
-    config.add_view(show_entrance, route_name='user_enter')
-    config.add_view(show_exit, route_name='user_exit')
+    config.add_view(enter_user, route_name='user_enter')
+    config.add_view(exit_user, route_name='user_exit')
     config.add_view(
-        show_user,
+        see_user,
         renderer='invisibleroads_users:templates/user.jinja2',
         route_name='user')
     config.add_view(
@@ -24,7 +24,7 @@ def add_routes(config):
         cancel_authentication, context='velruse.AuthenticationDenied')
 
 
-def show_entrance(request):
+def enter_user(request):
     request.session['target_url'] = request.params.get(
         'target_url', '/').strip()
     try:
@@ -33,7 +33,7 @@ def show_entrance(request):
         return _set_headers(request, u'user@example.com')
 
 
-def show_exit(request):
+def exit_user(request):
     settings = request.registry.settings
     user_class = settings['users.user']
     user_id = request.authenticated_userid
@@ -48,7 +48,7 @@ def show_exit(request):
         headers=forget(request))
 
 
-def show_user(request):
+def see_user(request):
     settings = request.registry.settings
     user_class = settings['users.user']
     user_id = request.matchdict['id']
