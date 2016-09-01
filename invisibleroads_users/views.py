@@ -1,9 +1,11 @@
 import velruse
+from invisibleroads_macros.security import make_random_string
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
-from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.security import remember, forget
+from random import choice
+from string import letters
 
-from .models import make_ticket, db
+from .models import db
 
 
 def add_routes(config):
@@ -39,7 +41,7 @@ def exit_user(request):
     user_id = request.authenticated_userid
     cached_user = user_class.get_from_cache(user_id)
     if cached_user:
-        cached_user.ticket = make_ticket()
+        cached_user.token = _make_user_token(settings)
         db.add(cached_user)  # Reattach cached_user to session to save changes
         user_class.clear_from_cache(user_id)
     request.session.new_csrf_token()
@@ -66,13 +68,9 @@ def cancel_authentication(request):
     return HTTPFound(location=request.session.pop('target_url', '/'))
 
 
-def get_ticket(request):
-    registry = request.registry
-    authentication_policy = registry.queryUtility(IAuthenticationPolicy)
-    try:
-        return authentication_policy.cookie.identify(request)['tokens'][0]
-    except (TypeError, IndexError):
-        return ''
+def _make_user_token(settings):
+    length = settings['users.token_length']
+    return choice(letters) + make_random_string(length - 1)
 
 
 def _set_headers(request, email):
@@ -80,9 +78,9 @@ def _set_headers(request, email):
     user_class = settings['users.user']
     user = db.query(user_class).filter_by(email=email).first()
     if not user:
-        user = user_class(email=email)
+        user = user_class(email=email, token=_make_user_token(settings))
         db.add(user)
         db.flush()
     return HTTPFound(
         location=request.session.pop('target_url', '/'),
-        headers=remember(request, user.id, tokens=[user.ticket]))
+        headers=remember(request, user.id, tokens=[user.token]))

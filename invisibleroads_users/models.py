@@ -1,20 +1,13 @@
-from invisibleroads_macros.security import make_random_string
 from invisibleroads_records.libraries.cache import FromCache
 from invisibleroads_records.models import Base, db
-from random import choice
 from sqlalchemy import Column, Integer, String, Unicode
-from string import letters
-
-
-TICKET_LENGTH = 16
-make_ticket = lambda: choice(letters) + make_random_string(TICKET_LENGTH - 1)
 
 
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
     email = Column(Unicode, unique=True)
-    ticket = Column(String, default=make_ticket)
+    token = Column(String)
 
     @property
     def name(self):
