@@ -37,7 +37,7 @@ def enter_user(request):
 
 def exit_user(request):
     settings = request.registry.settings
-    user_class = settings['users.user']
+    user_class = settings['users.class']
     user_id = request.authenticated_userid
     cached_user = user_class.get_from_cache(user_id)
     if cached_user:
@@ -52,7 +52,7 @@ def exit_user(request):
 
 def see_user(request):
     settings = request.registry.settings
-    user_class = settings['users.user']
+    user_class = settings['users.class']
     user_id = request.matchdict['id']
     cached_user = user_class.get_from_cache(user_id)
     if not cached_user:
@@ -69,13 +69,13 @@ def cancel_authentication(request):
 
 
 def _make_user_token(settings):
-    length = settings['users.token_length']
-    return choice(letters) + make_random_string(length - 1)
+    token_length = settings['users.tokens.length']
+    return choice(letters) + make_random_string(token_length - 1)
 
 
 def _set_headers(request, email):
     settings = request.registry.settings
-    user_class = settings['users.user']
+    user_class = settings['users.class']
     user = db.query(user_class).filter_by(email=email).first()
     if not user:
         user = user_class(email=email, token=_make_user_token(settings))
