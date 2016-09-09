@@ -15,6 +15,7 @@ from .views import add_routes
 
 
 LOG = logging.getLogger(__name__)
+LOG.addHandler(logging.NullHandler())
 
 
 def includeme(config):
