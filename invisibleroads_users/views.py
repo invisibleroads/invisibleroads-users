@@ -5,7 +5,7 @@ from pyramid.security import remember, forget
 from random import choice
 from string import letters
 
-from .models import db
+from .models import DATABASE
 
 
 def add_routes(config):
@@ -42,7 +42,7 @@ def exit_user(request):
     cached_user = user_class.get_from_cache(user_id)
     if cached_user:
         cached_user.token = _make_user_token(settings)
-        db.add(cached_user)  # Reattach cached_user to session to save changes
+        DATABASE.add(cached_user)  # Reattach cached_user to save changes
         user_class.clear_from_cache(user_id)
     request.session.new_csrf_token()
     return HTTPFound(
@@ -76,11 +76,11 @@ def _make_user_token(settings):
 def _set_headers(request, email):
     settings = request.registry.settings
     user_class = settings['users.class']
-    user = db.query(user_class).filter_by(email=email).first()
+    user = DATABASE.query(user_class).filter_by(email=email).first()
     if not user:
         user = user_class(email=email, token=_make_user_token(settings))
-        db.add(user)
-        db.flush()
+        DATABASE.add(user)
+        DATABASE.flush()
     return HTTPFound(
         location=request.session.pop('target_url', '/'),
         headers=remember(request, user.id, tokens=[user.token]))

@@ -1,5 +1,5 @@
 from invisibleroads_records.libraries.cache import FromCache
-from invisibleroads_records.models import Base, db
+from invisibleroads_records.models import Base, DATABASE
 from sqlalchemy import Column, Integer, String, Unicode
 
 
@@ -27,5 +27,5 @@ class User(Base):
 
     @classmethod
     def _make_query(Class, id):
-        return db.query(Class).options(FromCache(
+        return DATABASE.query(Class).options(FromCache(
             cache_key='%s.id=%s' % (Class.__name__, id)))

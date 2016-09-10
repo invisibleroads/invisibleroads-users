@@ -6,7 +6,6 @@ from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.events import BeforeRender
 from pyramid.interfaces import IAuthenticationPolicy
-from pyramid.session import check_csrf_token
 from pyramid.settings import asbool
 from pyramid_redis_sessions import session_factory_from_settings
 
@@ -62,9 +61,10 @@ def configure_session_factory(config, prefix='redis.sessions.'):
     set_default(settings, prefix + 'cookie_secure', False)
     set_default(settings, prefix + 'cookie_httponly', True)
     set_default(settings, prefix + 'secret', make_random_string(128))
-    set_default(settings, prefix + 'timeout', 36000)
+    set_default(settings, prefix + 'timeout', 43200)
     set_default(settings, prefix + 'prefix', 'user_session.')
     config.set_session_factory(session_factory_from_settings(settings))
+    config.set_default_csrf_options(require_csrf=True)
 
 
 def configure_third_party_authentication(config):
@@ -84,10 +84,6 @@ def _define_get_groups(config):
         user_token = _get_user_token(request)
         if not user_token:
             return  # Cookie is bad
-        if request.method in (
-            'POST', 'PUT', 'DELETE',
-        ) and not check_csrf_token(request, raises=False):
-            return  # CSRF token does not match
         cached_user = user_class.get_from_cache(user_id)
         if not cached_user or cached_user.token != user_token:
             return  # User does not exist or user token changed
