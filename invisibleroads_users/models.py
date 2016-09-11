@@ -1,5 +1,5 @@
 from invisibleroads_records.libraries.cache import FromCache
-from invisibleroads_records.models import Base, DATABASE
+from invisibleroads_records.models import Base
 from sqlalchemy import Column, Integer, String, Unicode
 
 
@@ -18,14 +18,14 @@ class User(Base):
         return []
 
     @classmethod
-    def get_from_cache(Class, id):
-        return Class._make_query(id).get(id) if id else None
+    def get_from_cache(Class, id, database):
+        return Class._make_query(id, database).get(id) if id else None
 
     @classmethod
-    def clear_from_cache(Class, id):
-        Class._make_query(id).invalidate()
+    def clear_from_cache(Class, id, database):
+        Class._make_query(id, database).invalidate()
 
     @classmethod
-    def _make_query(Class, id):
-        return DATABASE.query(Class).options(FromCache(
-            cache_key='%s.id=%s' % (Class.__name__, id)))
+    def _make_query(Class, id, database):
+        return database.query(Class).options(
+            FromCache(cache_key='%s.id=%s' % (Class.__name__, id)))

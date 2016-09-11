@@ -5,8 +5,6 @@ from pyramid.security import remember, forget
 from random import choice
 from string import letters
 
-from .models import DATABASE
-
 
 def add_routes(config):
     config.add_route('users', '/users')
@@ -14,7 +12,7 @@ def add_routes(config):
     config.add_route('user_exit', '/users/exit')
     config.add_route('user', '/u/{user_id}')
 
-    config.add_view(enter_user, route_name='user_enter')
+    config.add_view(enter_user, route_name='user_enter', require_csrf=False)
     config.add_view(exit_user, route_name='user_exit')
     config.add_view(
         see_user,
@@ -37,13 +35,15 @@ def enter_user(request):
 
 def exit_user(request):
     settings = request.registry.settings
-    user_class = settings['users.class']
+    database = request.database
     user_id = request.authenticated_userid
-    cached_user = user_class.get_from_cache(user_id)
+
+    user_class = settings['users.class']
+    cached_user = user_class.get_from_cache(user_id, database)
     if cached_user:
         cached_user.token = _make_user_token(settings)
-        DATABASE.add(cached_user)  # Reattach cached_user to save changes
-        user_class.clear_from_cache(user_id)
+        database.add(cached_user)  # Save changes
+        user_class.clear_from_cache(user_id, database)
     request.session.new_csrf_token()
     return HTTPFound(
         location=request.params.get('target_url', '/').strip(),
@@ -52,9 +52,11 @@ def exit_user(request):
 
 def see_user(request):
     settings = request.registry.settings
-    user_class = settings['users.class']
+    database = request.database
     user_id = request.matchdict['id']
-    cached_user = user_class.get_from_cache(user_id)
+
+    user_class = settings['users.class']
+    cached_user = user_class.get_from_cache(user_id, database)
     if not cached_user:
         raise HTTPNotFound({'id': 'bad'})
     return dict(user_id=user_id)
@@ -75,12 +77,14 @@ def _make_user_token(settings):
 
 def _set_headers(request, email):
     settings = request.registry.settings
+    database = request.database
+
     user_class = settings['users.class']
-    user = DATABASE.query(user_class).filter_by(email=email).first()
+    user = database.query(user_class).filter_by(email=email).first()
     if not user:
         user = user_class(email=email, token=_make_user_token(settings))
-        DATABASE.add(user)
-        DATABASE.flush()
+        database.add(user)
+        database.flush()
     return HTTPFound(
         location=request.session.pop('target_url', '/'),
         headers=remember(request, user.id, tokens=[user.token]))
