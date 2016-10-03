@@ -1,5 +1,6 @@
 import velruse
 from invisibleroads_macros.security import make_random_string
+from invisibleroads_records.models import get_unique_instance
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.security import remember, forget
 from random import choice
@@ -82,7 +83,9 @@ def _set_headers(request, email):
     user_class = settings['users.class']
     user = database.query(user_class).filter_by(email=email).first()
     if not user:
-        user = user_class(email=email, token=_make_user_token(settings))
+        user = get_unique_instance(user_class, database)
+        user.email = email
+        user.token = _make_user_token(settings)
         database.add(user)
         database.flush()
     return HTTPFound(

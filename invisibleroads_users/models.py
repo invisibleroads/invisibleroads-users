@@ -1,11 +1,11 @@
 from invisibleroads_records.libraries.cache import FromCache
 from invisibleroads_records.models import Base
-from sqlalchemy import Column, Integer, String, Unicode
+from sqlalchemy import Column, String, Unicode
 
 
 class User(Base):
     __tablename__ = 'user'
-    id = Column(Integer, primary_key=True)
+    id = Column(String, primary_key=True, autoincrement=False)
     email = Column(Unicode, unique=True)
     token = Column(String)
 
