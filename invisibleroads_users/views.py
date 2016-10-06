@@ -8,7 +8,6 @@ from string import letters
 
 
 def add_routes(config):
-    config.add_route('users', '/users')
     config.add_route('user_enter', '/users/enter')
     config.add_route('user_exit', '/users/exit')
     config.add_route('user', '/u/{user_id}')
