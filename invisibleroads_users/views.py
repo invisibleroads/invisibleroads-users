@@ -13,7 +13,7 @@ def add_routes(config):
     config.add_route('user', '/u/{user_id}')
 
     config.add_view(enter_user, route_name='user_enter', require_csrf=False)
-    config.add_view(exit_user, route_name='user_exit')
+    config.add_view(exit_user, route_name='user_exit', require_csrf=False)
     config.add_view(
         see_user,
         renderer='invisibleroads_users:templates/user.jinja2',
