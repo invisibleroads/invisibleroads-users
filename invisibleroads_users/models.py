@@ -1,11 +1,10 @@
-from invisibleroads_records.libraries.cache import FromCache
-from invisibleroads_records.models import Base
+from invisibleroads_records.models import Base, CachedInstanceMixin
 from sqlalchemy import Column, String, Unicode
 
 
-class User(Base):
+class User(CachedInstanceMixin, Base):
+
     __tablename__ = 'user'
-    id = Column(String, primary_key=True, autoincrement=False)
     email = Column(Unicode, unique=True)
     token = Column(String)
 
@@ -16,16 +15,3 @@ class User(Base):
     @property
     def groups(self):
         return []
-
-    @classmethod
-    def get_from_cache(Class, id, database):
-        return Class._make_query(id, database).get(id) if id else None
-
-    @classmethod
-    def clear_from_cache(Class, id, database):
-        Class._make_query(id, database).invalidate()
-
-    @classmethod
-    def _make_query(Class, id, database):
-        return database.query(Class).options(
-            FromCache(cache_key='%s.id=%s' % (Class.__name__, id)))

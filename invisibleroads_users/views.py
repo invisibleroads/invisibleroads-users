@@ -1,7 +1,6 @@
 import velruse
 from invisibleroads_macros.security import make_random_string
-from invisibleroads_records.models import get_unique_instance
-from pyramid.httpexceptions import HTTPFound, HTTPNotFound
+from pyramid.httpexceptions import HTTPFound
 from pyramid.security import remember, forget
 from random import choice
 from string import letters
@@ -39,11 +38,10 @@ def exit_user(request):
     user_id = request.authenticated_userid
 
     user_class = settings['users.class']
-    cached_user = user_class.get_from_cache(user_id, database)
+    cached_user = user_class.get(user_id, database)
     if cached_user:
         cached_user.token = _make_user_token(settings)
-        database.add(cached_user)  # Save changes
-        user_class.clear_from_cache(user_id, database)
+        cached_user.update(database)
     request.session.new_csrf_token()
     return HTTPFound(
         location=request.params.get('target_url', '/').strip(),
@@ -52,14 +50,9 @@ def exit_user(request):
 
 def see_user(request):
     settings = request.registry.settings
-    database = request.database
-    user_id = request.matchdict['id']
-
     user_class = settings['users.class']
-    cached_user = user_class.get_from_cache(user_id, database)
-    if not cached_user:
-        raise HTTPNotFound({'id': 'bad'})
-    return dict(user_id=user_id)
+    cached_user = user_class.get_from(request)
+    return dict(user_id=cached_user.id)
 
 
 def finish_authentication(request):
@@ -82,7 +75,7 @@ def _set_headers(request, email):
     user_class = settings['users.class']
     user = database.query(user_class).filter_by(email=email).first()
     if not user:
-        user = get_unique_instance(user_class, database)
+        user = user_class.make_unique_instance(database)
         user.email = email
         user.token = _make_user_token(settings)
         database.add(user)

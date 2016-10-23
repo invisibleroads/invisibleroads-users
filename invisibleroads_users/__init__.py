@@ -122,7 +122,7 @@ def _define_get_groups(config):
         user_token = _get_user_token(request)
         if not user_token:
             return  # Cookie is bad
-        cached_user = user_class.get_from_cache(user_id, database)
+        cached_user = user_class.get(user_id, database)
         if not cached_user or cached_user.token != user_token:
             return  # User does not exist or user token changed
         return cached_user.groups
@@ -140,7 +140,7 @@ def _define_add_renderer_globals(config):
         database = request.database
         user_id = request.authenticated_userid
 
-        cached_user = user_class.get_from_cache(user_id, database)
+        cached_user = user_class.get(user_id, database)
         event.update(dict(user=cached_user))
 
     return add_renderer_globals
