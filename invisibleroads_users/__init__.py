@@ -2,6 +2,7 @@ import logging
 from invisibleroads_macros.configuration import resolve_attribute
 from invisibleroads_macros.iterable import set_default
 from invisibleroads_macros.security import make_random_string
+from invisibleroads_posts import add_website_dependency
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.exceptions import BadCSRFOrigin, BadCSRFToken
@@ -41,7 +42,7 @@ def configure_settings(config):
     settings = config.registry.settings
     set_default(settings, 'users.class', User, resolve_attribute)
     set_default(settings, 'users.tokens.length', 16, int)
-    settings['website.dependencies'].append(config.package_name)
+    add_website_dependency(config)
 
 
 def configure_assets(config):
