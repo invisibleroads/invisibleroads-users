@@ -64,7 +64,7 @@ def cancel_authentication(request):
 
 
 def _make_user_token(settings):
-    token_length = settings['users.tokens.length']
+    token_length = settings['users.token.length']
     return choice(letters) + make_random_string(token_length - 1)
 
 
@@ -75,7 +75,8 @@ def _set_headers(request, email):
     user_class = settings['users.class']
     user = database.query(user_class).filter_by(email=email).first()
     if not user:
-        user = user_class.make_unique_instance(database)
+        user = user_class.make_unique_instance(
+            database, settings['users.user.id.length'])
         user.email = email
         user.token = _make_user_token(settings)
         database.add(user)

@@ -41,7 +41,8 @@ def includeme(config):
 def configure_settings(config):
     settings = config.registry.settings
     set_default(settings, 'users.class', User, resolve_attribute)
-    set_default(settings, 'users.tokens.length', 16, int)
+    set_default(settings, 'users.token.length', 16, int)
+    set_default(settings, 'users.user.id.length', 16, int)
     add_website_dependency(config)
 
 
