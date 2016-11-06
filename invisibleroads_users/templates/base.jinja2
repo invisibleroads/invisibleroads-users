@@ -20,8 +20,8 @@ x.csrf_token = '{{ request.session.get_csrf_token() }}';
 </form>
 <ul class="nav navbar-nav navbar-right">
 {% if user %}
-{% set link_path = request.route_path('user', user_id=user.id) %}
-<li{% if request_path == link_path %} class="active"{% endif %}><a href="{{ link_path }}"><b>{{ user.name }}</b></a></li>
+{% set user_path = request.route_path('user', user_id=user.id) %}
+<li{% if request.path == user_path %} class="active"{% endif %}><a href="{{ user_path }}"><b>{{ user.name }}</b></a></li>
 {% block body_navigation_top_list_user %}{% endblock %}
 {% endif %}
 {% block body_navigation_top_list %}{% endblock %}
