@@ -6,8 +6,6 @@ x = IR.users = {};
 x.assets_url = '{{ request.static_path("invisibleroads_users:assets/") }}';
 {% if user %}
 x.user_id = '{{ user.id }}';
-{% endif %}
-{% if user %}
 x.csrf_token = '{{ request.session.get_csrf_token() }}';
 {% endif %}
 {% endblock %}
