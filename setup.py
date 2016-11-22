@@ -23,8 +23,8 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'invisibleroads-posts',
-        'invisibleroads-records',
-        'pyramid_redis_sessions',
+        'invisibleroads-posts>=0.5.2',
+        'invisibleroads-records>=0.3.0',
+        'pyramid-redis-sessions',
         'velruse',
     ])
