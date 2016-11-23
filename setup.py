@@ -1,3 +1,4 @@
+import sys
 from os.path import abspath, dirname, join
 from setuptools import find_packages, setup
 
@@ -5,6 +6,13 @@ from setuptools import find_packages, setup
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst', 'CHANGES.rst'])
+
+
+for command in ('register', 'upload'):
+    if command in sys.argv:
+        exit('cannot %s private repository' % command)
+
+
 setup(
     name='invisibleroads-users',
     version='0.3.0',
