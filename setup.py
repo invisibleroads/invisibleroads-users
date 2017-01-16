@@ -30,6 +30,9 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
+    setup_requires=[
+        'pytest-runner'
+    ],
     install_requires=[
         'invisibleroads-posts>=0.5.2',
         'invisibleroads-records>=0.3.0',
