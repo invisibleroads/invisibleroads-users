@@ -75,7 +75,7 @@ def _set_headers(request, email):
     user_class = settings['users.class']
     user = database.query(user_class).filter_by(email=email).first()
     if not user:
-        user = user_class.make_unique_instance(
+        user = user_class.make_unique_record(
             database, settings['user.id.length'])
         user.email = email
         user.token = _make_user_token(settings)

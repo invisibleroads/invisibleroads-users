@@ -1,8 +1,8 @@
-from invisibleroads_records.models import Base, CachedInstanceMixin
+from invisibleroads_records.models import Base, CachedRecordMixin
 from sqlalchemy import Column, String, Unicode
 
 
-class User(CachedInstanceMixin, Base):
+class User(CachedRecordMixin, Base):
 
     __tablename__ = 'user'
     email = Column(Unicode, unique=True)
