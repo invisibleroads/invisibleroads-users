@@ -2,12 +2,13 @@ import logging
 from invisibleroads_macros.configuration import resolve_attribute
 from invisibleroads_macros.iterable import set_default
 from invisibleroads_macros.security import make_random_string
-from invisibleroads_posts import add_website_dependency
+from invisibleroads_posts import (
+    InvisibleRoadsConfigurator, add_routes_for_fused_assets,
+    add_website_dependency)
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.exceptions import BadCSRFOrigin, BadCSRFToken
 from pyramid.events import BeforeRender
-from pyramid.interfaces import IAuthenticationPolicy
 from pyramid.settings import asbool
 from pyramid_redis_sessions import session_factory_from_settings
 from redis import ConnectionError
@@ -26,6 +27,13 @@ Is the redis server running?
 sudo systemctl start redis"""
 
 
+def main(global_config, **settings):
+    config = InvisibleRoadsConfigurator(settings=settings)
+    includeme(config)
+    add_routes_for_fused_assets(config)
+    return config.make_wsgi_app()
+
+
 def includeme(config):
     config.include('invisibleroads_posts')
     config.include('invisibleroads_records')
@@ -41,7 +49,6 @@ def includeme(config):
 def configure_settings(config):
     settings = config.registry.settings
     set_default(settings, 'users.class', User, resolve_attribute)
-    set_default(settings, 'users.token.length', 16, int)
     set_default(settings, 'user.id.length', 16, int)
     add_website_dependency(config)
 
@@ -59,7 +66,7 @@ def configure_security_policy(config, prefix='users.authtkts.'):
         secure=asbool(settings.get(prefix + 'cookie_secure', False)),
         http_only=asbool(settings.get(prefix + 'cookie_httponly', True)),
         secret=settings.get(prefix + 'secret', make_random_string(128)),
-        callback=_define_get_groups(config),
+        callback=_define_get_principals(config),
         hashalg='sha512')
     config.set_authorization_policy(authorization_policy)
     config.set_authentication_policy(authentication_policy)
@@ -112,23 +119,19 @@ def handle_csrf_token_error(context, request):
     return response
 
 
-def _define_get_groups(config):
+def _define_get_principals(config):
     settings = config.registry.settings
     user_class = settings['users.class']
 
-    def get_groups(user_id, request):
+    def get_principals(user_id, request):
         'Define server-side permissions for user'
         database = request.database
+        cached_user = user_class.get(database, user_id)
+        if not cached_user:
+            return  # User does not exist
+        return cached_user.principals
 
-        user_token = _get_user_token(request)
-        if not user_token:
-            return  # Cookie is bad
-        cached_user = user_class.get(user_id, database)
-        if not cached_user or cached_user.token != user_token:
-            return  # User does not exist or user token changed
-        return cached_user.groups
-
-    return get_groups
+    return get_principals
 
 
 def _define_add_renderer_globals(config):
@@ -140,19 +143,8 @@ def _define_add_renderer_globals(config):
         request = event['request']
         database = request.database
         user_id = request.authenticated_userid
-
-        cached_user = user_class.get(user_id, database)
-        event.update(dict(user=cached_user))
+        if user_id:
+            cached_user = user_class.get(database, user_id)
+            event.update(dict(user=cached_user))
 
     return add_renderer_globals
-
-
-def _get_user_token(request):
-    authentication_policy = request.registry.queryUtility(
-        IAuthenticationPolicy)
-    user_information = authentication_policy.cookie.identify(request)
-    try:
-        user_token = user_information['tokens'][0]
-    except (TypeError, IndexError):
-        user_token = ''
-    return user_token

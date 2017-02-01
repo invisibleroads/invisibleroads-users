@@ -3,6 +3,10 @@ from os.path import abspath, dirname, join
 from setuptools import find_packages, setup
 
 
+ENTRY_POINTS = """
+[paste.app_factory]
+main = invisibleroads_users:main
+"""
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst', 'CHANGES.rst'])
@@ -15,7 +19,7 @@ for command in ('register', 'upload'):
 
 setup(
     name='invisibleroads-users',
-    version='0.3.2',
+    version='0.4.0',
     description='Authentication and authorization',
     long_description=DESCRIPTION,
     classifiers=[
@@ -38,4 +42,5 @@ setup(
         'invisibleroads-records>=0.4.0',
         'pyramid-redis-sessions',
         'velruse',
-    ])
+    ],
+    entry_points=ENTRY_POINTS)

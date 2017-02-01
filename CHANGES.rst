@@ -1,6 +1,11 @@
+0.4
+---
+- Remove user.token
+
 0.3
 ---
 - Add UserFolderMixin
+- Include CSRF token for PATCH requests
 
 0.2
 ---

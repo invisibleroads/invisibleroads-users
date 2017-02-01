@@ -1,9 +1,6 @@
 import velruse
-from invisibleroads_macros.security import make_random_string
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import remember, forget
-from random import choice
-from string import letters
 
 
 def add_routes(config):
@@ -33,16 +30,7 @@ def enter_user(request):
 
 
 def exit_user(request):
-    settings = request.registry.settings
-    database = request.database
-    user_id = request.authenticated_userid
-
-    user_class = settings['users.class']
-    cached_user = user_class.get(user_id, database)
-    if cached_user:
-        cached_user.token = _make_user_token(settings)
-        cached_user.update(database)
-    request.session.new_csrf_token()
+    request.session.invalidate()
     return HTTPFound(
         location=request.params.get('target_url', '/').strip(),
         headers=forget(request))
@@ -63,24 +51,17 @@ def cancel_authentication(request):
     return HTTPFound(location=request.session.pop('target_url', '/'))
 
 
-def _make_user_token(settings):
-    token_length = settings['users.token.length']
-    return choice(letters) + make_random_string(token_length - 1)
-
-
 def _set_headers(request, email):
     settings = request.registry.settings
     database = request.database
-
     user_class = settings['users.class']
     user = database.query(user_class).filter_by(email=email).first()
     if not user:
         user = user_class.make_unique_record(
             database, settings['user.id.length'])
         user.email = email
-        user.token = _make_user_token(settings)
         database.add(user)
         database.flush()
     return HTTPFound(
         location=request.session.pop('target_url', '/'),
-        headers=remember(request, user.id, tokens=[user.token]))
+        headers=remember(request, user.id))
