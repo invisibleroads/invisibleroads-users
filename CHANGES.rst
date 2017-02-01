@@ -1,6 +1,6 @@
 0.3
 ---
-- 
+- Add UserFolderMixin
 
 0.2
 ---

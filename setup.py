@@ -15,7 +15,7 @@ for command in ('register', 'upload'):
 
 setup(
     name='invisibleroads-users',
-    version='0.3.1',
+    version='0.3.2',
     description='Authentication and authorization',
     long_description=DESCRIPTION,
     classifiers=[
@@ -35,7 +35,7 @@ setup(
     ],
     install_requires=[
         'invisibleroads-posts>=0.5.2',
-        'invisibleroads-records>=0.3.0',
+        'invisibleroads-records>=0.4.0',
         'pyramid-redis-sessions',
         'velruse',
     ])
