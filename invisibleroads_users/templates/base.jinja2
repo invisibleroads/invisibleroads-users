@@ -14,7 +14,7 @@ x.csrf_token = '{{ request.session.get_csrf_token() }}';
 {% block body_navigation_top_div %}{% endblock %}
 <form id="enter-user-form" class="navbar-form navbar-right" role="navigation" action="{{ request.route_path('user_exit' if user else 'user_enter') }}" method="post">
 <input name="target_url" type="hidden" value="{% block target_url %}{{ request.path }}{% endblock %}">
-<button type="submit" class="btn btn-default">{{ 'Exit' if user else 'Start' }}</button>
+<button type="submit" class="btn btn-default">{% if user %}Exit{% else %}Start{% endif %}</button>
 </form>
 <ul class="nav navbar-nav navbar-right">
 {% if user %}
