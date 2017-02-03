@@ -143,8 +143,7 @@ def _define_add_renderer_globals(config):
         request = event['request']
         database = request.database
         user_id = request.authenticated_userid
-        if user_id:
-            cached_user = user_class.get(database, user_id)
-            event.update(dict(user=cached_user))
+        cached_user = user_class.get(database, user_id)
+        event.update(dict(user=cached_user))
 
     return add_renderer_globals
