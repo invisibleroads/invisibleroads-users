@@ -1,5 +1,6 @@
 0.4
 ---
+- Define request.authenticated_user
 - Remove user.token
 
 0.3

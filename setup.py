@@ -38,9 +38,13 @@ setup(
         'pytest-runner'
     ],
     install_requires=[
-        'invisibleroads-posts>=0.5.2',
+        'invisibleroads-macros>=0.8.0',
+        'invisibleroads-posts>=0.5.3',
         'invisibleroads-records>=0.4.0',
+        'pyramid',
         'pyramid-redis-sessions',
+        'redis',
+        'sqlalchemy',
         'velruse',
     ],
     entry_points=ENTRY_POINTS)

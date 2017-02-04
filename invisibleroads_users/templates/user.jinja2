@@ -1,9 +1,5 @@
-{% extends "invisibleroads_users:templates/base.jinja2" %}
+{% extends base_template %}
 
 {% block page_title %}
-{{ user_id }}
-&middot;
-Users
-&middot;
-{{ website_name }}
+{{ user.name }} &middot; Users &middot; {{ website_name }}
 {% endblock %}

@@ -9,11 +9,13 @@ from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.exceptions import BadCSRFOrigin, BadCSRFToken
 from pyramid.events import BeforeRender
+from pyramid.security import Allow, Everyone
 from pyramid.settings import asbool
 from pyramid_redis_sessions import session_factory_from_settings
 from redis import ConnectionError
 
 from .models import User
+from .settings import SETTINGS
 from .views import add_routes
 
 
@@ -25,6 +27,13 @@ could not access redis
 Is the redis server running?
 
 sudo systemctl start redis"""
+
+
+class RootFactory(object):
+
+    __acl__ = [
+        (Allow, Everyone, 'see-user'),
+    ]
 
 
 def main(global_config, **settings):
@@ -41,24 +50,20 @@ def includeme(config):
     configure_security_policy(config)
     configure_http_session_factory(config)
     configure_third_party_authentication(config)
+    configure_views(config)
     configure_assets(config)
-    config.add_subscriber(_define_add_renderer_globals(config), BeforeRender)
     add_routes(config)
 
 
-def configure_settings(config):
+def configure_settings(config, prefix='invisibleroads_users.'):
     settings = config.registry.settings
-    set_default(settings, 'users.class', User, resolve_attribute)
+    SETTINGS['user_class'] = set_default(
+        settings, prefix + 'class', User, resolve_attribute)
     set_default(settings, 'user.id.length', 16, int)
     add_website_dependency(config)
 
 
-def configure_assets(config):
-    config.add_cached_static_view(
-        '_/invisibleroads-users', 'invisibleroads_users:assets')
-
-
-def configure_security_policy(config, prefix='users.authtkts.'):
+def configure_security_policy(config, prefix='invisibleroads_users.authtkts.'):
     settings = config.registry.settings
     authorization_policy = ACLAuthorizationPolicy()
     authentication_policy = AuthTktAuthenticationPolicy(
@@ -70,6 +75,9 @@ def configure_security_policy(config, prefix='users.authtkts.'):
         hashalg='sha512')
     config.set_authorization_policy(authorization_policy)
     config.set_authentication_policy(authentication_policy)
+    config.add_request_method(lambda request: SETTINGS['user_class'].get(
+        request.database, request.authenticated_userid
+    ), 'authenticated_user', reify=True)
 
 
 def configure_http_session_factory(config, prefix='redis.sessions.'):
@@ -96,6 +104,16 @@ def configure_third_party_authentication(config):
         LOG.warn('missing velruse.google.consumer_secret')
 
 
+def configure_views(config):
+    config.set_root_factory(RootFactory)
+    config.add_subscriber(_define_add_renderer_globals(config), BeforeRender)
+
+
+def configure_assets(config):
+    config.add_cached_static_view(
+        '_/invisibleroads-users', 'invisibleroads_users:assets')
+
+
 def handle_redis_connection_error(context, request):
     response = request.response
     response.status_int = 500
@@ -120,30 +138,24 @@ def handle_csrf_token_error(context, request):
 
 
 def _define_get_principals(config):
-    settings = config.registry.settings
-    user_class = settings['users.class']
+    user_class = SETTINGS['user_class']
 
     def get_principals(user_id, request):
         'Define server-side permissions for user'
         database = request.database
-        cached_user = user_class.get(database, user_id)
-        if not cached_user:
+        user = user_class.get(database, user_id)
+        if not user:
             return  # User does not exist
-        return cached_user.principals
+        return user.principals
 
     return get_principals
 
 
 def _define_add_renderer_globals(config):
-    settings = config.registry.settings
-    user_class = settings['users.class']
 
     def add_renderer_globals(event):
         'Define client-side permissions for user'
         request = event['request']
-        database = request.database
-        user_id = request.authenticated_userid
-        cached_user = user_class.get(database, user_id)
-        event.update(dict(user=cached_user))
+        event.update(dict(authenticated_user=request.authenticated_user))
 
     return add_renderer_globals

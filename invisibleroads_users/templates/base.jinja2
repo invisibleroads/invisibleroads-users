@@ -1,25 +1,25 @@
-{% extends "invisibleroads_posts:templates/base.jinja2" %}
+{% extends 'invisibleroads_posts:templates/base.jinja2' %}
 
 {% block head_script_inline %}
 {{ super() -}}
 x = IR.users = {};
 x.assets_url = '{{ request.static_path("invisibleroads_users:assets/") }}';
-{% if user %}
-x.user_id = '{{ user.id }}';
+{% if authenticated_user %}
+x.user_id = '{{ authenticated_user.id }}';
 x.csrf_token = '{{ request.session.get_csrf_token() }}';
 {% endif %}
 {% endblock %}
 
 {% block body_navigation_top %}
 {% block body_navigation_top_div %}{% endblock %}
-<form id="enter-user-form" class="navbar-form navbar-right" role="navigation" action="{{ request.route_path('user_exit' if user else 'user_enter') }}" method="post">
+<form id="enter-user-form" class="navbar-form navbar-right" role="navigation" action="{{ request.route_path('user_exit' if authenticated_user else 'user_enter') }}" method="post">
 <input name="target_url" type="hidden" value="{% block target_url %}{{ request.path }}{% endblock %}">
-<button type="submit" class="btn btn-default">{% if user %}Exit{% else %}Start{% endif %}</button>
+<button type="submit" class="btn btn-default">{% if authenticated_user %}Exit{% else %}Start{% endif %}</button>
 </form>
 <ul class="nav navbar-nav navbar-right">
-{% if user %}
-{% set user_path = request.route_path('user', user_id=user.id) %}
-<li{% if request.path == user_path %} class="active"{% endif %}><a href="{{ user_path }}"><b>{{ user.name }}</b></a></li>
+{% if authenticated_user %}
+{% set authenticated_user_url = request.route_path('user', user_id=authenticated_user.id) %}
+<li{% if request.path == authenticated_user_url %} class="active"{% endif %}><a href="{{ authenticated_user_url }}"><b>{{ authenticated_user.name }}</b></a></li>
 {% block body_navigation_top_list_user %}{% endblock %}
 {% endif %}
 {% block body_navigation_top_list %}{% endblock %}

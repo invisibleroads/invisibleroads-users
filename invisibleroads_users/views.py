@@ -2,6 +2,8 @@ import velruse
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import remember, forget
 
+from .settings import SETTINGS
+
 
 def add_routes(config):
     config.add_route('user_enter', '/users/enter')
@@ -12,6 +14,7 @@ def add_routes(config):
     config.add_view(exit_user, route_name='user_exit', require_csrf=False)
     config.add_view(
         see_user,
+        permission='see-user',
         renderer='invisibleroads_users:templates/user.jinja2',
         route_name='user')
     config.add_view(
@@ -37,10 +40,7 @@ def exit_user(request):
 
 
 def see_user(request):
-    settings = request.registry.settings
-    user_class = settings['users.class']
-    cached_user = user_class.get_from(request)
-    return dict(user_id=cached_user.id)
+    return dict(user=SETTINGS['user_class'].get_from(request))
 
 
 def finish_authentication(request):
@@ -54,7 +54,7 @@ def cancel_authentication(request):
 def _set_headers(request, email):
     settings = request.registry.settings
     database = request.database
-    user_class = settings['users.class']
+    user_class = SETTINGS['user_class']
     user = database.query(user_class).filter_by(email=email).first()
     if not user:
         user = user_class.make_unique_record(
