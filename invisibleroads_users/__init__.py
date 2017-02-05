@@ -35,6 +35,9 @@ class RootFactory(object):
         (Allow, Everyone, 'see-user'),
     ]
 
+    def __init__(self, request):
+        pass
+
 
 def main(global_config, **settings):
     config = InvisibleRoadsConfigurator(settings=settings)
@@ -52,7 +55,6 @@ def includeme(config):
     configure_third_party_authentication(config)
     configure_views(config)
     configure_assets(config)
-    add_routes(config)
 
 
 def configure_settings(config, prefix='invisibleroads_users.'):
@@ -107,6 +109,7 @@ def configure_third_party_authentication(config):
 def configure_views(config):
     config.set_root_factory(RootFactory)
     config.add_subscriber(_define_add_renderer_globals(config), BeforeRender)
+    add_routes(config)
 
 
 def configure_assets(config):
