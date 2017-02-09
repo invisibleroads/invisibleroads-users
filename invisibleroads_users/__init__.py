@@ -12,7 +12,7 @@ from pyramid.events import BeforeRender
 from pyramid.security import Allow, Everyone
 from pyramid.settings import asbool
 from pyramid_redis_sessions import session_factory_from_settings
-from redis import ConnectionError
+from redis import ConnectionError, StrictRedis
 
 from .models import User
 from .settings import SETTINGS
@@ -95,6 +95,10 @@ def configure_http_session_factory(config, prefix='redis.sessions.'):
     config.add_view(handle_redis_connection_error, context=ConnectionError)
     config.add_view(handle_csrf_origin_error, context=BadCSRFOrigin)
     config.add_view(handle_csrf_token_error, context=BadCSRFToken)
+    try:
+        StrictRedis().info()
+    except ConnectionError:
+        LOG.error(REDIS_CONNECTION_ERROR_MESSAGE)
 
 
 def configure_third_party_authentication(config):
