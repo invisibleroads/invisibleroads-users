@@ -2,6 +2,7 @@ import velruse
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import remember, forget
 
+from .events import UserAdded
 from .settings import SETTINGS
 
 
@@ -29,7 +30,7 @@ def enter_user(request):
     try:
         return HTTPFound(location=velruse.login_url(request, 'google'))
     except AttributeError:
-        return _set_headers(request, u'user@example.com')
+        return _set_headers(u'user@example.com', request)
 
 
 def exit_user(request):
@@ -44,14 +45,14 @@ def see_user(request):
 
 
 def finish_authentication(request):
-    return _set_headers(request, request.context.profile['verifiedEmail'])
+    return _set_headers(request.context.profile['verifiedEmail'], request)
 
 
 def cancel_authentication(request):
     return HTTPFound(location=request.session.pop('target_url', '/'))
 
 
-def _set_headers(request, email):
+def _set_headers(email, request):
     settings = request.registry.settings
     database = request.database
     user_class = SETTINGS['user_class']
@@ -62,6 +63,7 @@ def _set_headers(request, email):
         user.email = email
         database.add(user)
         database.flush()
+        request.registry.notify(UserAdded(user, request))
     return HTTPFound(
         location=request.session.pop('target_url', '/'),
         headers=remember(request, user.id))

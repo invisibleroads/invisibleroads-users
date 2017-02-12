@@ -73,7 +73,7 @@ def configure_security_policy(config, prefix='invisibleroads_users.authtkts.'):
         secure=asbool(settings.get(prefix + 'cookie_secure', False)),
         http_only=asbool(settings.get(prefix + 'cookie_httponly', True)),
         secret=settings.get(prefix + 'secret', make_random_string(128)),
-        callback=_define_get_principals(config),
+        callback=define_get_principals(config),
         hashalg='sha512')
     config.set_authorization_policy(authorization_policy)
     config.set_authentication_policy(authentication_policy)
@@ -112,7 +112,7 @@ def configure_third_party_authentication(config):
 
 def configure_views(config):
     config.set_root_factory(RootFactory)
-    config.add_subscriber(_define_add_renderer_globals(config), BeforeRender)
+    config.add_subscriber(define_add_renderer_globals(config), BeforeRender)
     add_routes(config)
 
 
@@ -144,7 +144,7 @@ def handle_csrf_token_error(context, request):
     return response
 
 
-def _define_get_principals(config):
+def define_get_principals(config):
     user_class = SETTINGS['user_class']
 
     def get_principals(user_id, request):
@@ -158,7 +158,7 @@ def _define_get_principals(config):
     return get_principals
 
 
-def _define_add_renderer_globals(config):
+def define_add_renderer_globals(config):
 
     def add_renderer_globals(event):
         'Define client-side permissions for user'
