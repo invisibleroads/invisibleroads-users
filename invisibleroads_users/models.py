@@ -1,10 +1,8 @@
-from invisibleroads_records.models import Base, CachedRecordMixin
+from invisibleroads_records.models import CachedRecordMixin
 from sqlalchemy import Column, Unicode
 
-from .settings import SETTINGS
 
-
-class User(CachedRecordMixin, Base):
+class UserMixin(CachedRecordMixin):
 
     __tablename__ = 'user'
     email = Column(Unicode, unique=True)
@@ -16,7 +14,3 @@ class User(CachedRecordMixin, Base):
     @property
     def principals(self):
         return []
-
-
-def get_user(database, user_id):
-    return SETTINGS['user_class'].get(database, user_id)

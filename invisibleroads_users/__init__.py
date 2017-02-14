@@ -5,6 +5,7 @@ from invisibleroads_macros.security import make_random_string
 from invisibleroads_posts import (
     InvisibleRoadsConfigurator, add_routes_for_fused_assets,
     add_website_dependency)
+from invisibleroads_records.models import Base
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.exceptions import BadCSRFOrigin, BadCSRFToken
@@ -14,8 +15,7 @@ from pyramid.settings import asbool
 from pyramid_redis_sessions import session_factory_from_settings
 from redis import ConnectionError, StrictRedis
 
-from .models import User
-from .settings import SETTINGS
+from . import models
 from .views import add_routes
 
 
@@ -59,9 +59,11 @@ def includeme(config):
 
 def configure_settings(config, prefix='invisibleroads_users.'):
     settings = config.registry.settings
-    SETTINGS['user_class'] = set_default(
-        settings, prefix + 'class', User, resolve_attribute)
-    set_default(settings, 'user.id.length', 16, int)
+    set_default(settings, 'user.id.length', 32, int)
+    UserMixin = set_default(
+        settings, prefix + 'user_mixin',
+        'invisibleroads_users.models:UserMixin', resolve_attribute)
+    models.User = type('User', (UserMixin, Base), {})
     add_website_dependency(config)
 
 
@@ -73,11 +75,11 @@ def configure_security_policy(config, prefix='invisibleroads_users.authtkts.'):
         secure=asbool(settings.get(prefix + 'cookie_secure', False)),
         http_only=asbool(settings.get(prefix + 'cookie_httponly', True)),
         secret=settings.get(prefix + 'secret', make_random_string(128)),
-        callback=define_get_principals(config),
+        callback=get_principals,
         hashalg='sha512')
     config.set_authorization_policy(authorization_policy)
     config.set_authentication_policy(authentication_policy)
-    config.add_request_method(lambda request: SETTINGS['user_class'].get(
+    config.add_request_method(lambda request: models.User.get(
         request.database, request.authenticated_userid
     ), 'authenticated_user', reify=True)
 
@@ -112,7 +114,7 @@ def configure_third_party_authentication(config):
 
 def configure_views(config):
     config.set_root_factory(RootFactory)
-    config.add_subscriber(define_add_renderer_globals(config), BeforeRender)
+    config.add_subscriber(add_renderer_globals, BeforeRender)
     add_routes(config)
 
 
@@ -144,25 +146,16 @@ def handle_csrf_token_error(context, request):
     return response
 
 
-def define_get_principals(config):
-    user_class = SETTINGS['user_class']
-
-    def get_principals(user_id, request):
-        'Define server-side permissions for user'
-        database = request.database
-        user = user_class.get(database, user_id)
-        if not user:
-            return  # User does not exist
-        return user.principals
-
-    return get_principals
+def get_principals(user_id, request):
+    'Define server-side permissions for user'
+    database = request.database
+    user = models.User.get(database, user_id)
+    if not user:
+        return  # User does not exist
+    return user.principals
 
 
-def define_add_renderer_globals(config):
-
-    def add_renderer_globals(event):
-        'Define client-side permissions for user'
-        request = event['request']
-        event.update(dict(authenticated_user=request.authenticated_user))
-
-    return add_renderer_globals
+def add_renderer_globals(event):
+    'Define client-side permissions for user'
+    request = event['request']
+    event.update(dict(authenticated_user=request.authenticated_user))

@@ -2,8 +2,8 @@ import velruse
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import remember, forget
 
+from . import models
 from .events import UserAdded
-from .settings import SETTINGS
 
 
 def add_routes(config):
@@ -25,8 +25,8 @@ def add_routes(config):
 
 
 def enter_user(request):
-    request.session['target_url'] = request.params.get(
-        'target_url', '/').strip()
+    params = request.params
+    request.session['target_url'] = params.get('target_url', '/').strip()
     try:
         return HTTPFound(location=velruse.login_url(request, 'google'))
     except AttributeError:
@@ -34,18 +34,21 @@ def enter_user(request):
 
 
 def exit_user(request):
+    params = request.params
     request.session.invalidate()
     return HTTPFound(
-        location=request.params.get('target_url', '/').strip(),
+        location=params.get('target_url', '/').strip(),
         headers=forget(request))
 
 
 def see_user(request):
-    return dict(user=SETTINGS['user_class'].get_from(request))
+    return dict(user=models.User.get_from(request))
 
 
 def finish_authentication(request):
-    return _set_headers(request.context.profile['verifiedEmail'], request)
+    context = request.context
+    profile = context.profile
+    return _set_headers(profile['verifiedEmail'], request)
 
 
 def cancel_authentication(request):
@@ -53,13 +56,12 @@ def cancel_authentication(request):
 
 
 def _set_headers(email, request):
-    settings = request.registry.settings
     database = request.database
-    user_class = SETTINGS['user_class']
-    user = database.query(user_class).filter_by(email=email).first()
+    settings = request.registry.settings
+    user = database.query(models.User).filter_by(email=email).first()
     if not user:
-        user = user_class.make_unique_record(
-            database, settings['user.id.length'])
+        user = models.User.make_unique_record(database, settings[
+            'user.id.length'])
         user.email = email
         database.add(user)
         database.flush()
