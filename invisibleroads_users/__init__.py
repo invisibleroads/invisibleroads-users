@@ -15,7 +15,7 @@ from pyramid.settings import asbool
 from pyramid_redis_sessions import session_factory_from_settings
 from redis import ConnectionError, StrictRedis
 
-from . import models
+from . import models as m
 from .views import add_routes
 
 
@@ -61,9 +61,9 @@ def configure_settings(config, prefix='invisibleroads_users.'):
     settings = config.registry.settings
     set_default(settings, 'user.id.length', 32, int)
     UserMixin = set_default(
-        settings, prefix + 'user_mixin', models.UserMixin, resolve_attribute)
-    if not hasattr(models, 'User'):
-        models.User = type('User', (UserMixin, Base), {})
+        settings, prefix + 'user_mixin', m.UserMixin, resolve_attribute)
+    if not hasattr(m, 'User'):
+        m.User = type('User', (UserMixin, Base), {})
     add_website_dependency(config)
 
 
@@ -79,7 +79,7 @@ def configure_security_policy(config, prefix='invisibleroads_users.authtkts.'):
         hashalg='sha512')
     config.set_authorization_policy(authorization_policy)
     config.set_authentication_policy(authentication_policy)
-    config.add_request_method(lambda request: models.User.get(
+    config.add_request_method(lambda request: m.User.get(
         request.database, request.authenticated_userid
     ), 'authenticated_user', reify=True)
 
@@ -149,7 +149,7 @@ def handle_csrf_token_error(context, request):
 def get_principals(user_id, request):
     'Define server-side permissions for user'
     database = request.database
-    user = models.User.get(database, user_id)
+    user = m.User.get(database, user_id)
     if not user:
         return  # User does not exist
     return user.principals

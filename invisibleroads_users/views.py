@@ -2,7 +2,7 @@ import velruse
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import remember, forget
 
-from . import models
+from . import models as m
 from .events import UserAdded
 
 
@@ -42,7 +42,7 @@ def exit_user(request):
 
 
 def see_user(request):
-    return dict(user=models.User.get_from(request))
+    return dict(user=m.User.get_from(request))
 
 
 def finish_authentication(request):
@@ -58,9 +58,9 @@ def cancel_authentication(request):
 def _set_headers(email, request):
     database = request.database
     settings = request.registry.settings
-    user = database.query(models.User).filter_by(email=email).first()
+    user = database.query(m.User).filter_by(email=email).first()
     if not user:
-        user = models.User.make_unique_record(database, settings[
+        user = m.User.make_unique_record(database, settings[
             'user.id.length'])
         user.email = email
         database.add(user)
