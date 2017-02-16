@@ -61,9 +61,9 @@ def configure_settings(config, prefix='invisibleroads_users.'):
     settings = config.registry.settings
     set_default(settings, 'user.id.length', 32, int)
     UserMixin = set_default(
-        settings, prefix + 'user_mixin',
-        'invisibleroads_users.models:UserMixin', resolve_attribute)
-    models.User = type('User', (UserMixin, Base), {})
+        settings, prefix + 'user_mixin', models.UserMixin, resolve_attribute)
+    if not hasattr(models, 'User'):
+        models.User = type('User', (UserMixin, Base), {})
     add_website_dependency(config)
 
 
