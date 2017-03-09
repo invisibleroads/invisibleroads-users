@@ -30,7 +30,7 @@ def enter_user(request):
     try:
         return HTTPFound(location=velruse.login_url(request, 'google'))
     except AttributeError:
-        return _set_headers(u'user@example.com', request)
+        return _set_headers(params.get('email', u'user@example.com'), request)
 
 
 def exit_user(request):
