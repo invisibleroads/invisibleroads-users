@@ -38,8 +38,8 @@ setup(
         'pytest-runner'
     ],
     install_requires=[
-        'invisibleroads-macros>=0.8.1.1',
-        'invisibleroads-posts>=0.5.4.1',
+        'invisibleroads-macros>=0.8.1.3',
+        'invisibleroads-posts>=0.5.4.2',
         'invisibleroads-records>=0.4.0',
         'pyramid',
         'pyramid-redis-sessions',
