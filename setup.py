@@ -19,7 +19,7 @@ for command in ('register', 'upload'):
 
 setup(
     name='invisibleroads-users',
-    version='0.4.0',
+    version='0.4.1',
     description='Authentication and authorization',
     long_description=DESCRIPTION,
     classifiers=[
