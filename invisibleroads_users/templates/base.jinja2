@@ -7,6 +7,9 @@ x.assets_url = '{{ request.static_path("invisibleroads_users:assets/") }}';
 {% if authenticated_user %}
 x.user_id = '{{ authenticated_user.id }}';
 x.csrf_token = '{{ request.session.get_csrf_token() }}';
+{% if google_analytics_property_id %}
+ga('set', 'userId', x.user_id);
+{% endif %}
 {% endif %}
 {% endblock %}
 
