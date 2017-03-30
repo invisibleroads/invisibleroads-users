@@ -17,7 +17,7 @@ ga('set', 'userId', x.user_id);
 {% block body_navigation_top_div %}{% endblock %}
 <form id="enter-user-form" class="navbar-form navbar-right" role="navigation" action="{{ request.route_path('user_exit' if authenticated_user else 'user_enter') }}" method="post">
 <input name="target_url" type="hidden" value="{% block target_url %}{{ request.path }}{% endblock %}">
-<button type="submit" class="btn btn-default">{% if authenticated_user %}Exit{% else %}Start{% endif %}</button>
+<button class="btn btn-default enter">{% if authenticated_user %}Exit{% else %}Start{% endif %}</button>
 </form>
 <ul class="nav navbar-nav navbar-right">
 {% if authenticated_user %}
