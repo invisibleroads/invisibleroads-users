@@ -1,4 +1,5 @@
 {% extends 'invisibleroads_posts:templates/base.jinja2' %}
+{% from 'invisibleroads_posts:templates/parts.jinja2' import confirmation_modal %}
 
 {% block head_script_inline %}
 {{ super() -}}
@@ -11,6 +12,7 @@ x.csrf_token = '{{ request.session.get_csrf_token() }}';
 {% endblock %}
 
 {% block body_navigation_top %}
+{{ super() -}}
 {% block body_navigation_top_div %}{% endblock %}
 <form id="enter-user-form" class="navbar-form navbar-right" role="navigation" action="{{ request.route_path('user_exit' if authenticated_user else 'user_enter') }}" method="post">
 <input name="target_url" type="hidden" value="{% block target_url %}{{ request.path }}{% endblock %}">
@@ -24,4 +26,11 @@ x.csrf_token = '{{ request.session.get_csrf_token() }}';
 {% endif %}
 {% block body_navigation_top_list %}{% endblock %}
 </ul>
+{% endblock %}
+
+{% block body_content %}
+{{ super() -}}
+{% if authenticated_user %}
+{% call confirmation_modal(id='feedback-modal', title='', backdrop='static') %}{% endcall %}
+{% endif %}
 {% endblock %}
