@@ -16,7 +16,7 @@ x.csrf_token = '{{ request.session.get_csrf_token() }}';
 {% block body_navigation_top_div %}{% endblock %}
 <form id="concierge-form" class="navbar-form navbar-right" role="navigation" action="{{ request.route_path('users_leave' if authenticated_user else 'users_enter') }}" method="post">
 <input name="target_url" type="hidden" value="{% block target_url %}{{ request.path }}{% endblock %}">
-<button class="btn btn-default enter">{% if authenticated_user %}Goodbye{% else %}Hello{% endif %}</button>
+<button class="btn btn-default enter">{% if authenticated_user %}Bye{% else %}Hello{% endif %}</button>
 </form>
 <ul class="nav navbar-nav navbar-right">
 {% if authenticated_user %}
