@@ -7,24 +7,32 @@ from .events import UserAdded
 
 
 def add_routes(config):
-    config.add_route('user_enter', '/users/enter')
-    config.add_route('user_exit', '/users/exit')
+    config.add_route('users_enter', '/users/enter')
+    config.add_route('users_leave', '/users/leave')
     config.add_route('user', '/u/{user_id}')
 
-    config.add_view(enter_user, route_name='user_enter', require_csrf=False)
-    config.add_view(exit_user, route_name='user_exit', require_csrf=False)
+    config.add_view(
+        remember_user,
+        route_name='users_enter',
+        require_csrf=False)
+    config.add_view(
+        forget_user,
+        route_name='users_leave',
+        require_csrf=False)
     config.add_view(
         see_user,
         permission='see-user',
         renderer='invisibleroads_users:templates/user.jinja2',
         route_name='user')
     config.add_view(
-        finish_authentication, context='velruse.AuthenticationComplete')
+        finish_authentication,
+        context='velruse.AuthenticationComplete')
     config.add_view(
-        cancel_authentication, context='velruse.AuthenticationDenied')
+        cancel_authentication,
+        context='velruse.AuthenticationDenied')
 
 
-def enter_user(request):
+def remember_user(request):
     params = request.params
     request.session['target_url'] = params.get('target_url', '/').strip()
     try:
@@ -33,7 +41,7 @@ def enter_user(request):
         return _set_headers(params.get('email', u'user@example.com'), request)
 
 
-def exit_user(request):
+def forget_user(request):
     params = request.params
     request.session.invalidate()
     return HTTPFound(
