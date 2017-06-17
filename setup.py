@@ -42,6 +42,7 @@ setup(
         'invisibleroads-posts>=0.5.4.2',
         'invisibleroads-records>=0.4.0',
         'pyramid',
+        'pyramid-multiauth',
         'pyramid-redis-sessions',
         'redis',
         'sqlalchemy',

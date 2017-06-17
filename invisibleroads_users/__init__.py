@@ -6,12 +6,9 @@ from invisibleroads_posts import (
     InvisibleRoadsConfigurator, add_routes_for_fused_assets,
     add_website_dependency)
 from invisibleroads_records.models import Base
-from pyramid.authentication import AuthTktAuthenticationPolicy
-from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.exceptions import BadCSRFOrigin, BadCSRFToken
 from pyramid.events import BeforeRender
 from pyramid.security import Allow, Everyone
-from pyramid.settings import asbool
 from pyramid_redis_sessions import session_factory_from_settings
 from redis import ConnectionError, StrictRedis
 
@@ -67,18 +64,14 @@ def configure_settings(config, prefix='invisibleroads_users.'):
     add_website_dependency(config)
 
 
-def configure_security_policy(config, prefix='invisibleroads_users.authtkts.'):
+def configure_security_policy(config):
     settings = config.registry.settings
-    authorization_policy = ACLAuthorizationPolicy()
-    authentication_policy = AuthTktAuthenticationPolicy(
-        cookie_name=settings.get(prefix + 'cookie_name', 'a'),
-        secure=asbool(settings.get(prefix + 'cookie_secure', False)),
-        http_only=asbool(settings.get(prefix + 'cookie_httponly', True)),
-        secret=settings.get(prefix + 'secret', make_random_string(128)),
-        callback=get_principals,
-        hashalg='sha512')
-    config.set_authorization_policy(authorization_policy)
-    config.set_authentication_policy(authentication_policy)
+    for k, v in settings.items():
+        if not k.startswith('multiauth.policy.'):
+            continue
+        if k.endswith('.secret') and not v:
+            settings[k] = make_random_string(128)
+    config.include('pyramid_multiauth')
     config.add_request_method(lambda request: m.User.get(
         request.database, request.authenticated_userid
     ), 'authenticated_user', reify=True)
