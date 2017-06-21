@@ -1,4 +1,4 @@
-from invisibleroads_posts.libraries.configuration import Settings
+from invisibleroads_macros.configuration import Settings
 
 
 S = Settings()
