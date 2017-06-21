@@ -1,6 +1,6 @@
-import logging
 from invisibleroads_macros.configuration import get_list, resolve_attribute
 from invisibleroads_macros.iterable import set_default
+from invisibleroads_macros.log import get_log
 from invisibleroads_macros.security import make_random_string
 from invisibleroads_posts import (
     InvisibleRoadsConfigurator, add_routes_for_fused_assets,
@@ -20,11 +20,13 @@ from .settings import S
 from .views import add_routes
 
 
-LOG = logging.getLogger(__name__)
-LOG.addHandler(logging.NullHandler())
+L = get_log(__name__)
 PREFIX = 'invisibleroads_users.'
 REDIS_CONNECTION_ERROR_MESSAGE = """\
-could not access redis -- is the redis server running?
+could not access redis
+
+Is the redis server running?
+
 sudo systemctl start redis"""
 
 
@@ -103,7 +105,7 @@ def configure_http_session_factory(config, prefix='redis.sessions.'):
     try:
         StrictRedis().info()
     except ConnectionError:
-        LOG.error(REDIS_CONNECTION_ERROR_MESSAGE)
+        L.error(REDIS_CONNECTION_ERROR_MESSAGE)
 
 
 def configure_views(config):
@@ -134,7 +136,7 @@ def configure_provider_definitions(config, prefix=PREFIX):
 def handle_redis_connection_error(context, request):
     response = request.response
     response.status_int = 500
-    LOG.error(REDIS_CONNECTION_ERROR_MESSAGE)
+    L.error(REDIS_CONNECTION_ERROR_MESSAGE)
     return response
 
 

@@ -1,3 +1,4 @@
+from invisibleroads_macros.log import get_log
 from invisibleroads_macros.security import make_random_string
 from pyramid.httpexceptions import HTTPSeeOther, HTTPTemporaryRedirect
 from pyramid.security import remember, forget
@@ -5,6 +6,9 @@ from pyramid.security import remember, forget
 from . import models as M
 from .providers import get_provider
 from .settings import S
+
+
+D = get_log('data')
 
 
 def add_routes(config):
@@ -37,8 +41,8 @@ def see_provider(request):
     if S['mock']:
         provider_name = 'mock'
         return welcome_user(request, {
-            'name': 'User',
-            'email': 'user@example.com',
+            'name': u'User',
+            'email': u'user@example.com',
             'image_url': S['image_url'],
         }, provider_name, target_url)
 
@@ -80,8 +84,10 @@ def welcome_user(request, user_definition, provider_name, target_url):
     user = database.query(M.User).filter_by(email=user_email).first()
     if not user:
         user = M.make_user(request)
+    user_id = user.id
     user.email = user_email
     user.name = user_definition['name']
     user.image_url = user_definition['image_url']
     user.update(database)
-    return HTTPSeeOther(target_url, headers=remember(request, user.id))
+    D.info('user_id=%s,provider_name=%s', user_id, provider_name)
+    return HTTPSeeOther(target_url, headers=remember(request, user_id))
