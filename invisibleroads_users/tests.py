@@ -2,7 +2,7 @@ from pytest import fixture
 from redis import StrictRedis
 from webtest import TestApp
 
-from invisibleroads_users import main as get_app, models as m
+from invisibleroads_users import main as get_app, models as M
 
 
 @fixture
@@ -16,7 +16,7 @@ def users_request(records_request, website_config):
     database = records_request.database
     user_id = records_request.authenticated_userid
     users_request = records_request
-    users_request.authenticated_user = m.User.get(database, user_id)
+    users_request.authenticated_user = M.User.get(database, user_id)
     yield users_request
     StrictRedis().flushall()
 
@@ -25,3 +25,11 @@ def users_request(records_request, website_config):
 def website_config(config):
     config.include('invisibleroads_users')
     yield config
+
+
+@fixture
+def user(website_request):
+    user = M.make_user(website_request)
+    user.name = 'User'
+    user.email = 'user@example.com'
+    return user

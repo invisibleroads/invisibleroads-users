@@ -1,3 +1,10 @@
+0.5
+---
+- Add user.name, user.image_url
+- Replace velruse with requests-oauthlib
+- Support Google, LinkedIn
+- Use pyramid-multiauth
+
 0.4
 ---
 - Define request.authenticated_user

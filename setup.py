@@ -19,7 +19,7 @@ for command in ('register', 'upload'):
 
 setup(
     name='invisibleroads-users',
-    version='0.4.1',
+    version='0.5.0',
     description='Authentication and authorization',
     long_description=DESCRIPTION,
     classifiers=[
@@ -38,14 +38,13 @@ setup(
         'pytest-runner'
     ],
     install_requires=[
-        'invisibleroads-macros>=0.8.1.3',
-        'invisibleroads-posts>=0.5.4.2',
-        'invisibleroads-records>=0.4.0',
+        'invisibleroads-macros>=0.8.2',
+        'invisibleroads-posts>=0.5.5',
+        'invisibleroads-records>=0.4.1',
         'pyramid',
         'pyramid-multiauth',
         'pyramid-redis-sessions',
-        'redis',
+        'requests-oauthlib',
         'sqlalchemy',
-        'velruse',
     ],
     entry_points=ENTRY_POINTS)

@@ -1,79 +1,87 @@
-import velruse
-from pyramid.httpexceptions import HTTPFound
+from invisibleroads_macros.security import make_random_string
+from pyramid.httpexceptions import HTTPSeeOther, HTTPTemporaryRedirect
 from pyramid.security import remember, forget
 
-from . import models as m
-from .events import UserAdded
+from . import models as M
+from .providers import get_provider
+from .settings import S
 
 
 def add_routes(config):
-    config.add_route('users_enter', '/users/enter')
+    config.add_route('users_enter', '/users/enter/{provider_name}')
+    config.add_route(
+        'users_enter_callback', '/users/enter/{provider_name}/callback')
     config.add_route('users_leave', '/users/leave')
     config.add_route('user', '/u/{user_id}')
 
     config.add_view(
+        see_provider,
+        route_name='users_enter')
+    config.add_view(
         remember_user,
-        route_name='users_enter',
-        require_csrf=False)
+        route_name='users_enter_callback')
     config.add_view(
         forget_user,
-        route_name='users_leave',
-        require_csrf=False)
+        route_name='users_leave')
     config.add_view(
         see_user,
         permission='see-user',
         renderer='invisibleroads_users:templates/user.jinja2',
         route_name='user')
-    config.add_view(
-        finish_authentication,
-        context='velruse.AuthenticationComplete')
-    config.add_view(
-        cancel_authentication,
-        context='velruse.AuthenticationDenied')
+
+
+def see_provider(request):
+    params = request.params
+    target_url = params.get('target_url', '/')
+
+    if S['mock']:
+        provider_name = 'mock'
+        return welcome_user(request, {
+            'name': 'User',
+            'email': 'user@example.com',
+            'image_url': S['image_url'],
+        }, provider_name, target_url)
+
+    provider = get_provider(request, make_random_string(64))
+    session = request.session
+    session['auth_state'] = provider.auth_state
+    session['target_url'] = target_url
+    return HTTPSeeOther(provider.auth_url)
 
 
 def remember_user(request):
     params = request.params
-    request.session['target_url'] = params.get('target_url', '/').strip()
-    try:
-        return HTTPFound(location=velruse.login_url(request, 'google'))
-    except AttributeError:
-        return _set_headers(params.get('email', u'user@example.com'), request)
+    session = request.session
+    auth_state = session.pop('auth_state', '')
+    target_url = session.pop('target_url', '/')
+
+    if not params.get('code') or params.get('state') != auth_state:
+        raise HTTPSeeOther(target_url)
+
+    provider = get_provider(request, auth_state)
+    user_definition = provider.user_definition
+    return welcome_user(request, user_definition, provider.name, target_url)
 
 
 def forget_user(request):
     params = request.params
+    target_url = params.get('target_url', '/')
     request.session.invalidate()
-    return HTTPFound(
-        location=params.get('target_url', '/').strip(),
-        headers=forget(request))
+    return HTTPTemporaryRedirect(location=target_url, headers=forget(request))
 
 
 def see_user(request):
-    return dict(user=m.User.get_from(request))
+    return dict(user=M.User.get_from(request))
 
 
-def finish_authentication(request):
-    context = request.context
-    profile = context.profile
-    return _set_headers(profile['verifiedEmail'], request)
-
-
-def cancel_authentication(request):
-    return HTTPFound(location=request.session.pop('target_url', '/'))
-
-
-def _set_headers(email, request):
+def welcome_user(request, user_definition, provider_name, target_url):
     database = request.database
-    settings = request.registry.settings
-    user = database.query(m.User).filter_by(email=email).first()
+    user_email = user_definition['email']
+    user = database.query(M.User).filter_by(email=user_email).first()
     if not user:
-        user = m.User.make_unique_record(database, settings[
-            'user.id.length'])
-        user.email = email
-        database.add(user)
-        database.flush()
-        request.registry.notify(UserAdded(user, request))
-    return HTTPFound(
-        location=request.session.pop('target_url', '/'),
-        headers=remember(request, user.id))
+        user = M.make_user(request)
+    user.email = user_email
+    user.name = user_definition['name']
+    user.image_url = user_definition['image_url']
+    user.update(database)
+    return HTTPSeeOther(target_url, headers=remember(request, user.id))

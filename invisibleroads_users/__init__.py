@@ -1,28 +1,30 @@
 import logging
-from invisibleroads_macros.configuration import resolve_attribute
+from invisibleroads_macros.configuration import get_list, resolve_attribute
 from invisibleroads_macros.iterable import set_default
 from invisibleroads_macros.security import make_random_string
 from invisibleroads_posts import (
     InvisibleRoadsConfigurator, add_routes_for_fused_assets,
     add_website_dependency)
+from invisibleroads_posts.libraries.configuration import fill_secrets
 from invisibleroads_records.models import Base
+from os import environ
 from pyramid.exceptions import BadCSRFOrigin, BadCSRFToken
 from pyramid.events import BeforeRender
 from pyramid.security import Allow, Everyone
+from pyramid.settings import asbool
 from pyramid_redis_sessions import session_factory_from_settings
 from redis import ConnectionError, StrictRedis
 
-from . import models as m
+from . import models as M
+from .settings import S
 from .views import add_routes
 
 
 LOG = logging.getLogger(__name__)
 LOG.addHandler(logging.NullHandler())
+PREFIX = 'invisibleroads_users.'
 REDIS_CONNECTION_ERROR_MESSAGE = """\
-could not access redis
-
-Is the redis server running?
-
+could not access redis -- is the redis server running?
 sudo systemctl start redis"""
 
 
@@ -49,39 +51,47 @@ def includeme(config):
     configure_settings(config)
     configure_security_policy(config)
     configure_http_session_factory(config)
-    configure_third_party_authentication(config)
     configure_views(config)
     configure_assets(config)
+    configure_provider_definitions(config)
 
 
-def configure_settings(config, prefix='invisibleroads_users.'):
+def configure_settings(config, prefix=PREFIX):
     settings = config.registry.settings
-    set_default(settings, 'user.id.length', 32, int)
-    UserMixin = set_default(
-        settings, prefix + 'user_mixin', m.UserMixin, resolve_attribute)
-    if not hasattr(m, 'User'):
-        m.User = type('User', (UserMixin, Base), {})
+    UserMixin = S.set(
+        settings, prefix, 'user_mixin', M.UserMixin, resolve_attribute)
+    if not hasattr(M, 'User'):
+        M.User = type('User', (UserMixin, Base), {})
+    S.set(settings, '', 'user.id.length', 32, int)
+    S.set(settings, prefix, 'mock', True, asbool)
+    set_default(settings, prefix + 'auth_button.enter_text', 'Enter')
+    set_default(settings, prefix + 'auth_button.leave_text', 'Leave')
+    set_default(settings, prefix + 'auth_modal.title', 'Choose a Provider')
+    set_default(settings, prefix + 'auth_modal.button_text', 'Cancel')
+    S.set(settings, prefix, 'cookie_name', 'u')
+    S.set(settings, prefix, 'cookie_secure', False, asbool)
+    S.set(settings, prefix, 'cookie_httponly', True, asbool)
+    S.set(
+        settings, prefix, 'image_url',
+        '/_/invisibleroads-users/smiley-20170620-2300.png')
     add_website_dependency(config)
 
 
 def configure_security_policy(config):
     settings = config.registry.settings
-    for k, v in settings.items():
-        if not k.startswith('multiauth.policy.'):
-            continue
-        if k.endswith('.secret') and not v:
-            settings[k] = make_random_string(128)
+    fill_secrets(settings, 'multiauth.policy.')
     config.include('pyramid_multiauth')
-    config.add_request_method(lambda request: m.User.get(
+    config.add_request_method(lambda request: M.User.get(
         request.database, request.authenticated_userid
     ), 'authenticated_user', reify=True)
 
 
 def configure_http_session_factory(config, prefix='redis.sessions.'):
     settings = config.registry.settings
+    fill_secrets(settings, prefix)
     set_default(settings, prefix + 'cookie_name', 's')
-    set_default(settings, prefix + 'cookie_secure', False)
-    set_default(settings, prefix + 'cookie_httponly', True)
+    set_default(settings, prefix + 'cookie_secure', S['cookie_secure'])
+    set_default(settings, prefix + 'cookie_httponly', S['cookie_httponly'])
     set_default(settings, prefix + 'secret', make_random_string(128))
     set_default(settings, prefix + 'timeout', 43200)
     set_default(settings, prefix + 'prefix', 'user_session.')
@@ -96,15 +106,6 @@ def configure_http_session_factory(config, prefix='redis.sessions.'):
         LOG.error(REDIS_CONNECTION_ERROR_MESSAGE)
 
 
-def configure_third_party_authentication(config):
-    config.include('velruse.providers.google_oauth2')
-    try:
-        config.add_google_oauth2_login_from_settings()
-    except KeyError:
-        LOG.warn('missing velruse.google.consumer_key')
-        LOG.warn('missing velruse.google.consumer_secret')
-
-
 def configure_views(config):
     config.set_root_factory(RootFactory)
     config.add_subscriber(add_renderer_globals, BeforeRender)
@@ -114,6 +115,20 @@ def configure_views(config):
 def configure_assets(config):
     config.add_cached_static_view(
         '_/invisibleroads-users', 'invisibleroads_users:assets')
+
+
+def configure_provider_definitions(config, prefix=PREFIX):
+    S['provider_definitions'] = d = {}
+    settings = config.registry.settings
+    for provider_name in set_default(
+            settings, prefix + 'auth_providers', [], get_list):
+        provider_prefix = prefix + 'auth_provider.' + provider_name + '.'
+        d[provider_name] = {
+            'consumer_key': settings[provider_prefix + 'consumer_key'],
+            'consumer_secret': settings[provider_prefix + 'consumer_secret'],
+        }
+    if not S['cookie_secure']:
+        environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 
 def handle_redis_connection_error(context, request):
@@ -142,7 +157,7 @@ def handle_csrf_token_error(context, request):
 def get_principals(user_id, request):
     'Define server-side permissions for user'
     database = request.database
-    user = m.User.get(database, user_id)
+    user = M.User.get(database, user_id)
     if not user:
         return  # User does not exist
     return user.principals

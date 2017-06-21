@@ -1,3 +1,41 @@
-.enter {
+.btn-users {
+  margin-left: 15px;
+}
+
+.btn-auth {
+  display: inline-block;
+  background-repeat: no-repeat;
+  width: 191px;
+  height: 41px;
+}
+
+.users-google {
+  background-position: 0 0;
+  height: 46px;
+}
+.users-google:hover {
+  background-position: 0 -46px;
+}
+.users-google:active {
+  background-position: 0 -92px;
+}
+
+.users-linkedin {
+  background-position: 3px -138px;
+  width: 215px;
+}
+.users-linkedin:hover {
+  background-position: 3px -179px;
+}
+.users-linkedin:active {
+  background-position: 3px -220px;
+}
+
+.users-enter, .users-leave {
   cursor: pointer;
+}
+
+#users-image {
+  max-height: 100px;
+  max-width: 100%;
 }

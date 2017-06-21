@@ -1,6 +1,7 @@
-from invisibleroads_users.views import see_user
 from pyramid.httpexceptions import HTTPNotFound
 from pytest import raises
+
+from invisibleroads_users.views import see_user
 
 
 def test_see_user(users_request):
