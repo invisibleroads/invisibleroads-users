@@ -13,10 +13,9 @@ def users_website(users_request):
 
 @fixture
 def users_request(records_request, website_config):
-    database = records_request.database
-    user_id = records_request.authenticated_userid
     users_request = records_request
-    users_request.authenticated_user = M.User.get(database, user_id)
+    users_request.__class__.authenticated_user = property(
+        lambda self: M.User.get(self.database, self.authenticated_userid))
     yield users_request
     StrictRedis().flushall()
 
