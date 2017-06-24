@@ -39,10 +39,11 @@ def see_provider(request):
     target_url = params.get('target_url', '/')
 
     if S['mock']:
+        email = params.get('target_email', u'user@example.com')
         provider_name = 'mock'
         return welcome_user(request, {
-            'name': u'User',
-            'email': u'user@example.com',
+            'name': email.split('@')[0].title(),
+            'email': email,
             'image_url': S['image_url'],
         }, provider_name, target_url)
 
