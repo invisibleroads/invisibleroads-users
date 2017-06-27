@@ -1,6 +1,10 @@
+import functools
 from invisibleroads_macros.log import get_log
 from invisibleroads_macros.security import make_random_string
-from pyramid.httpexceptions import HTTPSeeOther, HTTPTemporaryRedirect
+from invisibleroads_posts.views import expect_integer, expect_param
+from inspect import getcallargs
+from pyramid.httpexceptions import (
+    HTTPSeeOther, HTTPTemporaryRedirect, HTTPUnauthorized)
 from pyramid.security import remember, forget
 
 from . import models as M
@@ -92,3 +96,20 @@ def welcome_user(request, user_definition, provider_name, target_url):
     user.update(database)
     D.info('user_id=%s,provider_name=%s', user_id, provider_name)
     return HTTPSeeOther(target_url, headers=remember(request, user_id))
+
+
+def authorize_value(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kw):
+        value = f(*args, **kw)
+        args = getcallargs(f, *args, **kw)
+        request = args['request']
+        default = args['default']
+        if not request.authenticated_userid and value != default:
+            raise HTTPUnauthorized
+        return value
+    return wrapper
+
+
+authorize_param = authorize_value(expect_param)
+authorize_integer = authorize_value(expect_integer)

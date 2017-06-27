@@ -7,9 +7,9 @@
 x = IR.users = {};
 x.assets_url = '{{ request.static_path("invisibleroads_users:assets/") }}';
 x.target_url = '{% block target_url %}{{ request.path }}{% endblock %}';
+x.csrf_token = '{{ request.session.get_csrf_token() }}';
 {% if authenticated_user %}
 x.user_id = '{{ authenticated_user.id }}';
-x.csrf_token = '{{ request.session.get_csrf_token() }}';
 x.leave_url = '{{ request.route_path("users_leave") }}';
 {% endif %}
 {% endblock %}
@@ -36,13 +36,12 @@ x.leave_url = '{{ request.route_path("users_leave") }}';
 
 {% block body_footer %}
 {{ super() -}}
-{% if authenticated_user %}
-{% call confirmation_modal(id='feedback-modal', title='', backdrop='static') %}{% endcall %}
-{% else %}
 {% call confirmation_modal(id='auth-modal', title=settings['invisibleroads_users.auth_modal.title'], default_button_text=settings['invisibleroads_users.auth_modal.button_text']) %}
+{% block auth_modal_body %}{% endblock %}
+<p>
 {% for provider_name in settings['invisibleroads_users.auth_providers'] %}
 <a class="btn-auth users-{{ provider_name }}" href="{{ request.route_path('users_enter', provider_name=provider_name) }}"></a><br>
 {% endfor %}
+</p>
 {% endcall %}
-{% endif %}
 {% endblock %}
