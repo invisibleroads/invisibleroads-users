@@ -152,7 +152,7 @@ def handle_csrf_token_error(context, request):
     response = request.response
     response.status_int = 400
     response.content_type = 'text/plain'
-    response.body = 'bad csrf token'
+    response.text = 'bad csrf token'
     return response
 
 
