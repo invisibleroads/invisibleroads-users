@@ -93,7 +93,7 @@ def welcome_user(request, user_definition, provider_name, target_url):
     user.email = user_email
     user.name = user_definition['name']
     user.image_url = user_definition['image_url']
-    user.update(database)
+    user.update_cache(database)
     D.info('user_id=%s,provider_name=%s', user_id, provider_name)
     return HTTPSeeOther(target_url, headers=remember(request, user_id))
 
