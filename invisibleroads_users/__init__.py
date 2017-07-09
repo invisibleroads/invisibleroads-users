@@ -1,5 +1,5 @@
-from invisibleroads_macros.configuration import get_list, resolve_attribute
-from invisibleroads_macros.iterable import set_default
+from invisibleroads_macros.configuration import (
+    parse_list, resolve_attribute, set_default)
 from invisibleroads_macros.log import get_log
 from invisibleroads_macros.security import make_random_string
 from invisibleroads_posts import (
@@ -123,7 +123,7 @@ def configure_provider_definitions(config, prefix=PREFIX):
     S['provider_definitions'] = d = {}
     settings = config.registry.settings
     for provider_name in set_default(
-            settings, prefix + 'auth_providers', [], get_list):
+            settings, prefix + 'auth_providers', [], parse_list):
         provider_prefix = prefix + 'auth_provider.' + provider_name + '.'
         d[provider_name] = {
             'consumer_key': settings[provider_prefix + 'consumer_key'],
