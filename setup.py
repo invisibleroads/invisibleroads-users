@@ -12,7 +12,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.rst', 'CHANGES.rst'])
 
 
-for command in ('register', 'upload'):
+for command in 'register', 'upload':
     if command in sys.argv:
         exit('cannot %s private repository' % command)
 
@@ -35,7 +35,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     setup_requires=[
-        'pytest-runner'
+        'pytest-runner',
     ],
     install_requires=[
         'invisibleroads-macros>=0.8.2',
