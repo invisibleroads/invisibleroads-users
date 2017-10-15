@@ -33,7 +33,7 @@ sudo systemctl start redis"""
 class RootFactory(object):
 
     __acl__ = [
-        (Allow, Everyone, 'see-user'),
+        (Allow, Everyone, 'see user'),
     ]
 
     def __init__(self, request):

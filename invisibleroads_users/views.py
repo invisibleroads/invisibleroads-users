@@ -33,7 +33,7 @@ def add_routes(config):
         route_name='users_leave')
     config.add_view(
         see_user,
-        permission='see-user',
+        permission='user-see',
         renderer='invisibleroads_users:templates/user.jinja2',
         route_name='user')
 
