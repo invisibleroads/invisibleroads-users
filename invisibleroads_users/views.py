@@ -40,7 +40,7 @@ def add_routes(config):
 
 def see_provider(request):
     params = request.params
-    target_url = params.get('target_url', '/')
+    target_url = params.get('target_url', '/').strip()
 
     if S['mock']:
         email = params.get('target_email', u'user@example.com')
@@ -74,7 +74,7 @@ def remember_user(request):
 
 def forget_user(request):
     params = request.params
-    target_url = params.get('target_url', '/')
+    target_url = params.get('target_url', '/').strip()
     request.session.invalidate()
     return HTTPTemporaryRedirect(location=target_url, headers=forget(request))
 
