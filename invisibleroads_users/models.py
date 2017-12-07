@@ -1,11 +1,13 @@
-from invisibleroads_records.models import CachedRecordMixin, CreationMixin
-from sqlalchemy import Column, Unicode
+from invisibleroads_records.models import (
+    CachedRecordMixin, CreationMixin, ModificationMixin)
+from sqlalchemy import Column
+from sqlalchemy.types import Unicode
 
 from .events import UserAdded
 from .settings import S
 
 
-class UserMixin(CreationMixin, CachedRecordMixin):
+class UserMixin(ModificationMixin, CreationMixin, CachedRecordMixin):
 
     __tablename__ = 'user'
     email = Column(Unicode, unique=True)
