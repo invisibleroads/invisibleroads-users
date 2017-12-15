@@ -116,7 +116,7 @@ def configure_views(config):
 
 def configure_assets(config):
     config.add_cached_static_view(
-        '_/invisibleroads-users', 'invisibleroads_users:assets')
+        '-/invisibleroads-users', 'invisibleroads_users:assets')
 
 
 def configure_provider_definitions(config, prefix=PREFIX):
