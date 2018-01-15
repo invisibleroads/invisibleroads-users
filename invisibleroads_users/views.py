@@ -1,6 +1,5 @@
 import functools
 from datetime import datetime
-from invisibleroads_macros.log import get_log
 from invisibleroads_macros.security import make_random_string
 from invisibleroads_posts.views import expect_integer, expect_param
 from inspect import getcallargs
@@ -11,9 +10,6 @@ from pyramid.security import remember, forget
 from . import models as M
 from .providers import get_provider
 from .settings import S
-
-
-D = get_log('data')
 
 
 def add_routes(config):
@@ -96,9 +92,6 @@ def welcome_user(request, user_definition, provider_name, target_url):
     user.image_url = user_definition['image_url']
     user.modification_datetime = datetime.utcnow()
     user.update_cache(database)
-    D.info(
-        'user_id=%s,provider_name=%s,target_url=%s',
-        user_id, provider_name, target_url)
     return HTTPSeeOther(target_url, headers=remember(request, user_id))
 
 
