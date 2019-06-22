@@ -52,6 +52,7 @@ class Google(Provider):
     scope = [
         'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile',
+        'openid',
     ]
 
     def get_user_definition(self, d):
