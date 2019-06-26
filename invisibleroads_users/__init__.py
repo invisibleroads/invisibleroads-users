@@ -96,7 +96,7 @@ def configure_http_session_factory(config, prefix='redis.sessions.'):
     set_default(settings, prefix + 'cookie_httponly', S['cookie_httponly'])
     set_default(settings, prefix + 'secret', make_random_string(128))
     set_default(settings, prefix + 'timeout', 43200)
-    set_default(settings, prefix + 'prefix', 'user_session.')
+    set_default(settings, prefix + 'prefix', 'http_session.')
     config.set_session_factory(session_factory_from_settings(settings))
     config.set_default_csrf_options(require_csrf=True)
     config.add_view(handle_redis_connection_error, context=ConnectionError)
