@@ -13,7 +13,7 @@ from pyramid.events import BeforeRender
 from pyramid.security import Allow, Everyone
 from pyramid.settings import asbool
 from pyramid_redis_sessions import session_factory_from_settings
-from redis import ConnectionError, StrictRedis
+from redis import ConnectionError as RedisConnectionError, StrictRedis
 
 from . import models as M
 from .settings import S
@@ -22,12 +22,7 @@ from .views import add_routes
 
 L = get_log(__name__)
 PREFIX = 'invisibleroads_users.'
-REDIS_CONNECTION_ERROR_MESSAGE = """\
-could not access redis
-
-Is the redis server running?
-
-sudo systemctl start redis"""
+REDIS_CONNECTION_ERROR_MESSAGE = 'could not access redis'
 
 
 class RootFactory(object):
@@ -99,12 +94,13 @@ def configure_http_session_factory(config, prefix='redis.sessions.'):
     set_default(settings, prefix + 'prefix', 'http_session.')
     config.set_session_factory(session_factory_from_settings(settings))
     config.set_default_csrf_options(require_csrf=True)
-    config.add_view(handle_redis_connection_error, context=ConnectionError)
+    config.add_view(
+        handle_redis_connection_error, context=RedisConnectionError)
     config.add_view(handle_csrf_origin_error, context=BadCSRFOrigin)
     config.add_view(handle_csrf_token_error, context=BadCSRFToken)
     try:
         StrictRedis().info()
-    except ConnectionError:
+    except RedisConnectionError:
         L.error(REDIS_CONNECTION_ERROR_MESSAGE)
 
 
