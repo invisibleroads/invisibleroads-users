@@ -4,7 +4,6 @@ from invisibleroads_macros_configuration import (
     set_default)
 from invisibleroads_macros_security import make_random_string
 from invisibleroads_records.models import Base
-from miscreant.aes.siv import SIV
 from os import environ
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.exceptions import BadCSRFOrigin, BadCSRFToken
@@ -13,7 +12,7 @@ from pyramid.settings import asbool, aslist
 from pyramid_redis_sessions import session_factory_from_settings
 from redis import ConnectionError as RedisConnectionError
 
-from . import models as M, routines as R
+from . import models as M
 from .constants import (
     DEFAULT_SECRET,
     DEFAULT_SECRET_ERROR_MESSAGE,
@@ -25,6 +24,7 @@ from .constants import (
     REDIS_SESSIONS_SETTINGS_PREFIX,
     REDIS_SESSIONS_TIMEOUT_IN_SECONDS,
     S)
+from .routines import get_crypt
 from .views import (
     handle_csrf_origin_error,
     handle_csrf_token_error,
@@ -52,7 +52,8 @@ def configure_settings(config, prefix=INVISIBLEROADS_USERS_SETTINGS_PREFIX):
     S.set(settings, prefix, 'cookie_httponly', S['cookie_httponly'], asbool)
     S.set(settings, prefix, 'verify_tls', S['verify_tls'], asbool)
     S.set(settings, prefix, 'auth_state_length', S['auth_state_length'], int)
-    S.set(settings, prefix, 'public_attributes', S['public_attributes'], aslist)
+    S.set(settings, prefix, 'public_attributes', S[
+        'public_attributes'], aslist)
     S.set(settings, prefix, 'secret', S['secret'])
     if S['secret'] == DEFAULT_SECRET:
         L.warning(DEFAULT_SECRET_ERROR_MESSAGE)
@@ -84,7 +85,7 @@ def configure_security_policy(config):
     config.set_default_csrf_options(require_csrf=S['require_csrf'])
     config.add_view(handle_csrf_origin_error, context=BadCSRFOrigin)
     config.add_view(handle_csrf_token_error, context=BadCSRFToken)
-    R.TRANSLATOR = SIV(S['secret'])
+    S['crypt'] = get_crypt()
 
 
 def configure_provider_definitions(

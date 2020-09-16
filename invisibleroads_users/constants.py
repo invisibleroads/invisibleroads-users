@@ -44,5 +44,5 @@ from miscreant.aes.siv import SIV
 from base64 import b64encode
 print(b64encode(SIV.generate_key()).decode('utf-8'))"
 
-{INVISIBLEROADS_USERS_SETTINGS_PREFIX}.secret = YOUR-SECRET
+{INVISIBLEROADS_USERS_SETTINGS_PREFIX}secret = YOUR-SECRET
 '''
