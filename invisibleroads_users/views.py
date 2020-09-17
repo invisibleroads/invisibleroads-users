@@ -107,10 +107,10 @@ def welcome_user(request, user_definition, target_url):
     if S['storage'] == 'database':
         User = M.User
         is_new_user = False
-        database = request.database
-        user = database.query(User).filter_by(email=user_email).first()
+        db = request.db
+        user = db.query(User).filter_by(email=user_email).first()
         if not user:
-            user = User.make_unique_record(database)
+            user = User.make_unique_record(db)
             user.email = user_email
             is_new_user = True
         user.name = user_name
