@@ -1,5 +1,10 @@
+import subprocess
 from os.path import abspath, dirname, join
 from setuptools import find_packages, setup
+# https://stackoverflow.com/a/45021666/192092
+from setuptools.command.install import install
+from setuptools.command.develop import develop
+from setuptools.command.egg_info import egg_info
 
 
 ENTRY_POINTS = '''
@@ -23,7 +28,6 @@ APPLICATION_REQUIREMENTS = [
     # security
     'miscreant',
     # 'pyramid-authsanity',
-    'pyramid-authsanity @ https://github.com/invisibleroads/pyramid_authsanity/archive/patch-1.zip',
     'pyramid-redis-sessions',
     'requests-oauthlib',
     # shortcut
@@ -38,6 +42,34 @@ TEST_REQUIREMENTS = [
 FOLDER = dirname(abspath(__file__))
 DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.md', 'CHANGES.md'])
+
+
+# !!! Remove after pyramid-authsanity merges patch request
+PACKAGE_URLS = [
+    'https://github.com/invisibleroads/pyramid_authsanity/tarball/patch-1',
+]
+
+
+# https://github.com/BaderLab/saber/issues/35#issuecomment-467827175
+class PostInstall(install):
+
+    def run(self):
+        super().run()
+        print(subprocess.getoutput('pip install ' + ' '.join(PACKAGE_URLS)))
+
+
+class PostDevelop(develop):
+
+    def run(self):
+        super().run()
+        print(subprocess.getoutput('pip install ' + ' '.join(PACKAGE_URLS)))
+
+
+class PostEggInfo(egg_info):
+
+    def run(self):
+        super().run()
+        print(subprocess.getoutput('pip install ' + ' '.join(PACKAGE_URLS)))
 
 
 setup(
@@ -56,4 +88,9 @@ setup(
     zip_safe=True,
     extras_require={'test': TEST_REQUIREMENTS},
     install_requires=APPLICATION_REQUIREMENTS,
-    entry_points=ENTRY_POINTS)
+    entry_points=ENTRY_POINTS,
+    cmdclass={
+        'install': PostInstall,
+        'develop': PostDevelop,
+        'egg_info': PostEggInfo,
+    })
