@@ -14,8 +14,8 @@ S = Settings({
     'auth_state_length': 64,
     'public_attributes': ['name', 'email', 'image_url'],
     'image_url': (
-        'http://1.bp.blogspot.com/-x22hx1xdaZ4/TWCUepz_2lI/AAAAAAAAElQ/'
-        'K7tvDtLq3Gs/s400/scary78.png'),
+        'http://3.bp.blogspot.com/_D_Z-D2tzi14/TMkHEi7p6CI/AAAAAAAAEA4/'
+        'UyhnLtpt4hM/s400/drunk11.png'),
     'secret': DEFAULT_SECRET,
     'default_permission': 'see',
     'require_csrf': True,

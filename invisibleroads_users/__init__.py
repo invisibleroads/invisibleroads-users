@@ -50,6 +50,7 @@ def configure_settings(config, prefix=INVISIBLEROADS_USERS_SETTINGS_PREFIX):
     if not hasattr(M, 'User'):
         M.User = type('User', (UserMixin, Base), {})
     S.set(settings, prefix, 'mock', S['mock'], asbool)
+    S.set(settings, prefix, 'storage', S['storage'])
     S.set(settings, prefix, 'cookie_secure', S['cookie_secure'], asbool)
     S.set(settings, prefix, 'cookie_httponly', S['cookie_httponly'], asbool)
     S.set(settings, prefix, 'verify_tls', S['verify_tls'], asbool)
