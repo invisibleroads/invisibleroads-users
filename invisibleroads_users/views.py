@@ -122,11 +122,14 @@ def welcome_user(request, user_definition, target_url):
     else:
         user_id = user_definition.get('id', user_email)
 
+    # Pass user_definition to UserAuthService while remembering user_id
     user_definition['id'] = user_id
+    request.user_definition = user_definition
+    headers = remember(request, user_id)
+
+    # Store user_definition in session
     session = request.session
     session['user'] = user_definition
-
-    headers = remember(request, user_id)
     return HTTPSeeOther(target_url, headers=headers)
 
 

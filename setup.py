@@ -1,10 +1,5 @@
-import subprocess
 from os.path import abspath, dirname, join
 from setuptools import find_packages, setup
-# https://stackoverflow.com/a/45021666/192092
-from setuptools.command.install import install
-from setuptools.command.develop import develop
-from setuptools.command.egg_info import egg_info
 
 
 ENTRY_POINTS = '''
@@ -27,7 +22,7 @@ APPLICATION_REQUIREMENTS = [
     'invisibleroads-records >= 0.5.8.1',
     # security
     'miscreant',
-    # 'pyramid-authsanity',
+    'pyramid-authsanity',
     'pyramid-redis-sessions',
     'requests-oauthlib',
     # shortcut
@@ -44,37 +39,9 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
     'README.md', 'CHANGES.md'])
 
 
-# !!! Remove after pyramid-authsanity merges patch request
-PACKAGE_URLS = [
-    'https://github.com/invisibleroads/pyramid_authsanity/tarball/patch-1',
-]
-
-
-# https://github.com/BaderLab/saber/issues/35#issuecomment-467827175
-class PostInstall(install):
-
-    def run(self):
-        super().run()
-        print(subprocess.getoutput('pip install ' + ' '.join(PACKAGE_URLS)))
-
-
-class PostDevelop(develop):
-
-    def run(self):
-        super().run()
-        print(subprocess.getoutput('pip install ' + ' '.join(PACKAGE_URLS)))
-
-
-class PostEggInfo(egg_info):
-
-    def run(self):
-        super().run()
-        print(subprocess.getoutput('pip install ' + ' '.join(PACKAGE_URLS)))
-
-
 setup(
     name='invisibleroads-users',
-    version='0.6.0',
+    version='0.6.1',
     description='Web application security defaults',
     long_description=DESCRIPTION,
     long_description_content_type='text/markdown',
@@ -88,9 +55,4 @@ setup(
     zip_safe=True,
     extras_require={'test': TEST_REQUIREMENTS},
     install_requires=APPLICATION_REQUIREMENTS,
-    entry_points=ENTRY_POINTS,
-    cmdclass={
-        'install': PostInstall,
-        'develop': PostDevelop,
-        'egg_info': PostEggInfo,
-    })
+    entry_points=ENTRY_POINTS)

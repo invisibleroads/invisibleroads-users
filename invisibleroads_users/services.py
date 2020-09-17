@@ -35,7 +35,7 @@ class UserAuthService(object):
         redis = self.redis
         redis_key = S['redis.users.prefix'] + principal
         redis.sadd(redis_key, ticket)
-        self.user_definition = self.session.get('user', {})
+        self.user_definition = self.request.user_definition
 
     def remove_ticket(self, ticket):
         try:
@@ -45,4 +45,3 @@ class UserAuthService(object):
         redis = self.redis
         redis_key = S['redis.users.prefix'] + principal
         redis.srem(redis_key, ticket)
-        self.user_definition = None
