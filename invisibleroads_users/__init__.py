@@ -26,7 +26,7 @@ from .constants import (
     REDIS_SESSIONS_TIMEOUT_IN_SECONDS,
     S)
 from .routines import get_crypt
-from .services import UserAuthService
+from .services import make_user_auth_service
 from .views import (
     handle_csrf_origin_error,
     handle_csrf_token_error,
@@ -87,7 +87,7 @@ def configure_security_policy(config):
     config.set_default_csrf_options(require_csrf=S['require_csrf'])
     config.add_view(handle_csrf_origin_error, context=BadCSRFOrigin)
     config.add_view(handle_csrf_token_error, context=BadCSRFToken)
-    config.register_service_factory(UserAuthService, iface=IAuthService)
+    config.register_service_factory(make_user_auth_service, iface=IAuthService)
     S['crypt'] = get_crypt()
 
 

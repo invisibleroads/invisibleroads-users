@@ -88,8 +88,11 @@ def get_auth_provider(request, auth_state):
         request, auth_state, **provider_definition)
 
 
-def get_enter_url_by_name():
-    return {k: v['form_url'] for k, v in S['provider_definitions']}
+def get_enter_url_by_name(request):
+    return {provider_name: request.route_url(
+        'authorizations_enter',
+        provider_name=provider_name,
+    ) for provider_name in S['provider_definitions']}
 
 
 PROVIDER_BY_NAME = {

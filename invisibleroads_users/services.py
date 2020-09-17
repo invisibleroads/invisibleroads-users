@@ -23,6 +23,8 @@ class UserAuthService(object):
         return self.user_definition.get('roles', [])
 
     def verify_ticket(self, principal, ticket):
+        if not principal:
+            return
         redis = self.redis
         redis_key = S['redis.users.prefix'] + principal
         if not redis.sismember(redis_key, ticket):
