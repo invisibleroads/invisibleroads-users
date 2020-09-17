@@ -29,7 +29,7 @@ def see_authorizations_json(request):
     d = {
         'urls': {
             'enter': get_enter_url_by_name(request),
-            'leave': request.route_path('authorizations_leave'),
+            'leave': request.route_url('authorizations_leave'),
         },
     }
     if 'user' in session:
