@@ -37,7 +37,7 @@ REDIS_SESSIONS_PREFIX = 'session.'
 USER_DEFINITION = {
     'email': 'user@example.com',
 }
-DEFAULT_SECRET_ERROR_MESSAGE = f'''\
+DEFAULT_SECRET_ERROR_MESSAGE = f'''
 !!! DEFAULT_SECRET is being used !!!
 
 python -c "
@@ -46,4 +46,4 @@ from base64 import b64encode
 print(b64encode(SIV.generate_key()).decode('utf-8'))"
 
 {INVISIBLEROADS_USERS_SETTINGS_PREFIX}secret = YOUR-SECRET
-'''
+'''.strip()
