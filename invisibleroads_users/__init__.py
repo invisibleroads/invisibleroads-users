@@ -4,7 +4,6 @@ from invisibleroads_macros_configuration import (
     set_default)
 from invisibleroads_macros_security import make_random_string
 from invisibleroads_records.models import Base
-from miscreant.aes.siv import SIV
 from os import environ
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.exceptions import BadCSRFOrigin, BadCSRFToken
@@ -14,7 +13,7 @@ from pyramid_authsanity.interfaces import IAuthService
 from pyramid_redis_sessions import session_factory_from_settings
 from redis import ConnectionError as RedisConnectionError
 
-from . import models as M, routines as R
+from . import models as M
 from .constants import (
     DEFAULT_SECRET,
     DEFAULT_SECRET_ERROR_MESSAGE,
@@ -26,6 +25,7 @@ from .constants import (
     REDIS_SESSIONS_SETTINGS_PREFIX,
     REDIS_SESSIONS_TIMEOUT_IN_SECONDS,
     S)
+from .routines import get_crypt
 from .services import UserAuthService
 from .views import (
     handle_csrf_origin_error,
@@ -88,7 +88,7 @@ def configure_security_policy(config):
     config.add_view(handle_csrf_origin_error, context=BadCSRFOrigin)
     config.add_view(handle_csrf_token_error, context=BadCSRFToken)
     config.register_service_factory(UserAuthService, iface=IAuthService)
-    R.TRANSLATOR = SIV(S['secret'])
+    S['crypt'] = get_crypt()
 
 
 def configure_provider_definitions(
