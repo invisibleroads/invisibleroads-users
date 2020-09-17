@@ -7,11 +7,10 @@ ENTRY_POINTS = '''
 APPLICATION_CLASSIFIERS = [
     'Programming Language :: Python',
     'Framework :: Pyramid',
-    'Framework :: Pyramid :: InvisibleRoads',
     'Topic :: Internet :: WWW/HTTP',
     'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
+    'License :: OSI Approved :: MIT License',
 ]
-
 APPLICATION_REQUIREMENTS = [
     # web
     'pyramid',
