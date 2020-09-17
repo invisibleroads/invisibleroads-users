@@ -1,6 +1,7 @@
 # 0.6
 - Restart from scratch
 - Use pyramid-authsanity
+- Support Google
 
 # 0.5
 - Add user.name, user.image_url
