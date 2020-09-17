@@ -10,6 +10,7 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.exceptions import BadCSRFOrigin, BadCSRFToken
 from pyramid.security import Allow, Authenticated
 from pyramid.settings import asbool, aslist
+from pyramid_authsanity.interfaces import IAuthService
 from pyramid_redis_sessions import session_factory_from_settings
 from redis import ConnectionError as RedisConnectionError
 
@@ -25,6 +26,7 @@ from .constants import (
     REDIS_SESSIONS_SETTINGS_PREFIX,
     REDIS_SESSIONS_TIMEOUT_IN_SECONDS,
     S)
+from .services import UserAuthService
 from .views import (
     handle_csrf_origin_error,
     handle_csrf_token_error,
@@ -52,7 +54,8 @@ def configure_settings(config, prefix=INVISIBLEROADS_USERS_SETTINGS_PREFIX):
     S.set(settings, prefix, 'cookie_httponly', S['cookie_httponly'], asbool)
     S.set(settings, prefix, 'verify_tls', S['verify_tls'], asbool)
     S.set(settings, prefix, 'auth_state_length', S['auth_state_length'], int)
-    S.set(settings, prefix, 'public_attributes', S['public_attributes'], aslist)
+    S.set(settings, prefix, 'public_attributes', S[
+        'public_attributes'], aslist)
     S.set(settings, prefix, 'secret', S['secret'])
     if S['secret'] == DEFAULT_SECRET:
         L.warning(DEFAULT_SECRET_ERROR_MESSAGE)
@@ -84,6 +87,7 @@ def configure_security_policy(config):
     config.set_default_csrf_options(require_csrf=S['require_csrf'])
     config.add_view(handle_csrf_origin_error, context=BadCSRFOrigin)
     config.add_view(handle_csrf_token_error, context=BadCSRFToken)
+    config.register_service_factory(UserAuthService, iface=IAuthService)
     R.TRANSLATOR = SIV(S['secret'])
 
 

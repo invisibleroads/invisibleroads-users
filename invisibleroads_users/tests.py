@@ -1,5 +1,4 @@
 from pytest import fixture
-from redis import Redis
 
 from . import models as M
 

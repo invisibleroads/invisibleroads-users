@@ -19,6 +19,7 @@ S = Settings({
     'secret': DEFAULT_SECRET,
     'default_permission': 'see',
     'require_csrf': True,
+    'redis.users.prefix': 'user.',
 })
 L = get_log(__name__)
 

@@ -122,6 +122,7 @@ def welcome_user(request, user_definition, target_url):
     else:
         user_id = user_definition.get('id', user_email)
 
+    user_definition['id'] = user_id
     session = request.session
     session['user'] = user_definition
 
