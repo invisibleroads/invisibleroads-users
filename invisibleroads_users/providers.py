@@ -35,13 +35,13 @@ class AuthProvider(object):
         return self._auth_session.authorization_url(self._form_url)[0]
 
     def get_user_definition(self):
-        response = self._auth_session.fetch_token(
+        d = self._auth_session.fetch_token(
             self._token_url,
             client_secret=self._consumer_secret,
             authorization_response=self._request_url,
             verify=S['verify_tls'])
-        access_token = response['access_token']
-        refresh_token = response.get('refresh_token')
+        access_token = d['access_token']
+        refresh_token = d.get('refresh_token')
         response = self._auth_session.get(self._resource_url)
         resource_definition = response.json()
         return self._get_user_definition(
