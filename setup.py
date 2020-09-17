@@ -11,6 +11,7 @@ APPLICATION_CLASSIFIERS = [
     'Topic :: Internet :: WWW/HTTP',
     'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
 ]
+
 APPLICATION_REQUIREMENTS = [
     # web
     'pyramid',
@@ -22,7 +23,8 @@ APPLICATION_REQUIREMENTS = [
     'invisibleroads-records >= 0.5.8.1',
     # security
     'miscreant',
-    'pyramid-authsanity',
+    # 'pyramid-authsanity',
+    'pyramid-authsanity @ https://github.com/invisibleroads/pyramid_authsanity/archive/patch-1.zip',
     'pyramid-redis-sessions',
     'requests-oauthlib',
     # shortcut
