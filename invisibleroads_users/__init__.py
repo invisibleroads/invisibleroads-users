@@ -100,7 +100,7 @@ def configure_provider_definitions(
             settings, prefix + 'auth_providers', [], aslist):
         provider_prefix = prefix + 'auth_providers.' + provider_name + '.'
         d[provider_name] = {
-            'auth_scopes': settings[provider_prefix + 'auth_scopes'],
+            'auth_scopes': aslist(settings[provider_prefix + 'auth_scopes']),
             'consumer_key': settings[provider_prefix + 'consumer_key'],
             'consumer_secret': settings[provider_prefix + 'consumer_secret'],
             'form_url': settings[provider_prefix + 'form_url'],
