@@ -18,8 +18,8 @@ APPLICATION_REQUIREMENTS = [
     'redis',
     'sqlalchemy',
     # architecture
-    'invisibleroads-posts >= 0.7.14',
-    'invisibleroads-records >= 0.5.8.1',
+    'invisibleroads-posts >= 0.7.15',
+    'invisibleroads-records >= 0.5.9',
     # security
     'miscreant',
     'pyramid-authsanity',
@@ -29,7 +29,6 @@ APPLICATION_REQUIREMENTS = [
     'invisibleroads-macros-configuration >= 1.0.8',
     'invisibleroads-macros-log >= 1.0.3',
     'invisibleroads-macros-security >= 1.0.1',
-    # other
 ]
 TEST_REQUIREMENTS = [
     'pytest-cov',
@@ -41,7 +40,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
 
 setup(
     name='invisibleroads-users',
-    version='0.6.1',
+    version='0.6.2',
     description='Web application security defaults',
     long_description=DESCRIPTION,
     long_description_content_type='text/markdown',

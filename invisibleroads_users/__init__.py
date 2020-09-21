@@ -34,8 +34,6 @@ from .views import (
 
 
 def includeme(config):
-    config.include('pyramid_authsanity')
-    config.include('invisibleroads_records')
     configure_settings(config)
     configure_request_session_factory(config)
     configure_security_policy(config)
@@ -82,13 +80,13 @@ def configure_request_session_factory(
 
 
 def configure_security_policy(config):
-    config.include('pyramid_authsanity')
     config.set_authorization_policy(ACLAuthorizationPolicy())
+    config.include('pyramid_authsanity')
+    config.register_service_factory(make_user_auth_service, iface=IAuthService)
     config.set_default_permission(S['default_permission'])
     config.set_default_csrf_options(require_csrf=S['require_csrf'])
     config.add_view(handle_csrf_origin_error, context=BadCSRFOrigin)
     config.add_view(handle_csrf_token_error, context=BadCSRFToken)
-    config.register_service_factory(make_user_auth_service, iface=IAuthService)
     S['crypt'] = get_crypt()
 
 
