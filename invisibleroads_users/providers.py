@@ -55,7 +55,7 @@ class Google(AuthProvider):
         return {
             'name': resource_definition['name'],
             'email': resource_definition['email'],
-            'image_url': resource_definition['picture'],
+            'imageUrl': resource_definition['picture'],
         }
 
 
@@ -72,7 +72,7 @@ class LinkedIn(AuthProvider):
         return {
             'name': f'{first_name} {last_name}',
             'email': resource_definition['emailAddress'],
-            'image_url': resource_definition['profilePicture']['displayImage'],
+            'imageUrl': resource_definition['profilePicture']['displayImage'],
         }
 '''
 

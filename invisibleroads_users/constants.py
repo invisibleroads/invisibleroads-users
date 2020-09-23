@@ -12,7 +12,7 @@ S = Settings({
     'cookie_httponly': True,
     'verify_tls': True,
     'auth_state_length': 64,
-    'public_attributes': ['name', 'email', 'image_url'],
+    'public_attributes': ['name', 'email', 'imageUrl'],
     'image_url': (
         'http://3.bp.blogspot.com/_D_Z-D2tzi14/TMkHEi7p6CI/AAAAAAAAEA4/'
         'UyhnLtpt4hM/s400/drunk11.png'),

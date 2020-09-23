@@ -50,7 +50,7 @@ def see_provider(request):
         user_definition = dict(USER_DEFINITION, **{
             'name': user_email.split('@')[0].title(),
             'email': user_email,
-            'image_url': S['image_url'],
+            'imageUrl': S['image_url'],
         })
         return welcome_user(request, user_definition, target_url)
 
@@ -114,7 +114,7 @@ def welcome_user(request, user_definition, target_url):
             user.email = user_email
             is_new_user = True
         user.name = user_name
-        user.image_url = user_definition.get('image_url', S['image_url'])
+        user.image_url = user_definition.get('imageUrl', S['image_url'])
         user.modification_datetime = datetime.utcnow()
         if is_new_user:
             request.registry.notify(UserAdded(user, request))
