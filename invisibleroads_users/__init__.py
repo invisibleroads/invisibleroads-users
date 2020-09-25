@@ -61,6 +61,8 @@ def configure_settings(config, prefix=INVISIBLEROADS_USERS_SETTINGS_PREFIX):
     S.set(settings, prefix, 'default_permission', S[
         'default_permission'], asbool)
     S.set(settings, prefix, 'require_csrf', S['require_csrf'], asbool)
+    S.set(settings, prefix, 'target_url', S['target_url'])
+    S.set(settings, 'redis.users.', 'prefix', S['redis.users.prefix'])
 
 
 def configure_request_session_factory(

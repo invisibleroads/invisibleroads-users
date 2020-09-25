@@ -4,7 +4,7 @@ from invisibleroads_records.models import (
     RecordMixin)
 from sqlalchemy import Column
 from sqlalchemy.ext.hybrid import Comparator, hybrid_property
-from sqlalchemy.types import LargeBinary, Unicode
+from sqlalchemy.types import LargeBinary
 
 from .routines import decrypt, encrypt
 
@@ -33,14 +33,28 @@ class CaseInsensitiveString(str):
 class CaseInsensitiveEncryptComparator(Comparator):
 
     def operate(self, op, other, **kwargs):
-        if hasattr(other, '__iter__'):
-            other = [_.casefold() for _ in other]
-        else:
-            other = other.casefold()
-        return op(self.__clause_element__(), encrypt(other), **kwargs)
+        return op(self.__clause_element__(), encrypt(
+            other.casefold()), **kwargs)
 
 
-class EmailMixin(object):
+class EncryptedNameMixin(object):
+    'Mixin class for a case-insensitive encrypted name'
+    _name = Column(LargeBinary)
+
+    @hybrid_property
+    def name(self):
+        return CaseInsensitiveString(decrypt(self._name))
+
+    @name.setter
+    def name(self, name):
+        self._name = encrypt(name.casefold())
+
+    @name.comparator
+    def name(Class):
+        return CaseInsensitiveEncryptComparator(Class._name)
+
+
+class EncryptedEmailMixin(object):
     'Mixin class for a case-insensitive encrypted email address'
     _email = Column(LargeBinary)
 
@@ -57,8 +71,28 @@ class EmailMixin(object):
         return CaseInsensitiveEncryptComparator(Class._email)
 
 
-class UserMixin(EmailMixin, ModificationMixin, CreationMixin, RecordMixin):
+class EncryptedImageUrlMixin(object):
+    'Mixin class for a case-insensitive encrypted image URL'
+    _image_url = Column(LargeBinary)
+
+    @hybrid_property
+    def image_url(self):
+        return CaseInsensitiveString(decrypt(self._image_url))
+
+    @image_url.setter
+    def image_url(self, image_url):
+        self._image_url = encrypt(image_url.casefold())
+
+    @image_url.comparator
+    def image_url(Class):
+        return CaseInsensitiveEncryptComparator(Class._image_url)
+
+
+class UserMixin(
+        EncryptedNameMixin,
+        EncryptedEmailMixin,
+        EncryptedImageUrlMixin,
+        ModificationMixin,
+        CreationMixin,
+        RecordMixin):
     __tablename__ = 'user'
-    email = Column(Unicode, unique=True)
-    name = Column(Unicode)
-    image_url = Column(Unicode)

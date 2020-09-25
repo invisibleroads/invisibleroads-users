@@ -97,7 +97,7 @@ def get_form_url(request, target_url):
 
 def get_target_url(request):
     params = request.params
-    return params.get('targetUrl', '/').strip()
+    return params.get('targetUrl', S['target_url']).strip()
 
 
 def welcome_user(request, user_definition, target_url):
