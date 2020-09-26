@@ -1,10 +1,6 @@
 from .constants import S
 
 
-def make_user_auth_service(context, request):
-    return UserAuthService(request)
-
-
 # https://pyramid-authsanity.readthedocs.io/en/latest/api/interfaces.html
 class UserAuthService(object):
 
@@ -26,14 +22,14 @@ class UserAuthService(object):
         if not principal:
             return
         redis = self.redis
-        redis_key = S['redis.users.prefix'] + principal
+        redis_key = get_user_tickets_redis_key(principal)
         if not redis.sismember(redis_key, ticket):
             return
         self.user_definition = self.session.get('user', {})
 
     def add_ticket(self, principal, ticket):
         redis = self.redis
-        redis_key = S['redis.users.prefix'] + principal
+        redis_key = get_user_tickets_redis_key(principal)
         redis.sadd(redis_key, ticket)
         self.user_definition = self.request.user_definition
 
@@ -43,5 +39,13 @@ class UserAuthService(object):
         except TypeError:
             return
         redis = self.redis
-        redis_key = S['redis.users.prefix'] + principal
+        redis_key = get_user_tickets_redis_key(principal)
         redis.srem(redis_key, ticket)
+
+
+def get_user_tickets_redis_key(user_id):
+    return S['redis.user_tickets.key'].format(user_id=user_id)
+
+
+def make_user_auth_service(context, request):
+    return UserAuthService(request)
