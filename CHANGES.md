@@ -3,6 +3,7 @@
 - Use pyramid-authsanity
 - Restore Google
 - Restore encryption
+- Define check_authorization
 
 # 0.5
 - Add user.name, user.image_url
