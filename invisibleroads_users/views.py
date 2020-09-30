@@ -101,6 +101,8 @@ def get_target_url(request):
 
 
 def welcome_user(request, user_definition, target_url):
+    S['check_authorization'](user_definition)
+
     user_name = user_definition['name']
     user_email = user_definition['email']
 

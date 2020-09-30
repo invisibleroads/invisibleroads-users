@@ -15,3 +15,7 @@ def decrypt(text):
 def get_crypt():
     key = b64decode(S['secret'])
     return SIV(key)
+
+
+def check_authorization(user_definition):
+    pass

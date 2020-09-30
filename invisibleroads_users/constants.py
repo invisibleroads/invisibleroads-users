@@ -20,6 +20,7 @@ S = Settings({
     'default_permission': 'see',
     'require_csrf': True,
     'target_url': '/',
+    'check_authorization': 'invisibleroads_users.routines.check_authorization',
     'redis.user_tickets.key': 'user.{user_id}.tickets',
 })
 L = get_log(__name__)

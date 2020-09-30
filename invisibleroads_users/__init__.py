@@ -62,6 +62,8 @@ def configure_settings(config, prefix=INVISIBLEROADS_USERS_SETTINGS_PREFIX):
         'default_permission'], asbool)
     S.set(settings, prefix, 'require_csrf', S['require_csrf'], asbool)
     S.set(settings, prefix, 'target_url', S['target_url'])
+    S.set(settings, prefix, 'check_authorization', S[
+        'check_authorization'], load_attribute)
     S.set(settings, 'redis.user_tickets.', 'key', S['redis.user_tickets.key'])
 
 
