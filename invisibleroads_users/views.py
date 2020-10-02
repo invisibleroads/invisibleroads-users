@@ -1,5 +1,4 @@
 import functools
-from datetime import datetime
 from inspect import getcallargs
 from invisibleroads_macros_security import make_random_string
 from invisibleroads_posts.views import expect_integer, expect_value
@@ -11,12 +10,9 @@ from pyramid.httpexceptions import (
 from pyramid.security import forget, remember, NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
 
-from . import models as M
 from .constants import L, S, USER_DEFINITION
-from .events import UserAdded
-from .providers import (
-    get_auth_provider,
-    get_enter_url_by_name)
+from .providers import get_auth_provider, get_enter_url_by_name
+from .routines import get_or_add_user
 
 
 @view_config(
@@ -101,31 +97,21 @@ def get_target_url(request):
 
 
 def welcome_user(request, user_definition, target_url):
-    S['check_authorization'](user_definition)
-
-    user_name = user_definition['name']
     user_email = user_definition['email']
 
     if S['storage'] == 'database':
-        User = M.User
-        is_new_user = False
-        db = request.db
-        user = db.query(User).filter_by(email=user_email).first()
-        if not user:
-            user = User.make_unique_record(db)
-            user.email = user_email
-            is_new_user = True
-        user.name = user_name
-        user.image_url = user_definition.get('imageUrl', S['image_url'])
-        user.modification_datetime = datetime.utcnow()
-        if is_new_user:
-            request.registry.notify(UserAdded(user, request))
+        user = get_or_add_user(request, user_definition)
         user_id = user.id
+        tm = request.tm
+        tm.commit()
+        tm.begin()
     else:
         user_id = user_definition.get('id', user_email)
-
-    # Pass user_definition to UserAuthService while remembering user_id
     user_definition['id'] = user_id
+
+    S['check_authorization'](user_definition)
+
+    # Pass user_definition to UserAuthService
     request.user_definition = user_definition
     headers = remember(request, user_id)
 
