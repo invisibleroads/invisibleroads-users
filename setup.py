@@ -18,8 +18,8 @@ APPLICATION_REQUIREMENTS = [
     'redis',
     'sqlalchemy',
     # architecture
-    'invisibleroads-posts >= 0.7.15',
-    'invisibleroads-records >= 0.5.9',
+    'invisibleroads-posts >= 0.7.16.2',
+    'invisibleroads-records >= 0.5.9.3',
     # security
     'miscreant',
     'pyramid-authsanity',
