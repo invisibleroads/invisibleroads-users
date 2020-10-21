@@ -83,7 +83,7 @@ def get_auth_provider(request, auth_state):
     try:
         provider_definition = S['provider_definitions'][provider_name]
     except KeyError:
-        raise HTTPNotFound({'provider_name': 'is invalid'})
+        raise HTTPNotFound({'provider_name': 'is bad'})
     return PROVIDER_BY_NAME[provider_name](
         request, auth_state, **provider_definition)
 
