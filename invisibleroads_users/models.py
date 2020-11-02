@@ -96,3 +96,11 @@ class UserMixin(
         CreationMixin,
         RecordMixin):
     __tablename__ = 'user'
+
+    def get_json_dictionary(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'imageUrl': self.image_url,
+        }
