@@ -23,7 +23,7 @@ S = Settings({
     'check_authorization': 'invisibleroads_users.routines.check_authorization',
     'redis.user_tickets.key': 'user.{user_id}.tickets',
 })
-L = get_log(__name__)
+L = get_log('invisibleroads-users')
 
 
 INVISIBLEROADS_USERS_SETTINGS_PREFIX = 'invisibleroads_users.'
@@ -40,7 +40,9 @@ USER_DEFINITION = {
     'email': 'user@example.com',
 }
 DEFAULT_SECRET_ERROR_MESSAGE = f'''
-!!! DEFAULT_SECRET is being used !!!
+\033[31m\033[5m\
+!!! DEFAULT_SECRET is being used !!!\
+\033[0m
 
 python -c "
 from miscreant.aes.siv import SIV

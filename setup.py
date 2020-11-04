@@ -18,7 +18,7 @@ APPLICATION_REQUIREMENTS = [
     'redis',
     'sqlalchemy',
     # architecture
-    'invisibleroads-posts >= 0.7.16.2',
+    'invisibleroads-posts >= 0.7.16.3',
     'invisibleroads-records >= 0.5.9.3',
     # security
     'miscreant',
@@ -40,7 +40,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
 
 setup(
     name='invisibleroads-users',
-    version='0.6.4.2',
+    version='0.6.4.3',
     description='Web application security defaults',
     long_description=DESCRIPTION,
     long_description_content_type='text/markdown',
