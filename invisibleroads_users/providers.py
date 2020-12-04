@@ -11,7 +11,7 @@ class AuthProvider(object):
             consumer_secret, form_url, token_url, resource_url,
             compliance_fixes):
         redirect_uri = request.route_url(
-            'authorizations_enter_callback', provider_name=self.name)
+            'authorizations_enter_callback', providerName=self.name)
         auth_session = OAuth2Session(
             consumer_key,
             scope=auth_scopes,
@@ -79,19 +79,18 @@ class LinkedIn(AuthProvider):
 
 def get_auth_provider(request, auth_state):
     matchdict = request.matchdict
-    provider_name = matchdict['provider_name']
+    provider_name = matchdict['providerName']
     try:
         provider_definition = S['provider_definitions'][provider_name]
     except KeyError:
-        raise HTTPNotFound({'provider_name': 'is bad'})
+        raise HTTPNotFound({'providerName': 'is bad'})
     return PROVIDER_BY_NAME[provider_name](
         request, auth_state, **provider_definition)
 
 
 def get_enter_url_by_name(request):
     return {provider_name: request.route_url(
-        'authorizations_enter',
-        provider_name=provider_name,
+        'authorizations_enter', providerName=provider_name,
     ) for provider_name in S['provider_definitions']}
 
 
